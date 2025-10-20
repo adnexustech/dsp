@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-    <title><%=CUSTOMER_NAME%> - Login</title>
+    <title>Adnexus - Login</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= csrf_meta_tags %>
     <%= javascript_importmap_tags %>
 </head>
@@ -15,12 +15,10 @@
         <div class="max-w-md w-full space-y-8">
             <!-- Logo and Title -->
             <div class="text-center">
-                <h2 class="text-4xl font-bold text-white mb-2">
-                    <%=CUSTOMER_NAME%>
+                <%= image_tag("logo.png", alt: "Adnexus", class: "h-12 mx-auto mb-4 invert") %>
+                <h2 class="text-3xl font-bold text-white">
+                    Adnexus
                 </h2>
-                <p class="text-gray-400 text-lg">
-                    Campaign Administration
-                </p>
             </div>
 
             <!-- Login Form Card -->
@@ -30,8 +28,8 @@
 
             <!-- Footer -->
             <div class="text-center">
-                <p class="text-gray-500 text-sm">
-                    &copy; <%= Time.now.year %> <%=CUSTOMER_NAME%>. All rights reserved.
+                <p class="text-gray-400 text-sm">
+                    Copyright Adnexus Technology Inc
                 </p>
             </div>
         </div>

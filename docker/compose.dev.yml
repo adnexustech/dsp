@@ -85,7 +85,7 @@ services:
       RAILS_LOG_TO_STDOUT: "true"
 
       # Application Settings
-      CUSTOMER_NAME: ADNEXUS-Dev
+      CUSTOMER_NAME: Adnexus
       BIDDER_TIME_OFFSET: 0
 
       # Elasticsearch (optional)

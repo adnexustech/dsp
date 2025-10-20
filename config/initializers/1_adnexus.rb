@@ -31,7 +31,7 @@ def env_replace(name, val, type="string")
 end
 
 # Header label
-env_replace("CUSTOMER_NAME","ADNEXUS-Demo")
+env_replace("CUSTOMER_NAME","Adnexus")
 
 # Bidder timezone offset from GMT. Assumes bidder time is GMT
 env_replace("BIDDER_TIME_OFFSET",0,"number")
@@ -67,8 +67,8 @@ env_replace("ELASTICSEARCH_CLICKS_INDEX", "clicks-*")
 env_replace("ELASTICSEARCH_STATS_INDEX", "status-*")
 
 #
-# Crosstalk hosts. 
-# Define the Regions that this campaign manager will manage. 
+# Crosstalk hosts.
+# Define the Regions that this campaign manager will manage.
 # Each region must have a Crosstalk host. Campaign Manager will send updates to the campaign region's Crosstalk.
 #
 env_replace("RTB_CROSSTALK_REGION_HOSTS", '{"US" => "crosstalk"}', "hash")
@@ -96,10 +96,10 @@ env_replace("RTB_REPORT_TIMEZONE", "America/Los_Angeles")
 
 
 
-      
-      
-      
-      
+
+
+
+
 
 
 
