@@ -1,5 +1,6 @@
 //= link_tree ../images
 //= link application.css
+//= link application.tailwind.css
 //= link_tree ../builds
 //= link vendor_libs.js
 //= link_tree ../stylesheets/styles .css
