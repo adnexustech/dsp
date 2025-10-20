@@ -6,27 +6,87 @@
 
 # Ignore bundler config.
 /.bundle
-.ruby-version
 
-# Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
+# Ignore all environment files.
+/.env
+/.env.*
+.env.local
+.env.*.local
 
 # Ignore all logfiles and tempfiles.
 /log/*
 !/log/.keep
-/tmp
+/tmp/*
+!/tmp/.keep
+!/tmp/pids/
+/tmp/pids/*
+!/tmp/pids/.keep
 
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+# Ignore storage (uploaded files in development and any SQLite databases).
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
+
+/public/assets
+/public/packs
+/public/packs-test
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+/config/credentials/*.key
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-*
+
+# Ignore all tests coverage
+coverage
 .rspec
 
-converage
+# Ignore Tailwind CSS builds
+/app/assets/builds/*
 
+# Node modules
+/node_modules
+/vendor/node_modules
+
+# Yarn
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Ruby version managers
+.ruby-version
+.rvmrc
+.rbenv-vars
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea
+.vscode
+.project
+.classpath
+.settings
+
+# AI assistant generated files (per-session)
 AGENTS.md
-CLAUDE.md
 GEMINI.md
 GROK.md
 QUWEN.md
 
-bin/*
-
+# Playwright
 .playwright-mcp

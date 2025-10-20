@@ -1,0 +1,318 @@
+@import "tailwindcss";
+
+/* Base styles with dark mode support */
+@layer base {
+  html {
+    height: 100%;
+  }
+
+  body {
+    height: 100%;
+    background-color: #f9fafb;
+    color: #111827;
+    transition: all 0.2s;
+  }
+
+  .dark body {
+    background-color: #111827;
+    color: #f9fafb;
+  }
+}
+
+/* Modern sidebar styling */
+@layer components {
+  /* Sidebar container */
+  #sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 16rem;
+    background-color: #1e293b;
+    transition: all 0.3s;
+    z-index: 40;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark #sidebar {
+    background-color: #0f172a;
+  }
+
+  /* Collapsed sidebar */
+  body.sidebar-collapsed #sidebar {
+    transform: translateX(-100%);
+  }
+
+  @media (min-width: 768px) {
+    body.sidebar-collapsed #sidebar {
+      transform: translateX(0);
+      width: 5rem;
+    }
+  }
+
+  /* Sidebar menu */
+  #sidebar #side-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #sidebar #side-menu > li {
+    border-bottom: 1px solid #374151;
+    list-style: none !important;
+  }
+
+  .dark #sidebar #side-menu > li {
+    border-bottom-color: #1f2937;
+  }
+
+  #sidebar #side-menu > li::before {
+    display: none !important;
+  }
+
+  #sidebar #side-menu > li > a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.15s;
+    list-style: none !important;
+  }
+
+  #sidebar #side-menu > li > a:hover {
+    background-color: #374151;
+    color: #ffffff;
+  }
+
+  .dark #sidebar #side-menu > li > a:hover {
+    background-color: #1f2937;
+  }
+
+  /* Icons */
+  #sidebar #side-menu > li > a > i.fa {
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+    color: #9ca3af;
+    min-width: 24px;
+  }
+
+  /* Menu text */
+  #sidebar #side-menu .menu-title {
+    display: block;
+    transition: opacity 0.3s;
+  }
+
+  @media (min-width: 768px) {
+    body.sidebar-collapsed #sidebar #side-menu .menu-title {
+      display: none;
+    }
+  }
+
+  /* Icon background circles */
+  .icon-bg {
+    display: none;
+  }
+
+  /* Top bar */
+  #topbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.2s;
+  }
+
+  .dark #topbar {
+    background-color: #1f2937;
+    border-bottom-color: #374151;
+  }
+
+  /* Logo */
+  #logo {
+    color: #111827;
+    font-weight: bold;
+    font-size: 1.25rem;
+    text-decoration: none;
+  }
+
+  .dark #logo {
+    color: #ffffff;
+  }
+
+  /* Main content area */
+  #page-wrapper {
+    margin-left: 16rem;
+    transition: all 0.3s;
+    min-height: 100vh;
+  }
+
+  @media (min-width: 768px) {
+    body.sidebar-collapsed #page-wrapper {
+      margin-left: 5rem;
+    }
+  }
+
+  /* Page content */
+  .page-content {
+    padding: 1.5rem;
+    background-color: #ffffff;
+    min-height: 100vh;
+    transition: all 0.2s;
+  }
+
+  .dark .page-content {
+    background-color: #1f2937;
+  }
+
+  /* Breadcrumb */
+  .page-title-breadcrumb {
+    background-color: #f3f4f6;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .dark .page-title-breadcrumb {
+    background-color: #374151;
+    border-bottom-color: #4b5563;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+  }
+
+  .dark table {
+    background-color: #1f2937;
+  }
+
+  table thead {
+    background-color: #f3f4f6;
+  }
+
+  .dark table thead {
+    background-color: #374151;
+  }
+
+  table th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .dark table th {
+    color: #d1d5db;
+    border-bottom-color: #4b5563;
+  }
+
+  table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .dark table td {
+    border-bottom-color: #374151;
+  }
+
+  /* Buttons */
+  .btn, button[type="submit"], input[type="submit"] {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-primary, button[type="submit"], input[type="submit"] {
+    background-color: #3b82f6;
+    color: #ffffff;
+  }
+
+  .btn-primary:hover, button[type="submit"]:hover, input[type="submit"]:hover {
+    background-color: #1e40af;
+  }
+
+  /* Forms */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #111827;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="number"]:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #3b82f6;
+  }
+
+  .dark input[type="text"],
+  .dark input[type="email"],
+  .dark input[type="password"],
+  .dark input[type="number"],
+  .dark textarea,
+  .dark select {
+    border-color: #4b5563;
+    background-color: #374151;
+    color: #f9fafb;
+  }
+
+  /* Dark mode toggle button */
+  .dark-mode-toggle {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #e5e7eb;
+    transition: all 0.2s;
+  }
+
+  .dark-mode-toggle:hover {
+    background-color: #d1d5db;
+  }
+
+  .dark .dark-mode-toggle {
+    background-color: #374151;
+  }
+
+  .dark .dark-mode-toggle:hover {
+    background-color: #4b5563;
+  }
+
+  /* Sidebar toggle button */
+  .sidebar-toggle {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  .sidebar-toggle:hover {
+    background-color: #f3f4f6;
+  }
+
+  .dark .sidebar-toggle:hover {
+    background-color: #374151;
+  }
+}
+
+/* Hide old Bootstrap conflicting styles */
+@layer utilities {
+  .left-side-collapsed {
+    /* Override old class */
+  }
+}
