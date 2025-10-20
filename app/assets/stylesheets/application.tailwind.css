@@ -1,1 +1,149 @@
 @import "tailwindcss";
+
+/* Base styles with dark mode support */
+@layer base {
+  html {
+    @apply h-full;
+  }
+
+  body {
+    @apply h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
+  }
+}
+
+/* Modern sidebar styling */
+@layer components {
+  /* Sidebar container */
+  #sidebar {
+    @apply fixed left-0 top-0 h-full w-64 bg-sidebar dark:bg-sidebar-dark transition-all duration-300 z-40 shadow-xl;
+  }
+
+  /* Collapsed sidebar */
+  body.sidebar-collapsed #sidebar {
+    @apply -translate-x-full md:translate-x-0 md:w-20;
+  }
+
+  /* Sidebar menu */
+  #sidebar #side-menu {
+    @apply list-none m-0 p-0;
+  }
+
+  #sidebar #side-menu > li {
+    @apply border-b border-gray-700 dark:border-gray-800 list-none;
+    list-style: none !important;
+  }
+
+  #sidebar #side-menu > li::before {
+    display: none !important;
+  }
+
+  #sidebar #side-menu > li > a {
+    @apply flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 dark:hover:bg-gray-800 transition-colors duration-150 no-underline text-base;
+    list-style: none !important;
+  }
+
+  #sidebar #side-menu > li > a:hover {
+    @apply text-white;
+  }
+
+  /* Icons */
+  #sidebar #side-menu > li > a > i.fa {
+    @apply text-xl mr-3 text-gray-400 min-w-[24px];
+  }
+
+  /* Menu text */
+  #sidebar #side-menu .menu-title {
+    @apply block transition-opacity duration-300;
+  }
+
+  body.sidebar-collapsed #sidebar #side-menu .menu-title {
+    @apply md:hidden;
+  }
+
+  /* Icon background circles */
+  .icon-bg {
+    @apply hidden;
+  }
+
+  /* Top bar */
+  #topbar {
+    @apply bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200;
+  }
+
+  /* Logo */
+  #logo {
+    @apply text-gray-900 dark:text-white font-bold text-xl no-underline;
+  }
+
+  /* Main content area */
+  #page-wrapper {
+    @apply ml-64 transition-all duration-300 min-h-screen;
+  }
+
+  body.sidebar-collapsed #page-wrapper {
+    @apply md:ml-20;
+  }
+
+  /* Page content */
+  .page-content {
+    @apply p-6 bg-white dark:bg-gray-800 min-h-screen transition-colors duration-200;
+  }
+
+  /* Breadcrumb */
+  .page-title-breadcrumb {
+    @apply bg-gray-100 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600;
+  }
+
+  /* Tables */
+  table {
+    @apply w-full border-collapse bg-white dark:bg-gray-800;
+  }
+
+  table thead {
+    @apply bg-gray-100 dark:bg-gray-700;
+  }
+
+  table th {
+    @apply px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600;
+  }
+
+  table td {
+    @apply px-4 py-3 border-b border-gray-200 dark:border-gray-700;
+  }
+
+  /* Buttons */
+  .btn, button[type="submit"], input[type="submit"] {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors duration-150 inline-flex items-center justify-center;
+  }
+
+  .btn-primary, button[type="submit"], input[type="submit"] {
+    @apply bg-primary hover:bg-primary-dark text-white;
+  }
+
+  /* Forms */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary;
+  }
+
+  /* Dark mode toggle button */
+  .dark-mode-toggle {
+    @apply p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors;
+  }
+
+  /* Sidebar toggle button */
+  .sidebar-toggle {
+    @apply p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors;
+  }
+}
+
+/* Hide old Bootstrap conflicting styles */
+@layer utilities {
+  .left-side-collapsed {
+    /* Override old class */
+  }
+}
