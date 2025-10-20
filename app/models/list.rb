@@ -1,4 +1,4 @@
-class List < ActiveRecord::Base
+class List < ApplicationRecord
 	
     has_many :rtb_standards, :foreign_key => :operand_list_id   
     has_many :targets, :foreign_key => :domains_list_id   

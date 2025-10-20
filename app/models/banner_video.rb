@@ -1,4 +1,4 @@
-class BannerVideo < ActiveRecord::Base
+class BannerVideo < ApplicationRecord
 
     belongs_to :campaign
     belongs_to :target

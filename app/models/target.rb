@@ -1,4 +1,4 @@
-class Target < ActiveRecord::Base
+class Target < ApplicationRecord
 
     has_many :campaigns
     has_many :banners

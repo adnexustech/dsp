@@ -1,4 +1,4 @@
-class BannerVideoMimeTypes < ActiveRecord::Base
+class BannerVideoMimeTypes < ApplicationRecord
     
     
     def self.all

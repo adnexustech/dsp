@@ -1,4 +1,4 @@
-class Banner < ActiveRecord::Base
+class Banner < ApplicationRecord
     
     belongs_to :campaign
     belongs_to :target

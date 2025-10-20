@@ -1,4 +1,4 @@
-class StatsRtb < ActiveRecord::Base
+class StatsRtb < ApplicationRecord
     
     self.pluralize_table_names = false    
 

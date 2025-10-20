@@ -1,4 +1,4 @@
-class ListTypes < ActiveRecord::Base
+class ListTypes < ApplicationRecord
     
     
     def self.all

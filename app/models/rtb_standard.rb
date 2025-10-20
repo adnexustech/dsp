@@ -1,4 +1,4 @@
-class RtbStandard < ActiveRecord::Base
+class RtbStandard < ApplicationRecord
 
     belongs_to :campaign
     has_many :banners

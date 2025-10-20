@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   resources :banners
   resources :campaigns
-  resources :banners
   resources :banner_videos
   resources :targets
   resources :rtb_standards

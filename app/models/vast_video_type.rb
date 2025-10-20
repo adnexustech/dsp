@@ -1,4 +1,4 @@
-class VastVideoType < ActiveRecord::Base
+class VastVideoType < ApplicationRecord
     
     # http://www.iab.net/media/file/OpenRTB-API-Specification-Version-2-3.pdf   section 5.7    
     

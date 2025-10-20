@@ -1,3 +1,3 @@
-class IabCategory < ActiveRecord::Base
+class IabCategory < ApplicationRecord
     
 end

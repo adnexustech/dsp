@@ -1,4 +1,4 @@
-class Region < ActiveRecord::Base
+class Region < ApplicationRecord
     
     
     def self.all

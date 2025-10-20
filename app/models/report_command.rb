@@ -1,4 +1,4 @@
-class ReportCommand < ActiveRecord::Base
+class ReportCommand < ApplicationRecord
 
     belongs_to :campaign
     belongs_to :banner

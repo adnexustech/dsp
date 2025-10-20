@@ -1,4 +1,4 @@
-class AdxCategory < ActiveRecord::Base
+class AdxCategory < ApplicationRecord
 
 	#  reference https://developers.google.com/ad-exchange/rtb/downloads
 

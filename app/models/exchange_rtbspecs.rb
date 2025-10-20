@@ -1,4 +1,4 @@
-class ExchangeRtbspecs < ActiveRecord::Base
+class ExchangeRtbspecs < ApplicationRecord
 
     
 end

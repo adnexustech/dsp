@@ -143,7 +143,7 @@
                 <!--END TITLE & BREADCRUMB PAGE-->
                 <!--BEGIN CONTENT-->
                 <div class="page-content">
-                    <p id="notice"><%=raw(notice)%></p>
+                    <p id="notice"><%= sanitize(notice, tags: %w(strong em br), attributes: []) if notice.present? %></p>
                     
                     <%= yield(:main_body) if content_for?(:main_body) %>	
                 </div>

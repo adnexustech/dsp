@@ -1,25 +1,33 @@
 
 
-def env_replace(name,val,type="string")
-    if ENV[name] 
-        val = ENV[name]  
+def env_replace(name, val, type="string")
+    if ENV[name]
+        val = ENV[name]
     end
-    case type
+
+    # Convert value based on type
+    converted_val = case type
     when "string"
-        eval("#{name} = \"#{val}\"")  
+        val.to_s
     when "boolean"
-        if val.to_s=~/^true/i
-            val="true"
-        elsif val.to_s=~/^false/i
-            val="false"
-        end
-        eval("#{name} = #{val}")  
+        val.to_s =~ /^true/i ? true : false
     when "number"
-        eval("#{name} = #{val}")
+        val.to_i
     when "hash"
-        eval("#{name} = #{val}")
+        # Safely parse hash strings - only allow simple hash literals
+        begin
+            JSON.parse(val.to_s.gsub('=>', ':').gsub(/(\w+):/, '"\1":'))
+        rescue JSON::ParserError
+            puts "WARNING: Failed to parse hash for #{name}, using empty hash"
+            {}
+        end
+    else
+        val
     end
-    puts "Setting #{name} to #{val} (#{type})"
+
+    # Use Object.const_set for safe constant assignment (no eval!)
+    Object.const_set(name, converted_val)
+    puts "Setting #{name} to #{converted_val} (#{type})"
 end
 
 # Header label
@@ -71,8 +79,12 @@ env_replace("RTB_CROSSTALK_USER", "ben*")
 env_replace("RTB_CROSSTALK_PASSWORD", "test")
 
 #
-# Set if your bidder is using large lists.  To store this data in AWS S3, put access info here.
-# Amazom Keys for S3 UPLOADED FILES, user fbapp_s3 
+# Set if your bidder is using large lists. To store this data in AWS S3, put access info here.
+# Amazon Keys for S3 UPLOADED FILES
+#
+# ⚠️  SECURITY WARNING: NEVER commit real AWS credentials to source control!
+# Always use environment variables: AWS_ACCESS_KEY_S3 and AWS_SECRET_KEY_S3
+# The defaults below are placeholders only.
 #
 env_replace("AWS_ACCESS_KEY_S3", "XXXXXXXX")
 env_replace("AWS_SECRET_KEY_S3", "XXXXXXXX")

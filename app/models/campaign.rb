@@ -1,4 +1,4 @@
-class Campaign < ActiveRecord::Base
+class Campaign < ApplicationRecord
     
     
     has_many :banners, :dependent => :destroy

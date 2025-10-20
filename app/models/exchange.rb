@@ -1,4 +1,4 @@
-class Exchange < ActiveRecord::Base
+class Exchange < ApplicationRecord
     
     
     def self.all

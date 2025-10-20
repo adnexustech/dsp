@@ -1,4 +1,4 @@
-class DeviceType < ActiveRecord::Base
+class DeviceType < ApplicationRecord
     
     
     def self.all

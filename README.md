@@ -24,9 +24,10 @@ Source Code
 
 To start working with code, first make sure you have the following installed on your computer:
 
-* [Ruby v2.4.x](https://www.ruby-lang.org/en/downloads/releases/)
-* [Rails v4.2.x](https://guides.rubyonrails.org/v4.2/getting_started.html)
-* [MySQL](https://www.mysql.com/)
+* [Ruby v3.3.x](https://www.ruby-lang.org/en/downloads/releases/)
+* [Rails v8.0.x](https://guides.rubyonrails.org/)
+* [MySQL v8.0](https://www.mysql.com/)
+* [Docker](https://www.docker.com/) (recommended for development)
 
 Next, get the code from this Github repo:
 
@@ -35,7 +36,7 @@ git clone git@github.com:RTB4FREE/campaign-manager.git
 cd campaign-manager
 ```
 
-The RTB4Free campaign manager is a standard [Rails 4.x application](http://guides.rubyonrails.org/v4.2/), and can be installed and managed in the standard Rails fashion:
+The RTB4Free campaign manager is a modern [Rails 8.x application](https://guides.rubyonrails.org/), and can be installed and managed in the standard Rails fashion:
 
 Install using Rails:
 
