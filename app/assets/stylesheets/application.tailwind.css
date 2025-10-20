@@ -1,1 +1,3 @@
-@import url("../builds/tailwind.css");
+/*
+ *= require_tree ../builds
+ */

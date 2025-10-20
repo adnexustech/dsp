@@ -14,7 +14,7 @@
     <%= csrf_meta_tags %>
     <%= javascript_importmap_tags %>
 </head>
-<body class="h-full" data-controller="darkmode sidebar">
+<body class="h-full dark" data-controller="darkmode sidebar">
     <div>
         <!--BEGIN BACK TO TOP-->
         <a id="totop" href="#"><i class="fa fa-angle-up"></i></a>
@@ -32,8 +32,8 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <a id="logo" href="/" class="navbar-brand">
-                    <%= image_tag("logo.png", alt: CUSTOMER_NAME, class: "h-8 inline-block dark:invert") %>
+                <a id="logo" href="/" class="navbar-brand flex items-center">
+                    <%= image_tag("logo.png", alt: "Adnexus", class: "h-8 inline-block invert") %>
                 </a>
             </div>
             <div class="topbar-main">
