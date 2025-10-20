@@ -1,10 +1,10 @@
-# CLAUDE.md
+# LLM.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI Agents such as Claude Code, Codex, Gemini, etc when working with code in this repository.
 
 ## Project Overview
 
-DSP2 is the ADNEXUS Campaign Manager - a Rails 8 web application for managing real-time bidding (RTB) advertising campaigns. It provides campaign management, targeting, creative management (banners/videos), budget controls, and reporting for programmatic advertising.
+DSP is the ADNEXUS Campaign Manager - a Rails 8 web application for managing real-time bidding (RTB) advertising campaigns. It provides campaign management, targeting, creative management (banners/videos), budget controls, and reporting for programmatic advertising.
 
 **Technology Stack:**
 - Ruby 3.3.0

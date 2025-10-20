@@ -1,16 +1,16 @@
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/adnexus/campaign-manager.svg)](https://hub.docker.com/r/adnexus/campaign-manager/)
-[![Docker Stars](https://img.shields.io/docker/stars/adnexus/campaign-manager.svg)](https://hub.docker.com/r/adnexus/campaign-manager/)
-[![](https://images.microbadger.com/badges/version/adnexus/campaign-manager.svg)](https://microbadger.com/images/adnexus/campaign-manager "Get your own version badge on microbadger.com")
-[![](https://images.microbadger.com/badges/image/adnexus/campaign-manager.svg)](https://microbadger.com/images/adnexus/campaign-manager "Get your own image badge on microbadger.com")
-[![Build Status](https://travis-ci.org/adnexus/campaign-manager.svg?branch=master)](https://travis-ci.org/adnexus/campaign-manager)
+[![Docker Pulls](https://img.shields.io/docker/pulls/adnexus/dsp.svg)](https://hub.docker.com/r/adnexus/dsp/)
+[![Docker Stars](https://img.shields.io/docker/stars/adnexus/dsp.svg)](https://hub.docker.com/r/adnexus/dsp/)
+[![](https://images.microbadger.com/badges/version/adnexus/dsp.svg)](https://microbadger.com/images/adnexus/dsp "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/adnexus/dsp.svg)](https://microbadger.com/images/adnexus/dsp "Get your own image badge on microbadger.com")
+[![Build Status](https://travis-ci.org/adnexus/dsp.svg?branch=master)](https://travis-ci.org/adnexus/dsp)
 
-Campaign Manager - ADNEXUS Campaign Management UI
+Campaign Manager - Adnexus Campaign Management UI
 ==================================================
 
 Campaign management user interface for [Adnexus](http://ad.nexus/)
 
-An image of this repo is available directly from [Docker Hub](https://hub.docker.com/r/adnexus/campaign-manager/)
+An image of this repo is available directly from [Docker Hub](https://hub.docker.com/r/adnexus/dsp/)
 
 
 Getting Help
@@ -32,8 +32,8 @@ To start working with code, first make sure you have the following installed on 
 Next, get the code from this Github repo:
 
 ```
-git clone git@github.com:ADNEXUS/campaign-manager.git
-cd campaign-manager
+git clone git@github.com:adnexustech/dsp.git
+cd dsp
 ```
 
 The Adnexus campaign manager is a modern [Rails 8.x application](https://guides.rubyonrails.org/), and can be installed and managed in the standard Rails fashion:
@@ -82,5 +82,5 @@ Getting Support
 There are various ways of getting support:
 
 * Email us at [support@ad.nexus](mailto://support@ad.nexus)
-* Add a Github issue:  [github.com/adnexus/campaignmanager/issues](https://github.com/adnexus/campaignmanager/issues)
+* Add a Github issue:  [github.com/adnexustech/dsp/issues](https://github.com/adnexustech/dsp/issues)
 * Join the [Adnexus Slack Channel](https://join.slack.com/t/adnexus/shared_invite/enQtNjYxNzc3NTQwMzIwLTlkNWYyMzY0NzA3MTNmMjc2M2I0NzkxYjE0NGIwYTljMjQ2YzAwYTBmMTJhNWM0ZDc0NTljNTA3NzFjNzZlNDI)
