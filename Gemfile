@@ -80,3 +80,10 @@ group :development do
   # Note: Spring may have compatibility issues with Rails 8
   # gem 'spring'
 end
+
+gem "importmap-rails", "~> 2.2"
+
+gem "turbo-rails", "~> 2.0"
+gem "stimulus-rails", "~> 1.3"
+
+gem "tailwindcss-rails", "~> 4.3"

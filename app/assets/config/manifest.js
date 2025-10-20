@@ -3,3 +3,5 @@
 //= link application.js
 //= link_tree ../stylesheets/styles .css
 //= link_directory ../javascripts .js
+//= link_tree ../../javascript .js
+//= link_tree ../../../vendor/javascript .js
