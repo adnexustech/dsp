@@ -8,7 +8,7 @@
 Campaign Manager - ADNEXUS Campaign Management UI
 ==================================================
 
-Campaign management user interface for [RTB4Free](http://ad.nexus/)
+Campaign management user interface for [Adnexus](http://ad.nexus/)
 
 An image of this repo is available directly from [Docker Hub](https://hub.docker.com/r/adnexus/campaign-manager/)
 
@@ -36,7 +36,7 @@ git clone git@github.com:ADNEXUS/campaign-manager.git
 cd campaign-manager
 ```
 
-The RTB4Free campaign manager is a modern [Rails 8.x application](https://guides.rubyonrails.org/), and can be installed and managed in the standard Rails fashion:
+The Adnexus campaign manager is a modern [Rails 8.x application](https://guides.rubyonrails.org/), and can be installed and managed in the standard Rails fashion:
 
 Install using Rails:
 
@@ -83,4 +83,4 @@ There are various ways of getting support:
 
 * Email us at [support@ad.nexus](mailto://support@ad.nexus)
 * Add a Github issue:  [github.com/adnexus/campaignmanager/issues](https://github.com/adnexus/campaignmanager/issues)
-* Join the [RTB4Free Slack Channel](https://join.slack.com/t/adnexus/shared_invite/enQtNjYxNzc3NTQwMzIwLTlkNWYyMzY0NzA3MTNmMjc2M2I0NzkxYjE0NGIwYTljMjQ2YzAwYTBmMTJhNWM0ZDc0NTljNTA3NzFjNzZlNDI)
+* Join the [Adnexus Slack Channel](https://join.slack.com/t/adnexus/shared_invite/enQtNjYxNzc3NTQwMzIwLTlkNWYyMzY0NzA3MTNmMjc2M2I0NzkxYjE0NGIwYTljMjQ2YzAwYTBmMTJhNWM0ZDc0NTljNTA3NzFjNzZlNDI)
