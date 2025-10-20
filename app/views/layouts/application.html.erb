@@ -1,34 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <title><%=CUSTOMER_NAME%></title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= favicon_link_tag 'favicon.ico' %>
-    <link rel="apple-touch-icon" href=/"images/icons/favicon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/icons/favicon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/icons/favicon-114x114.png">
-
-    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700">
-    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,700,300">
 
     <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "styles/font-awesome.min" %>
-    <%= stylesheet_link_tag "styles/animate" %>
-    <%= stylesheet_link_tag "styles/all" %>
-    <%= stylesheet_link_tag "styles/main" %>
-    <%= stylesheet_link_tag "styles/style-responsive" %>
-    <%= stylesheet_link_tag "styles/pace" %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-
-    <style>
-    </style>
 
     <%= csrf_meta_tags %>
     <%= javascript_importmap_tags %>
 </head>
-<body class="left-side-collapsed">
+<body class="h-full" data-controller="darkmode sidebar">
     <div>
         <!--BEGIN BACK TO TOP-->
         <a id="totop" href="#"><i class="fa fa-angle-up"></i></a>
@@ -38,20 +24,38 @@
             <nav id="topbar" role="navigation" style="margin-bottom: 0;" data-step="3" class="navbar navbar-default navbar-static-top">
             <div class="navbar-header">
 
-               <button type="button" data-toggle="collapse" data-target=".sidebar-collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+               <button
+                    type="button"
+                    data-action="click->sidebar#toggle"
+                    class="sidebar-toggle"
+                >
+                    <i class="fa fa-bars"></i>
+                </button>
 
-                <a id="logo" href="#" class="navbar-brand">
-                    <span class="logo-text"><%=image_tag("Twitter_bird_3_Icon_32.png")%> <%=CUSTOMER_NAME%></span>
-                    <span style="display: none" class="logo-text-icon">µ</span>
+                <a id="logo" href="/" class="navbar-brand">
+                    <%= image_tag("logo.png", alt: CUSTOMER_NAME, class: "h-8 inline-block dark:invert") %>
                 </a>
             </div>
             <div class="topbar-main">
-            <!--    <a id="menu-toggle" href="#" class="hidden-xs"><i class="fa fa-bars"></i></a>  -->
-                <span id="menu-toggle" class="navbar-expand-toggle hidden-xs">
+                <button
+                    type="button"
+                    data-action="click->sidebar#toggle"
+                    class="sidebar-toggle hidden-xs"
+                >
                     <i class="fa fa-bars"></i>
-                </span>
-                <ul class="nav navbar navbar-top-links navbar-right mbn">                    
+                </button>
+                <ul class="nav navbar navbar-top-links navbar-right mbn">
+                    <li>
+                        <button
+                            type="button"
+                            data-action="click->darkmode#toggle"
+                            class="dark-mode-toggle"
+                            title="Toggle dark mode"
+                        >
+                            <i class="fa fa-moon-o dark:hidden"></i>
+                            <i class="fa fa-sun-o hidden dark:inline"></i>
+                        </button>
+                    </li>
                     <li class="dropdown topbar-user">
                         <a data-hover="dropdown"  data-toggle="dropdown" href="#" class="dropdown-toggle"  >
                             <span class="hidden-xs"><%=current_user.name%></span>&nbsp;<span class="caret"></span>

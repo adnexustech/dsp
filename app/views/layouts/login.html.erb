@@ -1,52 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-    <title>Login</title>
+    <title><%=CUSTOMER_NAME%> - Login</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700">
-    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,700,300">
-
-    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
-    
-    <%= stylesheet_link_tag "styles/font-awesome.min" %>
-    <%= stylesheet_link_tag "styles/animate" %>
-    <%= stylesheet_link_tag "styles/all" %>
-    <%= stylesheet_link_tag "styles/main" %>
-    <%= stylesheet_link_tag "styles/style-responsive" %>
-    <%= stylesheet_link_tag "styles/pace" %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-
-
+    <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
+    <%= csrf_meta_tags %>
+    <%= javascript_importmap_tags %>
 </head>
-<body style="background: url('images/bg/bg.png') center center fixed;">
-    <div class="page-form">
-        <div class="panel panel-blue">
-            <div class="panel-body pan">
-                <div class="form-body pal">
-                    <div class="col-md-12 text-center">
-                        <h3 style="margin-top: -90px; ">
-                            <%=CUSTOMER_NAME%> Campaign Administration</h3>
-                        <br />
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                        </div>
-                        <div class="col-md-9 text-center">
-                            <p></p>
-                        </div>
-                    </div>
-                    <%= yield %>
-                </div>
-
+<body class="h-full bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900" data-controller="darkmode">
+    <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Logo and Title -->
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-white mb-2">
+                    <%=CUSTOMER_NAME%>
+                </h2>
+                <p class="text-gray-400 text-lg">
+                    Campaign Administration
+                </p>
             </div>
-        </div>
-        <div class="col-lg-12 text-center">
-            <p>
-            </p>
+
+            <!-- Login Form Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 space-y-6">
+                <%= yield %>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center">
+                <p class="text-gray-500 text-sm">
+                    &copy; <%= Time.now.year %> <%=CUSTOMER_NAME%>. All rights reserved.
+                </p>
+            </div>
         </div>
     </div>
 </body>
