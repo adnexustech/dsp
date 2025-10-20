@@ -9,10 +9,10 @@ gem 'rails', '~> 8.0.0'
 gem 'mysql2', '~> 0.5'
 
 # Asset Pipeline - Using Sprockets instead of Rails 8 default (Propshaft)
-# This maintains compatibility with existing SASS and CoffeeScript assets
+# TODO: Migrate to Propshaft + Importmap for Rails 8 best practices
 gem 'sprockets-rails', '~> 3.5'
 gem 'sass-rails', '~> 6.0'
-gem 'coffee-rails', '~> 5.0'
+# gem 'coffee-rails', '~> 5.0'  # REMOVED: Migrated all CoffeeScript to TypeScript
 gem 'terser', '~> 1.1'  # Replaces uglifier for JS compression
 
 # JavaScript
