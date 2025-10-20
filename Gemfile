@@ -42,6 +42,9 @@ gem 's3_direct_upload'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
 
+# CSV library (removed from Ruby 3.4 stdlib)
+gem 'csv'
+
 group :development, :test do
   # Debugging
   gem 'debug', platforms: %i[ mri mingw x64_mingw ]
