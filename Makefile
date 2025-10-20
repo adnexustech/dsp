@@ -29,16 +29,16 @@ help:
 
 # Installation
 install:
-	bundle install
+	/opt/homebrew/opt/ruby/bin/bundle install
 
 # Database setup (uses defaults from config/database.yml)
 db-setup:
 	@echo "Creating database..."
-	RUBYOPT="-W0" bundle exec rails db:create
+	RUBYOPT="-W0" bin/rails db:create
 	@echo "Running migrations..."
-	RUBYOPT="-W0" bundle exec rails db:migrate
+	RUBYOPT="-W0" bin/rails db:migrate
 	@echo "Seeding database..."
-	RUBYOPT="-W0" bundle exec rails db:seed
+	RUBYOPT="-W0" bin/rails db:seed
 	@echo "✅ Database setup complete!"
 	@echo ""
 	@echo "Login credentials:"
@@ -46,13 +46,13 @@ db-setup:
 	@echo "  Password: adnexus"
 
 db-migrate:
-	RUBYOPT="-W0" bundle exec rails db:migrate
+	RUBYOPT="-W0" bin/rails db:migrate
 
 db-reset:
-	RUBYOPT="-W0" bundle exec rails db:drop
-	RUBYOPT="-W0" bundle exec rails db:create
-	RUBYOPT="-W0" bundle exec rails db:migrate
-	RUBYOPT="-W0" bundle exec rails db:seed
+	RUBYOPT="-W0" bin/rails db:drop
+	RUBYOPT="-W0" bin/rails db:create
+	RUBYOPT="-W0" bin/rails db:migrate
+	RUBYOPT="-W0" bin/rails db:seed
 	@echo "✅ Database reset complete!"
 	@echo ""
 	@echo "Login credentials:"
@@ -60,7 +60,7 @@ db-reset:
 	@echo "  Password: adnexus"
 
 db-seed:
-	RUBYOPT="-W0" bundle exec rails db:seed
+	RUBYOPT="-W0" bin/rails db:seed
 
 # Development servers
 server:
@@ -69,7 +69,7 @@ server:
 	@echo ""
 	@echo "Login: demo@ad.nexus / adnexus"
 	@echo ""
-	RUBYOPT="-W0" bundle exec rails server -p 4000 -b 0.0.0.0
+	RUBYOPT="-W0" bin/rails server -p 4000 -b 0.0.0.0
 
 dev:
 	@echo "Starting development environment..."
@@ -83,12 +83,12 @@ dev:
 	else \
 		echo "Foreman not found. Install with: gem install foreman"; \
 		echo "Starting Rails server only..."; \
-		RUBYOPT="-W0" bundle exec rails server -p 4000 -b 0.0.0.0; \
+		RUBYOPT="-W0" bin/rails server -p 4000 -b 0.0.0.0; \
 	fi
 
 # Console
 console:
-	RUBYOPT="-W0" bundle exec rails console
+	RUBYOPT="-W0" bin/rails console
 
 # Testing
 test:

@@ -13,8 +13,9 @@ development:
   database: <%= ENV['DB_NAME'] || 'adnexus_dev' %>
   port: <%= ENV['DB_PORT'] || 3306 %>
   host: <%= ENV['DB_HOST'] || 'localhost' %>
-  username: <%= ENV['DB_USERNAME'] || 'adnexus' %>
-  password: <%= ENV['DB_PASSWORD'] || 'adnexus' %>
+  # MariaDB homebrew installation doesn't require auth
+  username: <%= ENV['DB_USERNAME'] || '' %>
+  password: <%= ENV['DB_PASSWORD'] || '' %>
 
 test:
   <<: *default

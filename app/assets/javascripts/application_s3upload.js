@@ -11,5 +11,5 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require s3_direct_upload
-//= require s3_fbmedia_update
+// Removed: s3_fbmedia_update - migrated to Stimulus controllers
 

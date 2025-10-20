@@ -152,8 +152,7 @@
             <!--END PAGE WRAPPER-->
         </div>
     </div>
-     <%= javascript_include_tag 'application' %>
-     <%= javascript_include_tag  params[:controller] %>
+     <%= javascript_include_tag 'vendor_libs' %>
      <%= yield(:javascript) if content_for?(:javascript) %>
 
 </body>
