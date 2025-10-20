@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '~> 3.3.0'
+ruby '>= 3.3.0'
 
 # Rails 8.0
 gem 'rails', '~> 8.0.0'
@@ -46,6 +46,24 @@ group :development, :test do
   # Debugging
   gem 'debug', platforms: %i[ mri mingw x64_mingw ]
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+
+  # Testing Framework
+  gem 'rspec-rails', '~> 7.0'
+  gem 'factory_bot_rails', '~> 6.4'
+  gem 'faker', '~> 3.5'
+  gem 'shoulda-matchers', '~> 6.0'
+end
+
+group :test do
+  # Test coverage
+  gem 'simplecov', require: false
+
+  # Mocking and stubbing
+  gem 'webmock', '~> 3.23'
+  gem 'vcr', '~> 6.3'
+
+  # Database cleaner
+  gem 'database_cleaner-active_record', '~> 2.2'
 end
 
 group :development do
