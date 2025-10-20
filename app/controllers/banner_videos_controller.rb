@@ -1,7 +1,7 @@
 class BannerVideosController < ApplicationController
   before_action :set_banner_video, only: [:show, :edit, :update, :destroy]
 
-  before_filter :authorize
+  before_action :authorize
 
   # GET /banner_videos
   # GET /banner_videos.json

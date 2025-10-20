@@ -1,4 +1,4 @@
-class ChangeDashedColumnNamesInCountries < ActiveRecord::Migration
+class ChangeDashedColumnNamesInCountries < ActiveRecord::Migration[4.2]
   def change
     remove_column :countries, :'itu-t_telephone_code', :string
     add_column :countries, :itu_t_telephone_code, :string

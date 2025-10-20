@@ -1,0 +1,142 @@
+# Docker Compose for Local Development
+# Usage: docker compose -f docker/compose.yml up
+
+version: '3.9'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    platform: linux/amd64  # For Apple Silicon compatibility
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rtb4free
+      MYSQL_DATABASE: rtb4free_dev
+      MYSQL_USER: rtb4free
+      MYSQL_PASSWORD: rtb4free
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prtb4free"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rtb4free_dev
+
+  # Elasticsearch (Optional - for reporting)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    platform: linux/amd64
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - rtb4free_dev
+    profiles:
+      - with-elasticsearch  # Start with: docker compose --profile with-elasticsearch up
+
+  # Redis (for caching and background jobs)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6385:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - rtb4free_dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Rails Web Application
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ..:/rails
+      - bundle_cache:/usr/local/bundle
+      - rails_cache:/rails/tmp/cache
+    ports:
+      - "3100:3000"
+    environment:
+      # Database
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USERNAME: rtb4free
+      DB_PASSWORD: rtb4free
+      DB_NAME: rtb4free_dev
+
+      # Redis
+      REDIS_URL: redis://redis:6379/0  # Internal Docker network uses 6379
+
+      # Rails
+      RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: "true"
+
+      # Application Settings
+      CUSTOMER_NAME: RTB4FREE-Dev
+      BIDDER_TIME_OFFSET: 0
+
+      # Elasticsearch (optional)
+      ELASTICSEARCH_ENABLE: "false"
+      ELASTICSEARCH_HOST: elasticsearch:9200
+      ELASTICSEARCH_KIBANA_URL: http://localhost:5601
+
+      # RTB Crosstalk
+      RTB_CROSSTALK_PORT: "8100"
+      RTB_CROSSTALK_USER: "ben*"
+      RTB_CROSSTALK_PASSWORD: "test"
+
+      # AWS S3 (use dummy values for dev)
+      AWS_ACCESS_KEY_S3: "development-key"
+      AWS_SECRET_KEY_S3: "development-secret"
+      AWS_REGION_S3: "us-east-1"
+      AWS_S3_BUCKET: "rtb4free-dev-bucket"
+
+      # Timezone
+      RTB_REPORT_TIMEZONE: "America/Los_Angeles"
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rtb4free_dev
+    stdin_open: true
+    tty: true
+    command: >
+      bash -c "
+        echo 'Waiting for database...';
+        bundle exec rails db:prepare;
+        echo 'Starting Rails server...';
+        bundle exec rails server -b 0.0.0.0 -p 3000
+      "
+
+volumes:
+  mysql_data:
+    driver: local
+  es_data:
+    driver: local
+  redis_data:
+    driver: local
+  bundle_cache:
+    driver: local
+  rails_cache:
+    driver: local
+
+networks:
+  rtb4free_dev:
+    name: rtb4free_dev_network
+    driver: bridge

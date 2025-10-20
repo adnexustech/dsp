@@ -1,7 +1,7 @@
 class TargetsController < ApplicationController
 
   before_action :set_target, only: [:show, :edit, :update, :destroy]
-  before_filter :authorize
+  before_action :authorize
   
   # GET /targets
   # GET /targets.json

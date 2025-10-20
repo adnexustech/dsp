@@ -6,7 +6,7 @@ class ListsController < ApplicationController
 
 	skip_before_action :verify_authenticity_token, only: [:upload]  # Fix for this error http://stackoverflow.com/questions/3364492/actioncontrollerinvalidauthenticitytoken
 
-	before_filter :authorize		
+	before_action :authorize		
 
   def index
     @lists = List.order(:name)

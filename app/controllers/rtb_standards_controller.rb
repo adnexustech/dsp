@@ -1,7 +1,7 @@
 class RtbStandardsController < ApplicationController
 
   before_action :set_rtb_standard, only: [:show, :edit, :update, :destroy]
-  before_filter :authorize
+  before_action :authorize
   
   # GET /rtb_standards
   # GET /rtb_standards.json

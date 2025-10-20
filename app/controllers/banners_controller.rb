@@ -1,7 +1,7 @@
 class BannersController < ApplicationController
   before_action :set_banner, only: [:show, :edit, :update, :destroy]
 
-  before_filter :authorize
+  before_action :authorize
 
   # GET /banners
   # GET /banners.json

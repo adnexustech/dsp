@@ -43,11 +43,11 @@ class BannerVideo < ApplicationRecord
         then
             errors.push("Daily cost #{sprintf('%.2f', cost)} greater than budget #{sprintf('%.2f', budget)}")
         end
-        if cost=self.hourly_cost and budget=self.hourly_budget and 
-           cost.to_f>0 and 
-           (cost.to_f > budget.to_f) 
+        if cost=self.hourly_cost and budget=self.hourly_budget and
+           cost.to_f>0 and
+           (cost.to_f > budget.to_f)
         then
-            errors.push("Daily cost #{sprintf('%.2f', cost)} greater than budget #{sprintf('%.2f', budget)}")
+            errors.push("Hourly cost #{sprintf('%.2f', cost)} greater than budget #{sprintf('%.2f', budget)}")
         end
         
       #  puts "Checking expire_time #{self.expire_time.to_i}, now #{Time.now.to_i}"

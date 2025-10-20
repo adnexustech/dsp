@@ -2,7 +2,7 @@ class DocumentsController < ApplicationController
 
     before_action :set_document, only: [:show, :edit, :update, :destroy ]
 
-	before_filter :authorize
+	before_action :authorize
 
 
     def index

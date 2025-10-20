@@ -1,7 +1,7 @@
 class DashboardsController < ApplicationController
 
 
-  before_filter :authorize
+  before_action :authorize
 
   def home
 

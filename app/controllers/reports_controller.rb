@@ -1,7 +1,7 @@
 class ReportsController < ApplicationController
 
 
-    before_filter :authorize
+    before_action :authorize
 
     def home      
          @offset = BIDDER_TIME_OFFSET   # Adjustment for differnt bidder time 
