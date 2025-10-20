@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DSP2 is the RTB4FREE Campaign Manager - a Rails 8 web application for managing real-time bidding (RTB) advertising campaigns. It provides campaign management, targeting, creative management (banners/videos), budget controls, and reporting for programmatic advertising.
+DSP2 is the ADNEXUS Campaign Manager - a Rails 8 web application for managing real-time bidding (RTB) advertising campaigns. It provides campaign management, targeting, creative management (banners/videos), budget controls, and reporting for programmatic advertising.
 
 **Technology Stack:**
 - Ruby 3.3.0
@@ -36,7 +36,7 @@ docker compose -f docker/compose.yml up --build
 docker compose -f docker/compose.yml exec web rake db:setup
 
 # Access application at http://localhost:3000
-# Default login: demo@rtb4free.com / rtb4free
+# Default login: demo@ad.nexus / adnexus
 ```
 
 **Local Development:**
@@ -142,7 +142,7 @@ app/
 
 config/
   initializers/
-    1_rtb4free.rb   # ⚠️ RTB4FREE configuration (contains security issues)
+    1_adnexus.rb   # ⚠️ ADNEXUS configuration (contains security issues)
     s3_direct_upload.rb  # AWS S3 upload configuration
 
   environments/   # Rails 8 environment configs
@@ -202,12 +202,12 @@ Rails 8 defaults to Propshaft, but this app uses **Sprockets** for backward comp
 ⚠️ **DO NOT DEPLOY TO PRODUCTION WITHOUT FIXING THESE:**
 
 ### 1. Remote Code Execution (RCE)
-**File:** `config/initializers/1_rtb4free.rb` lines 9, 16, 18, 20
+**File:** `config/initializers/1_adnexus.rb` lines 9, 16, 18, 20
 **Issue:** Uses `eval()` with environment variables, allowing arbitrary code execution
 **Fix:** Replace with safe JSON parsing or constant lookup
 
 ### 2. Hardcoded AWS Credentials
-**File:** `config/initializers/1_rtb4free.rb` lines 77-78
+**File:** `config/initializers/1_adnexus.rb` lines 77-78
 **Issue:** Real AWS keys in source code
 **Fix:** Move to Rails credentials: `rails credentials:edit`
 
@@ -238,11 +238,11 @@ Uses MySQL 8.0 with environment variable configuration:
 # config/database.yml
 development:
   adapter: mysql2
-  database: rtb4free_dev
+  database: adnexus_dev
   host: localhost
   port: 3306
-  username: rtb4free
-  password: rtb4free
+  username: adnexus
+  password: adnexus
 ```
 
 **Docker Environment Variables:**
@@ -350,7 +350,7 @@ docker compose -f compose.prod.yml up -d
 docker compose ps
 
 # Check database exists
-docker compose exec db mysql -u rtb4free -prtb4free -e "SHOW DATABASES;"
+docker compose exec db mysql -u adnexus -padnexus -e "SHOW DATABASES;"
 
 # Recreate database
 docker compose exec web rake db:setup
@@ -433,8 +433,8 @@ docker compose exec web bundle install
 
 ## Additional Resources
 
-- **RTB4FREE Documentation:** https://rtb4free.readthedocs.io
-- **Docker Hub:** https://hub.docker.com/r/rtb4free/campaign-manager
+- **ADNEXUS Documentation:** https://adnexus.readthedocs.io
+- **Docker Hub:** https://hub.docker.com/r/adnexus/campaign-manager
 - **Rails 8 Guides:** https://guides.rubyonrails.org/v8.0/
 - **Security Audit:** See `LLM.md` for comprehensive security report
 

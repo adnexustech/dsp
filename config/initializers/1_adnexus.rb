@@ -31,7 +31,7 @@ def env_replace(name, val, type="string")
 end
 
 # Header label
-env_replace("CUSTOMER_NAME","RTB4FREE-Demo")
+env_replace("CUSTOMER_NAME","ADNEXUS-Demo")
 
 # Bidder timezone offset from GMT. Assumes bidder time is GMT
 env_replace("BIDDER_TIME_OFFSET",0,"number")
@@ -40,11 +40,11 @@ env_replace("BIDDER_TIME_OFFSET",0,"number")
 #
 # Defaults for docker deploy
 #
-env_replace("RTB4FREE_DATABASE_HOST","localhost")
-env_replace("RTB4FREE_DATABASE_PORT",3306,"number")
-env_replace("RTB4FREE_DATABASE_USERNAME","root")
-env_replace("RTB4FREE_DATABASE_PASSWORD","")
-env_replace("RTB4FREE_DATABASE_NAME","rtb4free")
+env_replace("ADNEXUS_DATABASE_HOST","localhost")
+env_replace("ADNEXUS_DATABASE_PORT",3306,"number")
+env_replace("ADNEXUS_DATABASE_USERNAME","root")
+env_replace("ADNEXUS_DATABASE_PASSWORD","")
+env_replace("ADNEXUS_DATABASE_NAME","adnexus")
 
 
 #
@@ -89,7 +89,7 @@ env_replace("RTB_CROSSTALK_PASSWORD", "test")
 env_replace("AWS_ACCESS_KEY_S3", "XXXXXXXX")
 env_replace("AWS_SECRET_KEY_S3", "XXXXXXXX")
 env_replace("AWS_REGION_S3", "us-east-1")
-env_replace("AWS_S3_BUCKET", "my-rtb4free-bidder-lists")
+env_replace("AWS_S3_BUCKET", "my-adnexus-bidder-lists")
 env_replace("AWS_S3_BASE_URL", "https://s3.amazonaws.com/#{AWS_S3_BUCKET}")
 env_replace("RTB_REPORT_TIMEZONE", "America/Los_Angeles")
 

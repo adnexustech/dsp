@@ -1,4 +1,4 @@
-# Docker Setup for RTB4FREE Campaign Manager
+# Docker Setup for ADNEXUS Campaign Manager
 
 This directory contains Docker Compose configurations for running the Campaign Manager in different environments.
 
@@ -11,7 +11,7 @@ This directory contains Docker Compose configurations for running the Campaign M
 
 2. **Access the application:**
    - Open http://localhost:3000
-   - Default credentials: `demo@rtb4free.com` / `rtb4free`
+   - Default credentials: `demo@ad.nexus` / `adnexus`
 
 3. **Stop services:**
    ```bash
@@ -65,7 +65,7 @@ docker compose -f docker/compose.yml exec web bundle exec rails test
 
 **Access database:**
 ```bash
-docker compose -f docker/compose.yml exec db mysql -u rtb4free -prtb4free rtb4free_dev
+docker compose -f docker/compose.yml exec db mysql -u adnexus -padnexus adnexus_dev
 ```
 
 **Rebuild after Gemfile changes:**
@@ -149,7 +149,7 @@ docker compose -f docker/compose.prod.yml logs -f
 **Database backup:**
 ```bash
 docker compose -f docker/compose.prod.yml exec db \
-  mysqldump -u rtb4free -p rtb4free > backup_$(date +%Y%m%d).sql
+  mysqldump -u adnexus -p adnexus > backup_$(date +%Y%m%d).sql
 ```
 
 **Update to new version:**
@@ -230,7 +230,7 @@ docker compose -f docker/compose.yml down --rmi all
 - Change all default passwords in production
 - Enable SSL/TLS in production (use nginx profile)
 - Review security settings in `config/environments/production.rb`
-- Fix the `eval()` vulnerability in `config/initializers/1_rtb4free.rb` before production use
+- Fix the `eval()` vulnerability in `config/initializers/1_adnexus.rb` before production use
 
 ## Performance Tuning
 

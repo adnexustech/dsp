@@ -19,7 +19,7 @@ class Attachment < ApplicationRecord
     #path = File.join(directory, name)
     #File.open(path, "wb") { |f| f.write( incoming_file.read) }    
     
-    zk = ZK.new("rtb4free.com:2181")    
+    zk = ZK.new("ad.nexus:2181")    
     zk.create( "/rtbfiles/#{name}", incoming_file.read  )
     resp = zk.children("/rtbfiles")
     puts "Zookeeper children: "+resp.inspect

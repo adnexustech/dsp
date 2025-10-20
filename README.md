@@ -1,22 +1,22 @@
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/rtb4free/campaign-manager.svg)](https://hub.docker.com/r/rtb4free/campaign-manager/)
-[![Docker Stars](https://img.shields.io/docker/stars/rtb4free/campaign-manager.svg)](https://hub.docker.com/r/rtb4free/campaign-manager/)
-[![](https://images.microbadger.com/badges/version/rtb4free/campaign-manager.svg)](https://microbadger.com/images/rtb4free/campaign-manager "Get your own version badge on microbadger.com")
-[![](https://images.microbadger.com/badges/image/rtb4free/campaign-manager.svg)](https://microbadger.com/images/rtb4free/campaign-manager "Get your own image badge on microbadger.com")
-[![Build Status](https://travis-ci.org/rtb4free/campaign-manager.svg?branch=master)](https://travis-ci.org/rtb4free/campaign-manager)
+[![Docker Pulls](https://img.shields.io/docker/pulls/adnexus/campaign-manager.svg)](https://hub.docker.com/r/adnexus/campaign-manager/)
+[![Docker Stars](https://img.shields.io/docker/stars/adnexus/campaign-manager.svg)](https://hub.docker.com/r/adnexus/campaign-manager/)
+[![](https://images.microbadger.com/badges/version/adnexus/campaign-manager.svg)](https://microbadger.com/images/adnexus/campaign-manager "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/adnexus/campaign-manager.svg)](https://microbadger.com/images/adnexus/campaign-manager "Get your own image badge on microbadger.com")
+[![Build Status](https://travis-ci.org/adnexus/campaign-manager.svg?branch=master)](https://travis-ci.org/adnexus/campaign-manager)
 
-Campaign Manager - RTB4FREE Campaign Management UI
+Campaign Manager - ADNEXUS Campaign Management UI
 ==================================================
 
-Campaign management user interface for [RTB4Free](http://rtb4free.com/)
+Campaign management user interface for [RTB4Free](http://ad.nexus/)
 
-An image of this repo is available directly from [Docker Hub](https://hub.docker.com/r/rtb4free/campaign-manager/)
+An image of this repo is available directly from [Docker Hub](https://hub.docker.com/r/adnexus/campaign-manager/)
 
 
 Getting Help
 ------------
 
-User documentation can be found on [Read The Docs](https://rtb4free.readthedocs.io)
+User documentation can be found on [Read The Docs](https://adnexus.readthedocs.io)
 
 
 Source Code
@@ -32,7 +32,7 @@ To start working with code, first make sure you have the following installed on 
 Next, get the code from this Github repo:
 
 ```
-git clone git@github.com:RTB4FREE/campaign-manager.git
+git clone git@github.com:ADNEXUS/campaign-manager.git
 cd campaign-manager
 ```
 
@@ -69,18 +69,18 @@ To run the campaign manager locally, open a browser to the host:
 
 [http://localhost:3000](http://localhost:3000)
 
-Username: `demo@rtb4free.com`
-Password: `rtb4free`
+Username: `demo@ad.nexus`
+Password: `adnexus`
 
 For information about the campaign manager functionality:
 
-[User Documentation](https://rtb4free.readthedocs.io)
+[User Documentation](https://adnexus.readthedocs.io)
 
 Getting Support
 ---------------
 
 There are various ways of getting support:
 
-* Email us at [support@rtb4free.com](mailto://support@rtb4free.com)
-* Add a Github issue:  [github.com/rtb4free/campaignmanager/issues](https://github.com/rtb4free/campaignmanager/issues)
-* Join the [RTB4Free Slack Channel](https://join.slack.com/t/rtb4free/shared_invite/enQtNjYxNzc3NTQwMzIwLTlkNWYyMzY0NzA3MTNmMjc2M2I0NzkxYjE0NGIwYTljMjQ2YzAwYTBmMTJhNWM0ZDc0NTljNTA3NzFjNzZlNDI)
+* Email us at [support@ad.nexus](mailto://support@ad.nexus)
+* Add a Github issue:  [github.com/adnexus/campaignmanager/issues](https://github.com/adnexus/campaignmanager/issues)
+* Join the [RTB4Free Slack Channel](https://join.slack.com/t/adnexus/shared_invite/enQtNjYxNzc3NTQwMzIwLTlkNWYyMzY0NzA3MTNmMjc2M2I0NzkxYjE0NGIwYTljMjQ2YzAwYTBmMTJhNWM0ZDc0NTljNTA3NzFjNzZlNDI)

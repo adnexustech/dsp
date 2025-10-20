@@ -10,15 +10,15 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV['DB_NAME'] || 'rtb4free_dev' %>
+  database: <%= ENV['DB_NAME'] || 'adnexus_dev' %>
   port: <%= ENV['DB_PORT'] || 3306 %>
   host: <%= ENV['DB_HOST'] || 'localhost' %>
-  username: <%= ENV['DB_USERNAME'] || 'rtb4free' %>
-  password: <%= ENV['DB_PASSWORD'] || 'rtb4free' %>
+  username: <%= ENV['DB_USERNAME'] || 'adnexus' %>
+  password: <%= ENV['DB_PASSWORD'] || 'adnexus' %>
 
 test:
   <<: *default
-  database: <%= ENV['DB_NAME'] || 'rtb4free_test' %>
+  database: <%= ENV['DB_NAME'] || 'adnexus_test' %>
 
 production:
   <<: *default

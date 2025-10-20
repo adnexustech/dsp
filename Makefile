@@ -34,44 +34,44 @@ install:
 # Database setup
 db-setup:
 	@echo "Creating database..."
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails db:create
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails db:create
 	@echo "Running migrations..."
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails db:migrate
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails db:migrate
 	@echo "Database setup complete!"
 
 db-migrate:
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails db:migrate
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails db:migrate
 
 db-reset:
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails db:drop
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails db:create
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails db:migrate
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails db:drop
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails db:create
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails db:migrate
 	@echo "Database reset complete!"
 
 db-seed:
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails db:seed
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails db:seed
 
 # Development servers
 server:
 	@echo "Starting Rails server on http://localhost:4000"
 	@echo "Stop with Ctrl+C"
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free RUBYOPT="-W0" bundle exec rails server -p 4000 -b 0.0.0.0
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus RUBYOPT="-W0" bundle exec rails server -p 4000 -b 0.0.0.0
 
 dev:
 	@echo "Starting development environment..."
 	@echo "Rails server: http://localhost:4000"
 	@echo "Stop with Ctrl+C"
 	@if command -v foreman >/dev/null 2>&1; then \
-		DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free RUBYOPT="-W0" foreman start -f Procfile.dev; \
+		DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus RUBYOPT="-W0" foreman start -f Procfile.dev; \
 	else \
 		echo "Foreman not found. Install with: gem install foreman"; \
 		echo "Starting Rails server only..."; \
-		DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free RUBYOPT="-W0" bundle exec rails server -p 4000 -b 0.0.0.0; \
+		DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus RUBYOPT="-W0" bundle exec rails server -p 4000 -b 0.0.0.0; \
 	fi
 
 # Console
 console:
-	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=rtb4free DB_PASSWORD=rtb4free bundle exec rails console
+	DB_HOST=127.0.0.1 DB_PORT=3306 DB_USERNAME=adnexus DB_PASSWORD=adnexus bundle exec rails console
 
 # Testing
 test:
