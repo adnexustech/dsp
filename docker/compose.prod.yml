@@ -1,0 +1,191 @@
+# Docker Compose for Production
+# Usage: docker compose -f docker/compose.prod.yml up -d
+
+version: '3.9'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    platform: linux/amd64
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-rtb4free}
+      MYSQL_USER: ${DB_USERNAME:-rtb4free}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    networks:
+      - rtb4free_prod
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis (for caching and background jobs)
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - rtb4free_prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Elasticsearch (for reporting)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    platform: linux/amd64
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - rtb4free_prod
+    restart: unless-stopped
+    healthcheck:
+      test: curl -s http://localhost:9200 >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Rails Web Application
+  web:
+    image: ${DOCKER_IMAGE:-rtb4free/campaign-manager:latest}
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      # Database
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USERNAME: ${DB_USERNAME:-rtb4free}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME:-rtb4free}
+
+      # Redis
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+
+      # Rails
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+
+      # Application Settings
+      CUSTOMER_NAME: ${CUSTOMER_NAME:-RTB4FREE}
+      BIDDER_TIME_OFFSET: ${BIDDER_TIME_OFFSET:-0}
+
+      # Elasticsearch
+      ELASTICSEARCH_ENABLE: ${ELASTICSEARCH_ENABLE:-true}
+      ELASTICSEARCH_HOST: elasticsearch:9200
+      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
+
+      # RTB Crosstalk
+      RTB_CROSSTALK_PORT: ${RTB_CROSSTALK_PORT:-8100}
+      RTB_CROSSTALK_USER: ${RTB_CROSSTALK_USER}
+      RTB_CROSSTALK_PASSWORD: ${RTB_CROSSTALK_PASSWORD}
+
+      # AWS S3
+      AWS_ACCESS_KEY_S3: ${AWS_ACCESS_KEY_S3}
+      AWS_SECRET_KEY_S3: ${AWS_SECRET_KEY_S3}
+      AWS_REGION_S3: ${AWS_REGION_S3:-us-east-1}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+
+      # Timezone
+      RTB_REPORT_TIMEZONE: ${RTB_REPORT_TIMEZONE:-America/Los_Angeles}
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rtb4free_prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  # Nginx Reverse Proxy (optional)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_cache:/var/cache/nginx
+      - ssl_certs:/etc/nginx/ssl:ro
+    depends_on:
+      - web
+    networks:
+      - rtb4free_prod
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    profiles:
+      - with-nginx
+
+volumes:
+  mysql_data:
+    driver: local
+  es_data:
+    driver: local
+  redis_data:
+    driver: local
+  nginx_cache:
+    driver: local
+  ssl_certs:
+    driver: local
+
+networks:
+  rtb4free_prod:
+    name: rtb4free_prod_network
+    driver: bridge

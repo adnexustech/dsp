@@ -1,69 +1,61 @@
 source 'https://rubygems.org'
 
+ruby '~> 3.3.0'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.11'
-# Use sqlite3 as the database for Active Record
-#gem 'sqlite3'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+# Rails 8.0
+gem 'rails', '~> 8.0.0'
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-#gem 'turbolinks'   # Disable - messes up javascript loads. PL
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+# Database
+gem 'mysql2', '~> 0.5'
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+# Asset Pipeline - Using Sprockets instead of Rails 8 default (Propshaft)
+# This maintains compatibility with existing SASS and CoffeeScript assets
+gem 'sprockets-rails', '~> 3.5'
+gem 'sass-rails', '~> 6.0'
+gem 'coffee-rails', '~> 5.0'
+gem 'terser', '~> 1.1'  # Replaces uglifier for JS compression
 
-# Use Unicorn as the app server
-# gem 'unicorn'
+# JavaScript
+gem 'jquery-rails', '~> 4.6'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+# JSON APIs
+gem 'jbuilder', '~> 2.13'
 
-gem "nokogiri", ">= 1.8.5"
-gem "sprockets", ">= 3.7.2"
-gem "activejob", ">= 4.2.11"
-gem "rack", ">= 1.6.11"
-gem "rails-html-sanitizer", ">= 1.0.4"
-gem "loofah", ">= 2.2.3"
-gem "actionview", ">= 4.2.7.1"
-gem "activerecord", ">= 4.2.7.1"
-
-
-gem "mysql2"
-gem 'bootstrap_form'
+# Security
 gem 'bcrypt', '~> 3.1.7'
+
+# Bootstrap & UI
+gem 'bootstrap_form', '~> 5.0'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
-# elasticsearch gem version must match your elasticsearch version.
-gem "elasticsearch", '>= 6'
-gem 'puma'
-gem 'aws-sdk'
+
+# Search
+gem 'elasticsearch', '~> 8.0'
+
+# Web Server
+gem 'puma', '~> 6.0'
+
+# AWS
+gem 'aws-sdk-s3', '~> 1.0'  # Use specific S3 gem instead of full aws-sdk
 gem 's3_direct_upload'
 
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', require: false
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
+  # Debugging
+  gem 'debug', platforms: %i[ mri mingw x64_mingw ]
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
 
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-  # Allow devs to generate seed info to the DB
+  # Development console
+  gem 'web-console', '~> 4.0'
+
+  # Database seeding
   gem 'seed_dump'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+
+  # Speed up development
+  # Note: Spring may have compatibility issues with Rails 8
+  # gem 'spring'
 end

@@ -3,20 +3,48 @@
 # Version of your assets, change this if you want to expire all your assets.
 Rails.application.config.assets.version = '1.0'
 
-# Add additional assets to the asset load path
-# Rails.application.config.assets.paths << Emoji.images_path
-
+# Add additional assets to the asset load path.
+# Rails.application.config.assets.paths << Rails.root.join("node_modules")
 
 # Precompile additional assets.
-# application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
+# application.js, application.css, and all non-JS/CSS in the app/assets
+# folder are already added.
 Rails.application.config.assets.paths << Rails.root.join("app", "assets", "fonts")
 Rails.application.config.assets.paths << Rails.root.join("app", "assets", "stylesheets")
-Rails.application.config.assets.precompile += [ "styles/*",  "styles/flat/*","styles/futurico/*","styles/line/*","styles/minimal/*","styles/polaris/*","styles/square/*"]
-Rails.application.config.assets.precompile += %w( .svg .eot .woff .ttf )
-Dir[Rails.root.join('app/controllers/*_controller.rb')].map { |path| (path.match(/(\w+)_controller.rb/); $1) }.each do |controller|
-  Rails.application.config.assets.precompile += ["#{controller}.js.coffee","#{controller}.coffee", "#{controller}.css"]
+
+# Precompile style variations
+Rails.application.config.assets.precompile += [
+  "styles/*",
+  "styles/flat/*",
+  "styles/futurico/*",
+  "styles/line/*",
+  "styles/minimal/*",
+  "styles/polaris/*",
+  "styles/square/*"
+]
+
+# Precompile font files
+Rails.application.config.assets.precompile += %w( .svg .eot .woff .ttf .woff2 )
+
+# Precompile per-controller assets (Rails 4 pattern - consider refactoring)
+# Note: This pattern is deprecated and should be migrated to modern asset bundling
+Dir[Rails.root.join('app/controllers/*_controller.rb')].each do |path|
+  if match = path.match(/(\w+)_controller.rb/)
+    controller = match[1]
+    Rails.application.config.assets.precompile += [
+      "#{controller}.js.coffee",
+      "#{controller}.coffee",
+      "#{controller}.css",
+      "#{controller}.js"
+    ]
+  end
 end
-Rails.application.config.assets.precompile += %w( application_scriptedit.js application_s3upload.js )
+
+# Additional JavaScript files
+Rails.application.config.assets.precompile += %w(
+  application_scriptedit.js
+  application_s3upload.js
+)
 
 
 
