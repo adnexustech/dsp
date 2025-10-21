@@ -7,13 +7,16 @@ export default class extends Controller {
   connect() {
     // Create overlay for mobile
     this.createOverlay()
-    
+
+    // Restore pinned state from localStorage
+    this.restorePinnedState()
+
     // Desktop: sidebar always visible
     // Mobile: sidebar hidden by default
     if (window.innerWidth <= 768) {
       this.closeMobile()
     }
-    
+
     // Handle window resize
     window.addEventListener('resize', () => {
       if (window.innerWidth > 768) {
@@ -34,6 +37,26 @@ export default class extends Controller {
       this.overlay.className = 'sidebar-overlay'
       this.overlay.addEventListener('click', () => this.closeMobile())
       document.body.appendChild(this.overlay)
+    }
+  }
+
+  // Pin/unpin sidebar (desktop only)
+  togglePin() {
+    const sidebar = document.getElementById('sidebar')
+    const isPinned = sidebar.classList.toggle('sidebar-pinned')
+    document.body.classList.toggle('sidebar-pinned', isPinned)
+    
+    // Save state to localStorage
+    localStorage.setItem('sidebarPinned', isPinned ? 'true' : 'false')
+  }
+
+  // Restore pinned state from localStorage
+  restorePinnedState() {
+    const isPinned = localStorage.getItem('sidebarPinned') === 'true'
+    if (isPinned) {
+      const sidebar = document.getElementById('sidebar')
+      sidebar.classList.add('sidebar-pinned')
+      document.body.classList.add('sidebar-pinned')
     }
   }
 

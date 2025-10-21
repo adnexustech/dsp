@@ -20,10 +20,14 @@ class BannersController < ApplicationController
     @banner.frequency_spec = "device.ip" if @banner.frequency_spec.to_s.empty?
     @banner.interval_start ||= Time.now
     @banner.interval_end ||= Time.now
+    @campaigns = Campaign.order(:name)
+    @rtb_standards = RtbStandard.order(:name)
   end
 
   # GET /banners/1/edit
   def edit
+    @campaigns = Campaign.order(:name)
+    @rtb_standards = RtbStandard.order(:name)
   end
 
   # POST /banners
@@ -108,10 +112,10 @@ class BannersController < ApplicationController
       
       # Convert datepicker strings to time objects
       if str = params[:interval_start] 
-        params[:banner][:interval_start] = Time.strptime(str, "%m/%d/%Y %H:%M")     #"11/17/2016 1:37 PM"      
+        params[:banner][:interval_start] = Time.strptime(str, "%m-%d-%Y %H%M")     #"11/17/2016 1:37 PM"      
       end
       if str = params[:interval_end] 
-        params[:banner][:interval_end] =  Time.strptime(str, "%m/%d/%Y %H:%M")  
+        params[:banner][:interval_end] =  Time.strptime(str, "%m-%d-%Y %H%M")  
       end
       
       if params[:size_match_type].eql?("none")

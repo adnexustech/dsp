@@ -1,196 +1,188 @@
 <% content_for :breadcrumb do %>
-<div class="page-header pull-left">
-  <div class="page-title">Account Overview</div>
-</div>
-<ol class="breadcrumb page-breadcrumb pull-right">
-  <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+<ol class="breadcrumb page-breadcrumb">
+  <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+  <li><i class="fa fa-angle-right"></i></li>
   <li class="active">My Account</li>
 </ol>
+<div class="page-header">
+  <div class="page-title">Account Overview</div>
+</div>
 <%end%>
 
 <% content_for :main_body do %>
 <div class="page-content">
   <!-- Quick Stats -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-    <div class="stat-card">
+  <div class="grid grid-cols-4 gap-4 mb-8">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-zinc-700 hover:shadow-lg transition-all">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-gray-400 text-sm font-medium">Credits Balance</span>
-        <i class="fa fa-dollar text-green-500 text-xl"></i>
+        <span class="text-zinc-400 text-sm font-medium">Credits Balance</span>
+        <i class="fa-solid fa-dollar-sign text-green-500 text-lg"></i>
       </div>
-      <div class="stat-value text-green-500">$<%= '%.2f' % @user.credits_balance %></div>
-      <a href="<%= new_credit_path %>" class="text-green-500 hover:text-green-400 text-xs mt-2 inline-block">Add Credits →</a>
+      <div class="text-3xl font-bold text-green-500 my-2">$<%= '%.2f' % @user.credits_balance %></div>
+      <a href="<%= new_credit_path %>" class="text-green-500 hover:text-green-400 text-xs inline-block">Add Credits →</a>
     </div>
 
-    <div class="stat-card">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-zinc-700 hover:shadow-lg transition-all">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-gray-400 text-sm font-medium">Subscription</span>
-        <i class="fa fa-credit-card text-blue-500 text-xl"></i>
+        <span class="text-zinc-400 text-sm font-medium">Subscription</span>
+        <i class="fa-regular fa-credit-card text-blue-500 text-lg"></i>
       </div>
-      <div class="stat-value"><%= @user.subscription_plan&.titleize || 'Free' %></div>
+      <div class="text-3xl font-bold text-white my-2"><%= @user.subscription_plan&.titleize || 'Free' %></div>
       <% if @user.active_subscription? %>
-        <span class="text-green-500 text-xs mt-2 inline-block">● Active</span>
+        <span class="text-green-500 text-xs inline-block">● Active</span>
       <% else %>
-        <a href="<%= new_subscription_path %>" class="text-blue-500 hover:text-blue-400 text-xs mt-2 inline-block">Upgrade →</a>
+        <a href="<%= new_subscription_path %>" class="text-blue-500 hover:text-blue-400 text-xs inline-block">Upgrade →</a>
       <% end %>
     </div>
 
-    <div class="stat-card">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-zinc-700 hover:shadow-lg transition-all">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-gray-400 text-sm font-medium">Active Campaigns</span>
-        <i class="fa fa-bullhorn text-purple-500 text-xl"></i>
+        <span class="text-zinc-400 text-sm font-medium">Active Campaigns</span>
+        <i class="fa-solid fa-bullhorn text-purple-500 text-lg"></i>
       </div>
-      <div class="stat-value"><%= Campaign.count %></div>
-      <a href="<%= campaigns_path %>" class="text-gray-400 hover:text-gray-300 text-xs mt-2 inline-block">View All →</a>
+      <div class="text-3xl font-bold text-white my-2"><%= Campaign.count %></div>
+      <a href="<%= campaigns_path %>" class="text-zinc-400 hover:text-white text-xs inline-block">View All →</a>
     </div>
 
-    <div class="stat-card">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-zinc-700 hover:shadow-lg transition-all">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-gray-400 text-sm font-medium">Member Since</span>
-        <i class="fa fa-calendar text-gray-500 text-xl"></i>
+        <span class="text-zinc-400 text-sm font-medium">Member Since</span>
+        <i class="fa-regular fa-calendar text-zinc-500 text-lg"></i>
       </div>
-      <div class="text-2xl font-bold text-white"><%= @user.created_at.strftime('%b %Y') %></div>
-      <p class="text-gray-500 text-xs mt-2">Active account</p>
+      <div class="text-3xl font-bold text-white my-2"><%= @user.created_at.strftime('%b %Y') %></div>
+      <p class="text-zinc-500 text-xs">Active account</p>
     </div>
   </div>
 
   <!-- Main Content Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+  <div class="grid grid-cols-2 gap-4 mb-8">
     <!-- Profile Information -->
-    <div class="card">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-white flex items-center">
-          <i class="fa fa-user text-gray-400 mr-3"></i>
+        <h2 class="text-xl font-semibold flex items-center gap-3">
+          <i class="fa-regular fa-user text-zinc-400 text-lg"></i>
           Profile Information
         </h2>
-        <button onclick="document.getElementById('editProfileModal').classList.remove('hidden')" class="text-sm text-blue-500 hover:text-blue-400">
-          <i class="fa fa-pencil"></i> Edit
+        <button onclick="document.getElementById('editProfileModal').classList.remove('hidden')" class="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors">
+          <i class="fa-solid fa-pencil text-xs"></i>
+          Edit
         </button>
       </div>
 
       <div class="space-y-4">
-        <div class="flex justify-between border-b border-gray-800 pb-3">
-          <span class="text-gray-400">Name</span>
-          <span class="text-white font-medium"><%= @user.name %></span>
+        <div class="flex justify-between border-b border-zinc-800 pb-3">
+          <span class="text-zinc-400">Name</span>
+          <span class="font-medium"><%= @user.name %></span>
         </div>
-        <div class="flex justify-between border-b border-gray-800 pb-3">
-          <span class="text-gray-400">Email</span>
-          <span class="text-white"><%= @user.email %></span>
+        <div class="flex justify-between border-b border-zinc-800 pb-3">
+          <span class="text-zinc-400">Email</span>
+          <span><%= @user.email %></span>
         </div>
-        <div class="flex justify-between border-b border-gray-800 pb-3">
-          <span class="text-gray-400">Member Since</span>
-          <span class="text-white"><%= @user.created_at.strftime('%B %d, %Y') %></span>
+        <div class="flex justify-between border-b border-zinc-800 pb-3">
+          <span class="text-zinc-400">Member Since</span>
+          <span><%= @user.created_at.strftime('%B %d, %Y') %></span>
         </div>
         <div class="flex justify-between">
-          <span class="text-gray-400">Account Type</span>
+          <span class="text-zinc-400">Account Type</span>
           <% if @user.admin %>
-            <span class="px-2 py-1 bg-red-900 text-red-200 text-xs rounded">Administrator</span>
+            <span class="px-3 py-1 bg-red-500/10 text-red-400 text-xs font-medium rounded-full border border-red-500/20">Administrator</span>
           <% else %>
-            <span class="px-2 py-1 bg-blue-900 text-blue-200 text-xs rounded">User</span>
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-medium rounded-full border border-blue-500/20">User</span>
           <% end %>
         </div>
       </div>
     </div>
 
     <!-- Quick Links -->
-    <div class="card">
-      <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-        <i class="fa fa-link text-gray-400 mr-3"></i>
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg">
+      <h2 class="text-xl font-semibold mb-6 flex items-center gap-3">
+        <i class="fa-solid fa-link text-zinc-400 text-lg"></i>
         Quick Links
       </h2>
 
-      <div class="space-y-2">
-        <a href="<%= credits_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
-          <div class="flex items-center">
-            <i class="fa fa-dollar text-green-500 w-8"></i>
-            <span class="text-white">Credits & Wallet</span>
+      <div class="space-y-1">
+        <a href="<%= credits_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-dollar-sign text-green-500 w-5 text-center"></i>
+            <span>Credits & Wallet</span>
           </div>
-          <div class="flex items-center">
-            <span class="text-green-500 font-medium mr-2">$<%= '%.2f' % @user.credits_balance %></span>
-            <i class="fa fa-chevron-right text-gray-600"></i>
-          </div>
-        </a>
-
-        <a href="<%= subscriptions_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
-          <div class="flex items-center">
-            <i class="fa fa-credit-card text-blue-500 w-8"></i>
-            <span class="text-white">Subscription & Billing</span>
-          </div>
-          <div class="flex items-center">
-            <span class="px-2 py-1 bg-blue-900 text-blue-200 text-xs rounded mr-2"><%= @user.subscription_plan&.titleize || 'Free' %></span>
-            <i class="fa fa-chevron-right text-gray-600"></i>
+          <div class="flex items-center gap-2">
+            <span class="text-green-500 font-semibold">$<%= '%.2f' % @user.credits_balance %></span>
+            <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 transition-colors text-xs"></i>
           </div>
         </a>
 
-        <a href="<%= invoices_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
-          <div class="flex items-center">
-            <i class="fa fa-file-text text-gray-400 w-8"></i>
-            <span class="text-white">Invoices & Receipts</span>
+        <a href="<%= subscriptions_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group">
+          <div class="flex items-center gap-3">
+            <i class="fa-regular fa-credit-card text-blue-500 w-5 text-center"></i>
+            <span>Subscription & Billing</span>
           </div>
-          <i class="fa fa-chevron-right text-gray-600"></i>
-        </a>
-
-        <% if @user.stripe_customer_id %>
-          <a href="<%= portal_subscriptions_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
-            <div class="flex items-center">
-              <i class="fa fa-cog text-yellow-500 w-8"></i>
-              <span class="text-white">Manage Payment Methods</span>
-            </div>
-            <i class="fa fa-external-link text-gray-600"></i>
-          </a>
-        <% end %>
-
-        <a href="<%= campaigns_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
-          <div class="flex items-center">
-            <i class="fa fa-bullhorn text-red-500 w-8"></i>
-            <span class="text-white">My Campaigns</span>
-          </div>
-          <div class="flex items-center">
-            <span class="px-2 py-1 bg-gray-800 text-gray-300 text-xs rounded mr-2"><%= Campaign.count %></span>
-            <i class="fa fa-chevron-right text-gray-600"></i>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-medium rounded-full border border-blue-500/20"><%= @user.subscription_plan&.titleize || 'Free' %></span>
+            <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 transition-colors text-xs"></i>
           </div>
         </a>
 
-        <a href="<%= banners_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
-          <div class="flex items-center">
-            <i class="fa fa-image text-purple-500 w-8"></i>
-            <span class="text-white">My Banners</span>
+        <a href="<%= invoices_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group">
+          <div class="flex items-center gap-3">
+            <i class="fa-regular fa-file-lines text-zinc-400 w-5 text-center"></i>
+            <span>Invoices & Receipts</span>
           </div>
-          <i class="fa fa-chevron-right text-gray-600"></i>
+          <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 transition-colors text-xs"></i>
+        </a>
+
+        <a href="<%= campaigns_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-bullhorn text-red-500 w-5 text-center"></i>
+            <span>My Campaigns</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-zinc-800 text-zinc-300 text-xs font-medium rounded-full"><%= Campaign.count %></span>
+            <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 transition-colors text-xs"></i>
+          </div>
+        </a>
+
+        <a href="<%= banners_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group">
+          <div class="flex items-center gap-3">
+            <i class="fa-regular fa-image text-purple-500 w-5 text-center"></i>
+            <span>My Banners</span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 transition-colors text-xs"></i>
         </a>
       </div>
     </div>
   </div>
 
   <!-- Recent Activity -->
-  <div class="card">
-    <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-      <i class="fa fa-history text-gray-400 mr-3"></i>
+  <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg">
+    <h2 class="text-xl font-semibold mb-6 flex items-center gap-3">
+      <i class="fa-solid fa-clock-rotate-left text-zinc-400 text-lg"></i>
       Recent Activity
     </h2>
 
-    <% recent_transactions = @user.credit_transactions.recent.limit(5) %>
+    <% recent_transactions = @user.credit_transactions.recent.limit(5) rescue [] %>
     <% if recent_transactions.any? %>
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
-            <tr class="border-b border-gray-800">
-              <th class="text-left text-gray-400 font-medium pb-3">Date</th>
-              <th class="text-left text-gray-400 font-medium pb-3">Type</th>
-              <th class="text-left text-gray-400 font-medium pb-3">Description</th>
-              <th class="text-right text-gray-400 font-medium pb-3">Amount</th>
+            <tr class="border-b border-zinc-800">
+              <th class="text-left text-zinc-400 font-medium text-sm pb-3 uppercase tracking-wide">Date</th>
+              <th class="text-left text-zinc-400 font-medium text-sm pb-3 uppercase tracking-wide">Type</th>
+              <th class="text-left text-zinc-400 font-medium text-sm pb-3 uppercase tracking-wide">Description</th>
+              <th class="text-right text-zinc-400 font-medium text-sm pb-3 uppercase tracking-wide">Amount</th>
             </tr>
           </thead>
           <tbody>
             <% recent_transactions.each do |tx| %>
-              <tr class="border-b border-gray-900">
-                <td class="py-3 text-gray-300"><%= tx.created_at.strftime('%b %d, %Y %I:%M %p') %></td>
-                <td class="py-3">
-                  <span class="px-2 py-1 <%= tx.credit? ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200' %> text-xs rounded">
+              <tr class="border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors">
+                <td class="py-4 text-zinc-300 text-sm"><%= tx.created_at.strftime('%b %d, %Y %I:%M %p') %></td>
+                <td class="py-4">
+                  <span class="px-3 py-1 <%= tx.credit? ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20' %> text-xs font-medium rounded-full">
                     <%= tx.transaction_type.titleize %>
                   </span>
                 </td>
-                <td class="py-3 text-gray-300"><%= tx.description %></td>
-                <td class="py-3 text-right <%= tx.credit? ? 'text-green-500' : 'text-red-500' %> font-medium">
+                <td class="py-4 text-zinc-300 text-sm"><%= tx.description %></td>
+                <td class="py-4 text-right <%= tx.credit? ? 'text-green-500' : 'text-red-500' %> font-semibold">
                   <%= tx.signed_amount %>
                 </td>
               </tr>
@@ -198,55 +190,58 @@
           </tbody>
         </table>
       </div>
-      <div class="mt-4">
-        <a href="<%= credits_path %>" class="text-blue-500 hover:text-blue-400 text-sm">View All Transactions →</a>
+      <div class="mt-6">
+        <a href="<%= credits_path %>" class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-400 text-sm font-medium transition-colors">
+          View All Transactions
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </a>
       </div>
     <% else %>
-      <p class="text-gray-500 text-center py-8">No recent activity</p>
+      <p class="text-zinc-500 text-center py-8">No recent activity</p>
     <% end %>
   </div>
 </div>
 
 <!-- Edit Profile Modal -->
-<div id="editProfileModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-gray-950 border border-gray-800 rounded-lg p-6 w-full max-w-md">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-xl font-semibold text-white">Edit Profile</h3>
-      <button onclick="document.getElementById('editProfileModal').classList.add('hidden')" class="text-gray-400 hover:text-white">
-        <i class="fa fa-times"></i>
+<div id="editProfileModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-semibold">Edit Profile</h3>
+      <button onclick="document.getElementById('editProfileModal').classList.add('hidden')" class="text-zinc-400 hover:text-white transition-colors">
+        <i class="fa-solid fa-xmark text-xl"></i>
       </button>
     </div>
 
     <%= form_with model: @user, url: myaccountUpdate_path, method: :patch, local: true, class: 'space-y-4' do |f| %>
       <div>
-        <%= f.label :name, class: 'block text-gray-400 text-sm mb-2' %>
-        <%= f.text_field :name, class: 'w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none', required: true %>
+        <%= f.label :name, class: 'block text-zinc-400 text-sm mb-2 font-medium' %>
+        <%= f.text_field :name, class: 'w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all', required: true %>
       </div>
 
       <div>
-        <%= f.label :email, class: 'block text-gray-400 text-sm mb-2' %>
-        <%= f.email_field :email, class: 'w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none', required: true %>
+        <%= f.label :email, class: 'block text-zinc-400 text-sm mb-2 font-medium' %>
+        <%= f.email_field :email, class: 'w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all', required: true %>
       </div>
 
-      <div class="border-t border-gray-800 pt-4">
-        <p class="text-gray-500 text-sm mb-4">Leave password fields blank to keep current password</p>
+      <div class="border-t border-zinc-800 pt-4">
+        <p class="text-zinc-500 text-sm mb-4">Leave password fields blank to keep current password</p>
 
         <div class="mb-4">
-          <%= f.label :password, 'New Password', class: 'block text-gray-400 text-sm mb-2' %>
-          <%= f.password_field :password, class: 'w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none', placeholder: 'Leave blank to keep current' %>
+          <%= f.label :password, 'New Password', class: 'block text-zinc-400 text-sm mb-2 font-medium' %>
+          <%= f.password_field :password, class: 'w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all', placeholder: 'Leave blank to keep current' %>
         </div>
 
         <div>
-          <%= f.label :password_confirmation, class: 'block text-gray-400 text-sm mb-2' %>
-          <%= f.password_field :password_confirmation, class: 'w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none' %>
+          <%= f.label :password_confirmation, class: 'block text-zinc-400 text-sm mb-2 font-medium' %>
+          <%= f.password_field :password_confirmation, class: 'w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all' %>
         </div>
       </div>
 
       <div class="flex gap-3 pt-4">
-        <button type="button" onclick="document.getElementById('editProfileModal').classList.add('hidden')" class="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors">
+        <button type="button" onclick="document.getElementById('editProfileModal').classList.add('hidden')" class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl font-medium transition-colors">
           Cancel
         </button>
-        <%= f.submit 'Update Profile', class: 'flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors cursor-pointer' %>
+        <%= f.submit 'Update Profile', class: 'flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium transition-colors cursor-pointer' %>
       </div>
     <% end %>
   </div>

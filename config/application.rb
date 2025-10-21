@@ -24,6 +24,10 @@ module Workspace
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # Autoload Phlex components from app/components (standard Rails location)
+    config.autoload_paths << Rails.root.join("app/components")
+    config.eager_load_paths << Rails.root.join("app/components")
+
     # Use Sprockets for asset pipeline (not Rails 8 default Propshaft)
     # This maintains compatibility with existing SASS/CoffeeScript assets
     config.assets.enabled = true

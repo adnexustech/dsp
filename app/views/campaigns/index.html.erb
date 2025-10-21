@@ -1,31 +1,29 @@
 
 
-<% content_for :breadcrumb do %> 
-        <div class="page-header pull-left">
-            <div class="page-title">
-                Campaigns</div>
-        </div>
-        <ol class="breadcrumb page-breadcrumb pull-right">
-            <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-            <li class="active">Campaigns</li>
-        </ol>
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Campaigns</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Campaigns</div>
+    </div>
+  </div>
+  <div class="page-actions">
+    <%= form_tag campaigns_path, method: "get", style: "display: inline-flex; gap: 12px; align-items: center;" do %>
+      <button type="submit" class="px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors">Refresh</button>
+      <%= link_to 'New Campaign', new_campaign_path, class: "px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors" %>
+      <button type="button" class="px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors" id="bidder_sync_all">Push Synch All Campaigns</button>
+      <span id="bidder_sync_all_response"></span>
+    <% end %>
+  </div>
 <%end%>
 
 
 <% content_for :main_body do %>
 
-
-    <%= form_tag campaigns_path, method: "get" do %>        
-        <div class="col-lg-12 pull-left">
-            <button type="submit" class="btn btn-default btn-sm">Refresh</button>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <%= link_to 'New Campaign', new_campaign_path  , class:"btn btn-default btn-sm" %>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="button" class="btn btn-default btn-sm" id="bidder_sync_all">Push Synch All Campaigns</button>
-             &nbsp;&nbsp;&nbsp;&nbsp;
-             <span id="bidder_sync_all_response"></span>
-        </div>
-      <br/><br/>          
       <style>a:focus { color: green !important; }</style>
       <table class="table table-striped table-hover " id="listtable">
         <thead>
@@ -43,7 +41,7 @@
           </tr>
         </thead>
         <tbody>
-          <% @campaigns.each do |campaign| %>
+          <% @campaigns.each do |campaign| %>\
             <tr>
               <td><%=campaign.id%></td>
               <td><%=campaign.name%></td>
@@ -51,8 +49,8 @@
                 <% campaign.banners.each do |banner| %>
                   <%= banner.name%>
                   (<%= link_to "ID #{banner.id}", edit_banner_path(banner)%> <span class="text-info">ECPM <%=banner.bid_ecpm%></span>)
-                  
-                  <% 
+
+                  <%
                         if errors = banner.check_errors and errors.length>0
                              str = errors.join(", ")
                     %>
@@ -65,12 +63,12 @@
                 <% campaign.banner_videos.each do |video| %>
                   <%= video.name%>
                   (<%= link_to "ID #{video.id}", edit_banner_video_path(video)%>  <span class="text-info">ECPM <%=video.bid_ecpm%></span>)
-                  <% 
+                  <%
                         if errors = video.check_errors and errors.length>0
                              str = errors.join(", ")
                     %>
                           <span class="text text-warning"><%=raw(str)%></span>
-                    <%end%>                                               
+                    <%end%>
                   <br/>
                 <%end%>
               </td>
@@ -85,7 +83,7 @@
               </td>
 
               <td>
-                    <% 
+                    <%
                         color = "success"
                         color = "danger" if campaign.status.to_s.eql?("offline")
                     %>
@@ -93,12 +91,12 @@
                         <%= campaign.status.to_s.upcase %>
                     </span>
 
-                    <% 
+                    <%
                         if errors = campaign.check_errors
                              str = errors.join("<br/>")
                     %>
                           <br/><span class="text text-danger"><%=raw(str)%></span>
-                    <%end%>  
+                    <%end%>
 
               </td>
               <td><%= link_to 'Show',campaign   %></td>
@@ -108,8 +106,6 @@
           <% end %>
         </tbody>
       </table>
-    <%end%>
 
 <%end%>
-
 

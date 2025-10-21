@@ -1,40 +1,36 @@
- <% content_for :breadcrumb do %> 
-        <div class="page-header pull-left">
-            <div class="page-title">
-                Edit Banner: <em> <%=@banner.name%> </em>
-            </div>
-        </div>
-        <ol class="breadcrumb page-breadcrumb pull-right">
-            <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-            <li><a href="/banners#">Banners</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-            <li class="active">Edit</li>
-        </ol>
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li><a href="<%= banners_path %>">Banners</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Edit</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Edit Banner: <em><%= @banner.name %></em></div>
+    </div>
+  </div>
 <%end%>
 
-<% content_for :main_body do %> 	
-        <div class="col-md-12"><h3></h3>
-            <div class="row mtl">
-                <div class="col-md-3">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            Profile
-                        </div>
-                        <div class="panel-body pan">
-                            <%= render 'stats' %>
-                        </div>
-                    </div>
-                </div>    
-                <div class="col-md-9">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            Edit
-                        </div>
-                        <div class="panel-body pan">
-                            <%= render 'form' %>
-                            <%= link_to 'Banners', banners_path , class:"btn btn-default btn-sm"%>        
-                        </div>
-                    </div>                            
-                </div>
-            </div>
+<% content_for :main_body do %>
+  <div class="page-content">
+    <div class="grid grid-cols-12 gap-4">
+      <!-- Stats Sidebar -->
+      <div class="col-span-3">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold mb-6 flex items-center gap-3">
+            <i class="fa-solid fa-chart-line text-zinc-400 text-lg"></i>
+            Profile
+          </h2>
+          <%= render 'stats' %>
         </div>
+      </div>
+      
+      <!-- Form -->
+      <div class="col-span-9">
+        <%= render 'form_modern' %>
+      </div>
+    </div>
+  </div>
 <%end%>

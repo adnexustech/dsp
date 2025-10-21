@@ -253,6 +253,289 @@ end
 4. Keep ERB layouts during transition
 5. Eventually migrate all views to Phlex
 
+## Phlex UI Component Library (2025-10-21)
+
+### Status: ✅ PRODUCTION READY
+
+**IMPORTANT:** All new UI development MUST use Phlex components. Do NOT write inline HTML in ERB files.
+
+### Component Library Structure
+
+```
+app/views/components/
+  ui/                    # Reusable UI primitives (similar to shadcn/ui)
+    base.rb              # Base component class
+    button.rb            # Button with variants and sizes
+    card.rb              # Card container with padding options
+    stat_card.rb         # Stat display card
+    badge.rb             # Pill/badge component
+    input.rb             # Form input with Tailwind styling
+    label.rb             # Form label
+    modal.rb             # Modal/dialog component
+    quick_link.rb        # Navigation link with badge
+  
+  account_overview.rb    # Page-level component example
+```
+
+### Design System
+
+All components use **Tailwind CSS** with our design tokens:
+
+**Colors:**
+- Background: `bg-zinc-900`, `bg-zinc-950`
+- Borders: `border-zinc-800`, `border-zinc-700`
+- Text: `text-white`, `text-zinc-400`, `text-zinc-300`
+- Accents: `text-blue-500`, `text-green-500`, `text-red-500`
+
+**Border Radius:**
+- Cards: `rounded-xl` (12px)
+- Buttons: `rounded-lg` (8px)
+- Pills/Badges: `rounded-full`
+- Modals: `rounded-2xl` (16px)
+
+**Spacing:**
+- Card padding: `p-6` (24px default), `p-4` (sm), `p-8` (lg)
+- Button padding: `px-3 py-1.5` (sm), `px-4 py-2` (md), `px-6 py-3` (lg)
+
+### Using UI Components
+
+**1. Button Component**
+```ruby
+# In a Phlex view
+render UI::Button.new(variant: :primary, size: :sm) { "Save" }
+render UI::Button.new(variant: :secondary, icon: "fa-solid fa-pencil") { "Edit" }
+render UI::Button.new(variant: :ghost, onclick: "alert('hi')") { "Cancel" }
+
+# Variants: :primary, :secondary, :ghost, :danger
+# Sizes: :xs, :sm, :md, :lg
+```
+
+**2. Card Component**
+```ruby
+render UI::Card.new(padding: :default, hover: true) do
+  h2(class: "text-xl font-semibold mb-4") { "Card Title" }
+  p { "Card content goes here" }
+end
+
+# Padding: :none, :sm, :default, :lg
+# Hover: true/false (adds hover effects)
+```
+
+**3. StatCard Component**
+```ruby
+render UI::StatCard.new(
+  title: "Credits Balance",
+  value: "$50.00",
+  icon: "fa-solid fa-dollar-sign text-green-500",
+  link_text: "Add Credits",
+  link_url: credits_path,
+  value_color: "green-500"
+)
+```
+
+**4. Badge Component**
+```ruby
+render UI::Badge.new(variant: :success, size: :sm) { "Active" }
+render UI::Badge.new(variant: :danger) { "Administrator" }
+
+# Variants: :default, :primary, :success, :danger, :warning, :purple
+# Sizes: :xs, :sm, :md
+```
+
+**5. Form Components**
+```ruby
+# Label
+render UI::Label.new(for_id: "user_name", required: true) { "Name" }
+
+# Input
+render UI::Input.new(
+  type: :text,
+  name: "user[name]",
+  value: @user.name,
+  placeholder: "Enter name",
+  required: true
+)
+
+# Input types: :text, :email, :password, :number, etc.
+```
+
+**6. Modal Component**
+```ruby
+render UI::Modal.new(id: "editModal", title: "Edit Profile", size: :md) do
+  # Modal content (forms, etc.)
+  div(class: "space-y-4") do
+    # ...
+  end
+end
+
+# Sizes: :sm, :md, :lg, :xl
+```
+
+**7. QuickLink Component**
+```ruby
+render UI::QuickLink.new(
+  url: campaigns_path,
+  title: "My Campaigns",
+  icon: "fa-solid fa-bullhorn text-red-500",
+  badge: "12",
+  badge_variant: :default
+)
+```
+
+### Creating Page Components
+
+For complex pages, create a dedicated Phlex component:
+
+```ruby
+# app/views/components/account_overview.rb
+module Components
+  class AccountOverview < Phlex::HTML
+    include Phlex::Rails::Helpers::Routes
+    include Phlex::Rails::Helpers::FormWith
+
+    def initialize(user:)
+      @user = user
+    end
+
+    def view_template
+      div(class: "page-content") do
+        render_stats_grid
+        render_profile_card
+      end
+    end
+
+    private
+
+    def render_stats_grid
+      div(class: "grid grid-cols-1 md:grid-cols-4 gap-4") do
+        render UI::StatCard.new(
+          title: "Credits",
+          value: "$#{@user.credits_balance}",
+          icon: "fa-solid fa-dollar-sign text-green-500",
+          value_color: "green-500"
+        )
+      end
+    end
+
+    def render_profile_card
+      render UI::Card.new do
+        h2(class: "text-xl font-semibold mb-4") { "Profile" }
+        # ... profile content
+      end
+    end
+  end
+end
+```
+
+**Rendering in ERB:**
+```erb
+<% content_for :main_body do %>
+  <%= render Components::AccountOverview.new(user: @user) %>
+<%end%>
+```
+
+### MANDATORY Guidelines
+
+1. **NO INLINE HTML IN ERB:**
+   - ❌ Never write `<div class="...">` in ERB files
+   - ✅ Always use Phlex components
+
+2. **Component Reusability:**
+   - If you're writing the same HTML pattern twice, create a component
+   - Page-specific components go in `app/views/components/`
+   - Reusable UI primitives go in `app/views/components/ui/`
+
+3. **Styling Standards:**
+   - Use Tailwind utility classes (never inline styles)
+   - Follow the zinc color palette (zinc-900, zinc-800, etc.)
+   - Use design tokens for consistency (rounded-xl, p-6, etc.)
+
+4. **Naming Conventions:**
+   - UI primitives: `UI::Button`, `UI::Card`, `UI::Badge`
+   - Page components: `AccountOverview`, `DashboardStats`, `CampaignForm`
+   - File names match class names: `ui/button.rb` → `UI::Button`
+
+5. **Component Props:**
+   - Always use keyword arguments: `initialize(variant:, size: :md)`
+   - Provide sensible defaults: `size: :md` not `size = nil`
+   - Accept `**attributes` for HTML pass-through
+
+### Example: Complete Page Migration
+
+**Before (ERB):**
+```erb
+<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+  <h2 class="text-xl font-semibold mb-4">Profile</h2>
+  <button class="px-3 py-1.5 bg-blue-600 rounded-lg">Edit</button>
+</div>
+```
+
+**After (Phlex):**
+```ruby
+render UI::Card.new do
+  div(class: "flex justify-between items-center mb-4") do
+    h2(class: "text-xl font-semibold") { "Profile" }
+    render UI::Button.new(variant: :primary, size: :sm) { "Edit" }
+  end
+end
+```
+
+### Benefits of This Approach
+
+1. **Type Safety:** Ruby code is refactorable and type-checkable
+2. **Composability:** Components can render other components
+3. **Performance:** Faster than ERB (compiled Ruby)
+4. **Maintainability:** DRY principle enforced
+5. **Testing:** Easy to unit test components
+6. **IDE Support:** Better autocomplete and navigation
+
+### Testing Components
+
+```ruby
+# test/components/ui/button_test.rb
+require "test_helper"
+
+class Components::UI::ButtonTest < ActiveSupport::TestCase
+  test "renders primary button with correct classes" do
+    component = Components::UI::Button.new(variant: :primary, size: :sm)
+    html = component.call
+    
+    assert_includes html, "bg-blue-600"
+    assert_includes html, "px-3 py-1.5"
+  end
+end
+```
+
+### Component Documentation
+
+Each component should be self-documenting:
+- Clear parameter names
+- Type hints via keyword arguments
+- Inline comments for complex logic
+- Examples in component file
+
+**Example:**
+```ruby
+# frozen_string_literal: true
+
+module Components
+  module UI
+    # Primary button component with multiple variants and sizes
+    # 
+    # Examples:
+    #   render UI::Button.new(variant: :primary) { "Save" }
+    #   render UI::Button.new(variant: :ghost, size: :lg) { "Cancel" }
+    class Button < Base
+      # @param variant [Symbol] Button style (:primary, :secondary, :ghost, :danger)
+      # @param size [Symbol] Button size (:xs, :sm, :md, :lg)
+      def initialize(variant: :primary, size: :sm, **attributes)
+        # ...
+      end
+    end
+  end
+end
+```
+
 ## Rails 8 Upgrade - Important Details
 
 ### What Changed from Rails 4.2 → Rails 8.0

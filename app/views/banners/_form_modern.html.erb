@@ -1,0 +1,132 @@
+<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg">
+  <%= form_with(model: @banner, local: true, class: "space-y-6") do |f| %>
+    <% if @banner.errors.any? %>
+      <div id="error_explanation" class="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+        <h2 class="text-red-400 font-semibold mb-2">
+          <%= pluralize(@banner.errors.count, "error") %> prohibited this banner from being saved:
+        </h2>
+        <ul class="list-disc list-inside text-red-300 text-sm">
+          <% @banner.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Campaign Selection -->
+    <div class="form-group">
+      <%= f.label :campaign_id, "Campaign", class: "block text-sm font-medium mb-2" %>
+      <%= f.collection_select(:campaign_id, @campaigns, :id, :name,
+        { prompt: true, include_blank: true },
+        { class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none" }) %>
+    </div>
+
+    <!-- Banner ID -->
+    <div class="form-group">
+      <%= f.label :id, "Banner ID", class: "block text-sm font-medium mb-2" %>
+      <%= f.text_field :id, readonly: true, class: "w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-zinc-400" %>
+    </div>
+
+    <!-- Banner Name -->
+    <div class="form-group">
+      <%= f.label :name, "Banner Name", class: "block text-sm font-medium mb-2" %>
+      <%= f.text_field :name, class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none" %>
+    </div>
+
+    <!-- Interval Start/End -->
+    <div class="form-group">
+      <label class="block text-sm font-medium mb-2">Interval Start/End</label>
+      <div class="flex gap-4 items-center">
+        <input type="text" name="interval_start" id="interval_start"
+          value="<%= @banner.interval_start&.strftime('%m-%d-%Y %H%M') %>"
+          class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 datepicker" />
+        <span class="text-zinc-400">to</span>
+        <input type="text" name="interval_end"
+          value="<%= @banner.interval_end&.strftime('%m-%d-%Y %H%M') %>"
+          class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 datepicker" />
+      </div>
+    </div>
+
+    <!-- Bid ECPM -->
+    <div class="form-group">
+      <%= f.label :bid_ecpm, "Bid ECPM", class: "block text-sm font-medium mb-2" %>
+      <div class="flex items-center gap-2">
+        <span class="text-zinc-400">$</span>
+        <%= f.number_field :bid_ecpm, step: 0.01, class: "flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+      </div>
+    </div>
+
+    <!-- Content Type -->
+    <div class="form-group">
+      <%= f.label :contenttype, "Content Type", class: "block text-sm font-medium mb-2" %>
+      <%= f.select :contenttype,
+        [["iFrame", "iframe"], ["HTML", "html"], ["Javascript", "javascript"], ["Override", "override"]],
+        { include_blank: true },
+        { class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" } %>
+    </div>
+
+    <!-- Image URL -->
+    <div class="form-group">
+      <%= f.label :iurl, "Image URL", class: "block text-sm font-medium mb-2" %>
+      <%= f.text_field :iurl, class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+    </div>
+
+    <!-- Budget Fields -->
+    <div class="grid grid-cols-3 gap-4">
+      <div class="form-group">
+        <%= f.label :hourly_budget, "Hourly Budget", class: "block text-sm font-medium mb-2" %>
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-400">$</span>
+          <%= f.number_field :hourly_budget, step: 0.01, class: "flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :daily_budget, "Daily Budget", class: "block text-sm font-medium mb-2" %>
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-400">$</span>
+          <%= f.number_field :daily_budget, step: 0.01, class: "flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :total_basket_value, "Total Basket Value", class: "block text-sm font-medium mb-2" %>
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-400">$</span>
+          <%= f.number_field :total_basket_value, step: 0.01, class: "flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frequency Fields -->
+    <div class="grid grid-cols-3 gap-4">
+      <div class="form-group">
+        <%= f.label :frequency_spec, "Frequency Spec", class: "block text-sm font-medium mb-2" %>
+        <%= f.text_field :frequency_spec, class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :frequency_expire, "Frequency Expire (minutes)", class: "block text-sm font-medium mb-2" %>
+        <%= f.number_field :frequency_expire, class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :frequency_count, "Frequency Count", class: "block text-sm font-medium mb-2" %>
+        <%= f.number_field :frequency_count, class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2" %>
+      </div>
+    </div>
+
+    <!-- RTB Standards -->
+    <div class="form-group">
+      <%= f.label :rtb_standard_ids, "Rules", class: "block text-sm font-medium mb-2" %>
+      <%= f.collection_select(:rtb_standard_ids, @rtb_standards, :id, :name, {},
+        { multiple: true, class: "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 search_rules" }) %>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="flex justify-end gap-3 pt-6 border-t border-zinc-800">
+      <%= link_to "Cancel", banners_path, class: "px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors" %>
+      <%= f.submit "Update Banner", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer" %>
+    </div>
+  <% end %>
+</div>
