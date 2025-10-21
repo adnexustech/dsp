@@ -1,0 +1,85 @@
+<% content_for :breadcrumb do %>
+<div class="page-header pull-left">
+  <div class="page-title">Advertising Credits</div>
+</div>
+<ol class="breadcrumb page-breadcrumb pull-right">
+  <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li class="active">Credits</li>
+</ol>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="container mt-5">
+  <div class="row">
+    <!-- Credits Balance Card -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0"><i class="fa fa-dollar"></i> Current Balance</h5>
+        </div>
+        <div class="card-body text-center">
+          <h1 class="display-4">$<%= '%.2f' % @balance %></h1>
+          <p class="text-muted">Available Credits</p>
+
+          <%= link_to 'Add Credits', new_credit_path, class: 'btn btn-primary btn-block mt-3' %>
+
+          <div class="alert alert-info mt-3" style="font-size: 0.9em;">
+            <strong>Minimum Requirements:</strong><br>
+            Deposit: $<%= '%.2f' % @min_deposit %><br>
+            Daily Budget: $<%= '%.2f' % User::MIN_DAILY_BUDGET %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fa fa-list"></i> Transaction History</h5>
+        </div>
+        <div class="card-body">
+          <% if @transactions.any? %>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th class="text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @transactions.each do |tx| %>
+                    <tr>
+                      <td><%= tx.created_at.strftime('%b %d, %Y %I:%M %p') %></td>
+                      <td>
+                        <span class="badge <%= tx.credit? ? 'badge-success' : 'badge-danger' %>">
+                          <%= tx.transaction_type.titleize %>
+                        </span>
+                      </td>
+                      <td><%= tx.description %></td>
+                      <td class="text-right <%= tx.credit? ? 'text-success' : 'text-danger' %>">
+                        <%= tx.signed_amount %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-center text-muted">No transactions yet. Add credits to get started!</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <%= link_to 'Back to Dashboard', root_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>
+<%end%>

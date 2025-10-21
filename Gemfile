@@ -8,15 +8,9 @@ gem 'rails', '~> 8.0.0'
 # Database
 gem 'mysql2', '~> 0.5'
 
-# Asset Pipeline - Using Sprockets instead of Rails 8 default (Propshaft)
-# TODO: Migrate to Propshaft + Importmap for Rails 8 best practices
-gem 'sprockets-rails', '~> 3.5'
-gem 'sass-rails', '~> 6.0'
-# gem 'coffee-rails', '~> 5.0'  # REMOVED: Migrated all CoffeeScript to TypeScript
-gem 'terser', '~> 1.1'  # Replaces uglifier for JS compression
-
-# JavaScript
-gem 'jquery-rails', '~> 4.6'
+# Modern Asset Pipeline with TypeScript
+gem 'propshaft'  # Rails 8 asset pipeline
+gem 'jsbundling-rails'  # JavaScript bundling with esbuild
 
 # JSON APIs
 gem 'jbuilder', '~> 2.13'
@@ -24,10 +18,11 @@ gem 'jbuilder', '~> 2.13'
 # Security
 gem 'bcrypt', '~> 3.1.7'
 
-# Bootstrap & UI
-gem 'bootstrap_form', '~> 5.0'
-gem 'momentjs-rails', '>= 2.9.0'
-gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
+# Payments
+gem 'stripe', '~> 12.0'
+
+# Modern View Components
+gem 'phlex-rails', '~> 2.0'
 
 # Search
 gem 'elasticsearch', '~> 8.0'

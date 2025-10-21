@@ -42,6 +42,31 @@ Rails.application.routes.draw do
   
   post "/lists/upload" => "lists#upload"
 
+  # Subscription & Billing Routes
+  resources :subscriptions, only: [:index, :new, :create] do
+    collection do
+      post :cancel
+      get :portal
+    end
+  end
+
+  # Credits Management
+  resources :credits, only: [:index, :new, :create]
+
+  # Invoices
+  resources :invoices, only: [:index]
+
+  # Admin Routes
+  namespace :admin do
+    resources :credits, only: [:index]
+    resources :users, only: [] do
+      resources :credits, only: [:new, :create], controller: 'credits'
+      get 'credits/transactions', to: 'credits#transactions', as: :credit_transactions
+    end
+  end
+
+  # Stripe Webhooks
+  post '/webhooks/stripe' => 'webhooks#stripe'
 
  namespace :api, defaults: {format: 'json'} do
      namespace :v1 do

@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "font-awesome" %>
+    <%= stylesheet_link_tag "styles/font-awesome.min" %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
 
     <style>
@@ -108,7 +108,7 @@
       
       /* Sidebar */
       #sidebar {
-        background-color: #111111 !important;
+        background-color: #000000 !important;
         border-right: 1px solid #262626 !important;
         width: 240px !important;
         position: fixed !important;
@@ -315,42 +315,6 @@
         margin-top: 8px !important;
         min-width: 280px !important;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
-        transition: opacity 0.15s ease, transform 0.15s ease !important;
-      }
-
-      /* Keep dropdown visible on hover */
-      .dropdown:hover > .dropdown-menu,
-      .dropdown-menu:hover {
-        display: block !important;
-        opacity: 1 !important;
-      }
-
-      .dropdown {
-        position: relative !important;
-      }
-
-      .dropdown .dropdown-menu {
-        display: none !important;
-        position: absolute !important;
-        right: 0 !important;
-        opacity: 0 !important;
-      }
-
-      .dropdown:hover .dropdown-menu {
-        display: block !important;
-        opacity: 1 !important;
-        animation: fadeIn 0.15s ease forwards !important;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
       }
       
       .dropdown-header {
@@ -499,40 +463,10 @@
           display: block !important;
         }
       }
-
-      /* Global smooth transitions - prevent flickering */
-      * {
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-      }
-
-      /* Hardware acceleration for smooth animations */
-      .dropdown-menu,
-      #sidebar,
-      .sidebar-toggle,
-      .user-menu-trigger,
-      #sidebar #side-menu > li > a {
-        will-change: transform, opacity !important;
-        transform: translateZ(0) !important;
-        backface-visibility: hidden !important;
-      }
-
-      /* Prevent tap highlight and flickering */
-      a, button, .btn, .dropdown-menu li a {
-        -webkit-tap-highlight-color: transparent !important;
-        outline: none !important;
-      }
-
-      /* Smooth transitions for all interactive elements */
-      a:not(.no-transition), 
-      button:not(.no-transition), 
-      .btn:not(.no-transition) {
-        transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
-      }
     </style>
 
     <%= csrf_meta_tags %>
-    <%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
 </head>
 <body class="h-full dark" data-controller="darkmode sidebar">
     <div>
@@ -604,10 +538,13 @@
                             </li>
                             <li class="divider"></li>
                             <li class="dropdown-section-title">Account</li>
-                            <li><a href="/myaccount"><i class="fa fa-user"></i>Account Overview</a></li>
-                            <li><a href="/credits"><i class="fa fa-dollar"></i>Credits & Wallet</a></li>
-                            <li><a href="/subscriptions"><i class="fa fa-credit-card"></i>Billing & Plans</a></li>
-                            <li><a href="/invoices"><i class="fa fa-file-text"></i>Invoices</a></li>
+                            <li><a href="/myaccount"><i class="fa fa-user"></i>My Profile</a></li>
+                            <li><a href="/credits"><i class="fa fa-dollar"></i>Credits & Billing</a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-section-title">Organization</li>
+                            <li><a href="#"><i class="fa fa-building-o"></i>Switch Organization</a></li>
+                            <li><a href="#"><i class="fa fa-users"></i>Team Members</a></li>
                             <li class="divider"></li>
                             <li><a href="/logout"><i class="fa fa-sign-out"></i>Log Out</a></li>
                         </ul>
@@ -663,11 +600,6 @@
                         </i><span class="menu-title">Documentation</span></a>
                     </li>
 
-                     <li><a href="/myaccount"><i class="fa fa-user fa-fw">
-                        <div class="icon-bg bg-purple"></div>
-                        </i><span class="menu-title">Account</span></a>
-                    </li>
-
                      <li><a href="/credits"><i class="fa fa-dollar fa-fw">
                         <div class="icon-bg bg-green"></div>
                         </i><span class="menu-title">Credits</span></a>
@@ -678,20 +610,11 @@
                         </i><span class="menu-title">Billing & Plans</span></a>
                     </li>
 
-                     <li><a href="/invoices"><i class="fa fa-file-text fa-fw">
-                        <div class="icon-bg bg-info"></div>
-                        </i><span class="menu-title">Invoices</span></a>
-                    </li>
-
                     <% if current_user.admin %>
                      <li><a href="/users"><i class="fa fa-users fa-fw">
                         <div class="icon-bg bg-orange"></div>
                         </i><span class="menu-title">Admin Users</span></a>                       
                     </li>
-                      <li><a href="/admin/credits"><i class="fa fa-dollar fa-fw">
-                         <div class="icon-bg bg-green"></div>
-                         </i><span class="menu-title">Admin Credits</span></a>
-                     </li>
                      <li><a href="/categories"><i class="fa fa-folder fa-fw">
                         <div class="icon-bg bg-orange"></div>
                         </i><span class="menu-title">Admin Categories</span></a>                       
@@ -726,7 +649,7 @@
             <!--END PAGE WRAPPER-->
         </div>
     </div>
-     <%# Modern TypeScript bundle loaded in <head> - no legacy vendor_libs needed %>
+     <%= javascript_include_tag 'vendor_libs' %>
      <%= yield(:javascript) if content_for?(:javascript) %>
 
 </body>

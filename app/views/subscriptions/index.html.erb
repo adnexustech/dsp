@@ -1,0 +1,329 @@
+<% content_for :breadcrumb do %>
+<div class="page-header pull-left">
+  <div class="page-title">Billing & Subscription</div>
+</div>
+<ol class="breadcrumb page-breadcrumb pull-right">
+  <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li><a href="<%= myaccount_path %>">My Account</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li class="active">Billing</li>
+</ol>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="page-content">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-white mb-2">Billing & Subscription</h1>
+      <p class="text-gray-400">Manage your subscription and payment methods</p>
+    </div>
+    <div class="flex gap-3">
+      <%= link_to new_subscription_path, class: 'px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+        <i class="fa fa-refresh mr-2"></i>Change Plan
+      <% end %>
+      <%= link_to myaccount_path, class: 'px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors' do %>
+        <i class="fa fa-arrow-left mr-2"></i>Back to Account
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Current Plan Card -->
+    <div class="card">
+      <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
+        <i class="fa fa-check-circle text-green-500 mr-3"></i>
+        Current Plan
+      </h2>
+
+      <div class="mb-6">
+        <h3 class="text-2xl font-bold text-white mb-2"><%= @plan[:name] %></h3>
+        
+        <% if current_user.subscription_plan == 'free' %>
+          <p class="text-gray-400 mb-4">You're on the free plan</p>
+          <div class="bg-blue-900 border border-blue-700 rounded-lg p-4 mb-4">
+            <i class="fa fa-info-circle text-blue-400"></i>
+            <span class="text-blue-200 ml-2">Upgrade to unlock more campaigns, banners, and premium features!</span>
+          </div>
+          <%= link_to new_subscription_path, class: 'block w-full text-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+            <i class="fa fa-arrow-up mr-2"></i>View Plans
+          <% end %>
+        <% else %>
+          <div class="mb-4">
+            <span class="text-gray-400">Status: </span>
+            <span class="px-2 py-1 <%= current_user.active_subscription? ? 'bg-green-900 text-green-200' : 'bg-yellow-900 text-yellow-200' %> text-xs rounded">
+              <%= current_user.subscription_status&.titleize || 'N/A' %>
+            </span>
+          </div>
+
+          <% if current_user.on_trial? %>
+            <div class="bg-yellow-900 border border-yellow-700 rounded-lg p-4 mb-4">
+              <i class="fa fa-clock-o text-yellow-400"></i>
+              <span class="text-yellow-200 ml-2">
+                Trial ends in <strong><%= current_user.trial_days_remaining %> days</strong>
+                (<%= current_user.trial_ends_at.strftime('%B %d, %Y') %>)
+              </span>
+            </div>
+          <% end %>
+
+          <% if @plan[:price] %>
+            <div class="mb-6">
+              <p class="text-gray-400 text-sm mb-1">Monthly Price</p>
+              <h4 class="text-3xl font-bold text-green-500">
+                $<%= @plan[:price] / 100 %>
+                <span class="text-gray-400 text-base font-normal">/ month</span>
+              </h4>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="border-t border-gray-800 pt-6">
+        <h4 class="text-white font-semibold mb-4">Plan Features</h4>
+        <% features = @plan[:features] %>
+        <div class="space-y-3">
+          <div class="flex items-center">
+            <i class="fa fa-check text-green-500 mr-3"></i>
+            <span class="text-gray-300">
+              <%= features[:campaigns_limit] || 'Unlimited' %> Campaigns
+              <% if features[:campaigns_limit] %>
+                <span class="text-gray-500 text-sm">(<%= Campaign.count %> used)</span>
+              <% end %>
+            </span>
+          </div>
+          <div class="flex items-center">
+            <i class="fa fa-check text-green-500 mr-3"></i>
+            <span class="text-gray-300"><%= features[:banners_limit] || 'Unlimited' %> Banners</span>
+          </div>
+          <div class="flex items-center">
+            <i class="fa fa-check text-green-500 mr-3"></i>
+            <span class="text-gray-300"><%= features[:videos_limit] || 'Unlimited' %> Videos</span>
+          </div>
+          <div class="flex items-center">
+            <i class="fa fa-check text-green-500 mr-3"></i>
+            <span class="text-gray-300"><%= features[:support] %> Support</span>
+          </div>
+        </div>
+      </div>
+
+      <% if current_user.subscription_plan != 'free' && current_user.stripe_subscription_id %>
+        <div class="border-t border-gray-800 mt-6 pt-6">
+          <%= button_to cancel_subscriptions_path, method: :post, class: 'block w-full px-4 py-3 bg-red-900 hover:bg-red-800 text-red-200 rounded-lg transition-colors', data: { confirm: 'Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your billing period.' } do %>
+            <i class="fa fa-times-circle mr-2"></i>Cancel Subscription
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Right Column -->
+    <div class="space-y-6">
+      <!-- Payment Methods Card -->
+      <div class="card">
+        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
+          <i class="fa fa-credit-card text-blue-500 mr-3"></i>
+          Payment Methods
+        </h2>
+
+        <% if current_user.stripe_customer_id %>
+          <div class="text-center py-6">
+            <i class="fa fa-shield text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-300 mb-6">Your payment information is securely stored with Stripe</p>
+            <%= link_to portal_subscriptions_path, class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+              <i class="fa fa-cog mr-2"></i>
+              Manage Payment Methods
+              <i class="fa fa-external-link ml-2"></i>
+            <% end %>
+            <p class="text-gray-500 text-sm mt-4">
+              Redirects to Stripe's secure portal
+            </p>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <i class="fa fa-credit-card text-gray-600 text-5xl mb-4"></i>
+            <p class="text-gray-400 mb-4">No payment method on file</p>
+            <%= link_to new_subscription_path, class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+              <i class="fa fa-plus mr-2"></i>Add Payment Method
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Quick Actions Card -->
+      <div class="card">
+        <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
+          <i class="fa fa-bolt text-yellow-500 mr-3"></i>
+          Quick Actions
+        </h2>
+
+        <div class="space-y-2">
+          <a href="<%= invoices_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
+            <div class="flex items-center">
+              <i class="fa fa-file-text text-gray-400 w-8"></i>
+              <span class="text-white">View All Invoices</span>
+            </div>
+            <i class="fa fa-chevron-right text-gray-600"></i>
+          </a>
+
+          <a href="<%= credits_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
+            <div class="flex items-center">
+              <i class="fa fa-dollar text-green-500 w-8"></i>
+              <span class="text-white">Manage Credits</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-green-500 font-medium mr-2">$<%= '%.2f' % current_user.credits_balance %></span>
+              <i class="fa fa-chevron-right text-gray-600"></i>
+            </div>
+          </a>
+
+          <a href="<%= myaccount_path %>" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-900 transition-colors">
+            <div class="flex items-center">
+              <i class="fa fa-user text-purple-500 w-8"></i>
+              <span class="text-white">Account Overview</span>
+            </div>
+            <i class="fa fa-chevron-right text-gray-600"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage Statistics -->
+  <div class="card mb-8">
+    <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
+      <i class="fa fa-bar-chart text-blue-500 mr-3"></i>
+      Account Usage
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-400 font-medium">Campaigns</span>
+          <span class="text-white">
+            <%= Campaign.count %> / <%= @plan[:features][:campaigns_limit] || '∞' %>
+          </span>
+        </div>
+        <% if @plan[:features][:campaigns_limit] %>
+          <% usage_percent = (Campaign.count.to_f / @plan[:features][:campaigns_limit] * 100).round %>
+          <div class="w-full bg-gray-800 rounded-full h-2">
+            <div class="<%= usage_percent > 80 ? 'bg-yellow-500' : 'bg-green-500' %> h-2 rounded-full transition-all" style="width: <%= [usage_percent, 100].min %>%"></div>
+          </div>
+          <p class="text-gray-500 text-sm mt-1"><%= usage_percent %>% used</p>
+        <% else %>
+          <div class="w-full bg-green-900 rounded-full h-2">
+            <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+          </div>
+          <p class="text-green-500 text-sm mt-1">Unlimited</p>
+        <% end %>
+      </div>
+
+      <div>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-400 font-medium">Banners</span>
+          <span class="text-white">
+            <%= Banner.count %> / <%= @plan[:features][:banners_limit] || '∞' %>
+          </span>
+        </div>
+        <div class="w-full bg-gray-800 rounded-full h-2">
+          <div class="bg-blue-500 h-2 rounded-full" style="width: 50%"></div>
+        </div>
+        <p class="text-gray-500 text-sm mt-1">Active</p>
+      </div>
+
+      <div>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-400 font-medium">Credits Balance</span>
+          <span class="text-green-500 font-bold">$<%= '%.2f' % current_user.credits_balance %></span>
+        </div>
+        <div class="w-full bg-gray-800 rounded-full h-2">
+          <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+        </div>
+        <p class="text-green-500 text-sm mt-1">Available</p>
+      </div>
+    </div>
+
+    <% unless current_user.can_create_campaign? %>
+      <div class="bg-yellow-900 border border-yellow-700 rounded-lg p-4 mt-6">
+        <i class="fa fa-exclamation-triangle text-yellow-400"></i>
+        <span class="text-yellow-200 ml-2">
+          You've reached your campaign limit.
+          <%= link_to 'Upgrade your plan', new_subscription_path, class: 'text-yellow-100 underline hover:text-white' %> to create more campaigns.
+        </span>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Recent Invoices -->
+  <% if @invoices.any? %>
+    <div class="card">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold text-white flex items-center">
+          <i class="fa fa-file-text text-gray-400 mr-3"></i>
+          Recent Invoices
+        </h2>
+        <%= link_to invoices_path, class: 'text-blue-500 hover:text-blue-400 text-sm' do %>
+          View All <i class="fa fa-arrow-right ml-1"></i>
+        <% end %>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-800">
+              <th class="text-left text-gray-400 font-medium pb-3">Date</th>
+              <th class="text-left text-gray-400 font-medium pb-3">Description</th>
+              <th class="text-right text-gray-400 font-medium pb-3">Amount</th>
+              <th class="text-center text-gray-400 font-medium pb-3">Status</th>
+              <th class="text-right text-gray-400 font-medium pb-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @invoices.take(5).each do |invoice| %>
+              <tr class="border-b border-gray-900">
+                <td class="py-3 text-gray-300"><%= Time.at(invoice.created).strftime('%B %d, %Y') %></td>
+                <td class="py-3 text-gray-300">
+                  <% if invoice.lines.data.any? %>
+                    <%= invoice.lines.data.first.description %>
+                  <% else %>
+                    Subscription Payment
+                  <% end %>
+                </td>
+                <td class="py-3 text-right text-white font-medium">$<%= '%.2f' % (invoice.amount_paid / 100.0) %></td>
+                <td class="py-3 text-center">
+                  <span class="px-2 py-1 <%= invoice.status == 'paid' ? 'bg-green-900 text-green-200' : 'bg-yellow-900 text-yellow-200' %> text-xs rounded">
+                    <%= invoice.status.titleize %>
+                  </span>
+                </td>
+                <td class="py-3 text-right">
+                  <div class="flex justify-end gap-2">
+                    <% if invoice.hosted_invoice_url %>
+                      <a href="<%= invoice.hosted_invoice_url %>" target="_blank" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors text-sm">
+                        <i class="fa fa-eye"></i>
+                      </a>
+                    <% end %>
+                    <% if invoice.invoice_pdf %>
+                      <a href="<%= invoice.invoice_pdf %>" target="_blank" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors text-sm">
+                        <i class="fa fa-download"></i>
+                      </a>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Help Section -->
+  <div class="bg-blue-900 border border-blue-700 rounded-lg p-6 mt-8">
+    <h3 class="text-white font-semibold mb-2 flex items-center">
+      <i class="fa fa-question-circle text-blue-400 mr-2"></i>
+      Need Help?
+    </h3>
+    <p class="text-blue-200">
+      If you have questions about billing, subscriptions, or invoices, please contact our support team.
+      All payments are securely processed through Stripe.
+    </p>
+  </div>
+</div>
+<%end%>

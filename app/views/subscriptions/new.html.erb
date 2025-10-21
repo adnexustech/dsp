@@ -1,0 +1,133 @@
+<% content_for :breadcrumb do %>
+<div class="page-header pull-left">
+  <div class="page-title">Choose Your Plan</div>
+</div>
+<ol class="breadcrumb page-breadcrumb pull-right">
+  <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li><a href="/subscriptions">Billing</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li class="active">Change Plan</li>
+</ol>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="page-header">
+        <h1>Choose Your Plan</h1>
+        <p class="lead">Select the perfect plan for your advertising needs</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <% @plans.each do |plan_key, plan| %>
+      <div class="col-md-3">
+        <div class="card <%= 'border-primary' if @current_plan == plan_key %> mb-4">
+          <div class="card-header <%= 'bg-primary text-white' if @current_plan == plan_key %>">
+            <h4 class="my-0 font-weight-normal">
+              <%= plan[:name] %>
+              <% if @current_plan == plan_key %>
+                <span class="badge badge-success float-right">Current</span>
+              <% end %>
+            </h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">
+              <% if plan[:price] %>
+                $<%= plan[:price] / 100 %>
+                <small class="text-muted">/ month</small>
+              <% else %>
+                Free
+              <% end %>
+            </h1>
+
+            <ul class="list-unstyled mt-3 mb-4">
+              <% features = plan[:features] %>
+              <li>
+                <i class="fa fa-check text-success"></i>
+                <%= features[:campaigns_limit] || 'Unlimited' %> Campaigns
+              </li>
+              <li>
+                <i class="fa fa-check text-success"></i>
+                <%= features[:banners_limit] || 'Unlimited' %> Banners
+              </li>
+              <li>
+                <i class="fa fa-check text-success"></i>
+                <%= features[:videos_limit] || 'Unlimited' %> Videos
+              </li>
+              <li>
+                <i class="fa fa-check text-success"></i>
+                <%= features[:support] %> Support
+              </li>
+              <% if features[:whitelabel] %>
+                <li>
+                  <i class="fa fa-check text-success"></i>
+                  White Label
+                </li>
+              <% end %>
+              <% if features[:custom_features] %>
+                <li>
+                  <i class="fa fa-check text-success"></i>
+                  Custom Features
+                </li>
+              <% end %>
+            </ul>
+
+            <% if @current_plan == plan_key %>
+              <button type="button" class="btn btn-lg btn-block btn-outline-secondary" disabled>
+                Current Plan
+              </button>
+            <% elsif plan_key == :enterprise %>
+              <a href="mailto:sales@adnexus.com?subject=Enterprise%20Plan%20Inquiry"
+                 class="btn btn-lg btn-block btn-primary">
+                Contact Sales
+              </a>
+            <% else %>
+              <%= button_to "Select #{plan[:name]}",
+                  subscriptions_path(plan: plan_key),
+                  method: :post,
+                  class: "btn btn-lg btn-block btn-primary",
+                  data: { confirm: plan_key == :free ?
+                    "Are you sure you want to downgrade to the Free plan?" :
+                    "Subscribe to #{plan[:name]} plan for $#{plan[:price] / 100}/month?" } %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>Subscription Details</h5>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>All paid plans include a 14-day free trial</li>
+            <li>Cancel anytime - no long-term commitments</li>
+            <li>Upgrade or downgrade your plan at any time</li>
+            <li>Secure payment processing by Stripe</li>
+            <li>Billing occurs monthly on the anniversary of your subscription</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <%= link_to 'Back to Subscriptions', subscriptions_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>
+
+<%end%>
+
+<style>
+.pricing-card-title {
+  font-size: 2rem;
+}
+</style>

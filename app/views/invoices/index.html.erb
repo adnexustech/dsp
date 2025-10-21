@@ -1,0 +1,169 @@
+<% content_for :breadcrumb do %>
+<div class="page-header pull-left">
+  <div class="page-title">Invoices & Receipts</div>
+</div>
+<ol class="breadcrumb page-breadcrumb pull-right">
+  <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li><a href="<%= myaccount_path %>">My Account</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li class="active">Invoices</li>
+</ol>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fa fa-file-text"></i> Invoices & Receipts</h2>
+        <div>
+          <%= link_to 'Back to Account', myaccount_path, class: 'btn btn-secondary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subscription Invoices -->
+  <% if @stripe_invoices.any? %>
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fa fa-credit-card"></i> Subscription Invoices</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Invoice #</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @stripe_invoices.each do |invoice| %>
+                    <tr>
+                      <td><code><%= invoice.number || invoice.id %></code></td>
+                      <td><%= Time.at(invoice.created).strftime('%b %d, %Y') %></td>
+                      <td>
+                        <% if invoice.lines.data.any? %>
+                          <%= invoice.lines.data.first.description %>
+                        <% else %>
+                          Subscription Payment
+                        <% end %>
+                      </td>
+                      <td>
+                        <strong>$<%= '%.2f' % (invoice.amount_paid / 100.0) %></strong>
+                      </td>
+                      <td>
+                        <span class="badge <%= invoice.status == 'paid' ? 'badge-success' : invoice.status == 'open' ? 'badge-warning' : 'badge-secondary' %>">
+                          <%= invoice.status.titleize %>
+                        </span>
+                      </td>
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <% if invoice.hosted_invoice_url %>
+                            <a href="<%= invoice.hosted_invoice_url %>" target="_blank" class="btn btn-outline-primary" title="View Invoice">
+                              <i class="fa fa-eye"></i> View
+                            </a>
+                          <% end %>
+                          <% if invoice.invoice_pdf %>
+                            <a href="<%= invoice.invoice_pdf %>" target="_blank" class="btn btn-outline-secondary" title="Download PDF">
+                              <i class="fa fa-download"></i> PDF
+                            </a>
+                          <% end %>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Credit Purchase Receipts -->
+  <% if @credit_transactions.any? %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="fa fa-dollar"></i> Credit Purchase Receipts</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Receipt #</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @credit_transactions.each do |tx| %>
+                    <tr>
+                      <td><code>CR-<%= tx.id.to_s.rjust(6, '0') %></code></td>
+                      <td><%= tx.created_at.strftime('%b %d, %Y %I:%M %p') %></td>
+                      <td><%= tx.description %></td>
+                      <td>
+                        <strong class="<%= tx.credit? ? 'text-success' : 'text-danger' %>">
+                          <%= tx.signed_amount %>
+                        </strong>
+                      </td>
+                      <td>
+                        <span class="badge <%= tx.transaction_type == CreditTransaction::DEPOSIT ? 'badge-success' : 'badge-info' %>">
+                          <%= tx.transaction_type.titleize %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Empty State -->
+  <% if @stripe_invoices.empty? && @credit_transactions.empty? %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <i class="fa fa-file-text-o fa-5x text-muted mb-3"></i>
+            <h4 class="text-muted">No Invoices Yet</h4>
+            <p class="text-muted mb-4">Your invoices and receipts will appear here once you make a purchase.</p>
+            <div class="btn-group">
+              <%= link_to 'Add Credits', new_credit_path, class: 'btn btn-success' %>
+              <%= link_to 'View Plans', new_subscription_path, class: 'btn btn-primary' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Help Text -->
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <i class="fa fa-info-circle"></i>
+        <strong>Need help?</strong>
+        If you have questions about an invoice or need a receipt, please contact our support team.
+        All payments are securely processed through Stripe.
+      </div>
+    </div>
+  </div>
+</div>
+<%end%>

@@ -1,0 +1,68 @@
+<% content_for :breadcrumb do %>
+<div class="page-header pull-left">
+  <div class="page-title">User Transaction History</div>
+</div>
+<ol class="breadcrumb page-breadcrumb pull-right">
+  <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li><a href="<%= admin_credits_path %>">Admin Credits</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+  <li class="active">Transactions</li>
+</ol>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            Transaction History for <%= @user.name %> (<%= @user.email %>)
+            <br>
+            <small>Current Balance: $<%= '%.2f' % @user.credits_balance %></small>
+          </h5>
+        </div>
+        <div class="card-body">
+          <% if @transactions.any? %>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Date/Time</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th class="text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @transactions.each do |tx| %>
+                    <tr>
+                      <td><%= tx.id %></td>
+                      <td><%= tx.created_at.strftime('%b %d, %Y %I:%M:%S %p') %></td>
+                      <td>
+                        <span class="badge <%= tx.credit? ? 'badge-success' : 'badge-danger' %>">
+                          <%= tx.transaction_type.titleize %>
+                        </span>
+                      </td>
+                      <td><%= tx.description %></td>
+                      <td class="text-right <%= tx.credit? ? 'text-success' : 'text-danger' %>">
+                        <strong><%= tx.signed_amount %></strong>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-center text-muted">No transactions found for this user.</p>
+          <% end %>
+
+          <div class="mt-3 text-center">
+            <%= link_to 'Back to Credits Management', admin_credits_path, class: 'btn btn-secondary' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%end%>
