@@ -38,10 +38,10 @@
         background-color: #000000 !important;
       }
       
-      /* Header & Topbar */
+      /* Header & Topbar - Pure Black */
       #topbar {
         background-color: #000000 !important;
-        border-bottom: 1px solid #262626 !important;
+        border-bottom: 1px solid #000000 !important;
         height: 64px !important;
         padding: 0 16px !important;
         display: flex !important;
@@ -69,50 +69,25 @@
         align-items: center !important;
       }
       
-      /* Vercel-style Logo */
+      /* Logo - White on Black Header */
       #logo {
         display: flex !important;
         align-items: center !important;
-        gap: 12px !important;
         padding: 0 !important;
         margin: 0 !important;
         text-decoration: none !important;
         background: transparent !important;
       }
-      
+
       #logo:hover {
         opacity: 0.8 !important;
       }
-      
-      .logo-container {
-        width: 38px !important;
-        height: 38px !important;
-        background: #fafafa !important;
-        border-radius: 10px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 6px !important;
-        overflow: hidden !important;
-      }
-      
+
       .logo-image {
-        width: 100% !important;
-        height: 100% !important;
+        height: 38px !important;
+        width: auto !important;
         object-fit: contain !important;
-      }
-      
-      .logo-text {
-        font-size: 18px !important;
-        font-weight: 600 !important;
-        color: #ffffff !important;
-        letter-spacing: -0.025em !important;
-      }
-      
-      @media (max-width: 640px) {
-        .logo-text {
-          display: none !important;
-        }
+        filter: brightness(0) invert(1) !important;  /* Make logo white */
       }
       
       /* Sidebar - Icon-only like Google/Airbnb */
@@ -174,13 +149,14 @@
         display: flex !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        padding: 10px 12px !important;
+        padding: 12px 14px !important;
         border-radius: 8px !important;
-        color: #a0a0a0 !important;
+        color: #ffffff !important;
         text-decoration: none !important;
         transition: all 0.2s ease !important;
         background: transparent !important;
         position: relative !important;
+        border: none !important;
       }
       
       #sidebar #side-menu > li > a:hover {
@@ -198,7 +174,7 @@
         display: inline-block !important;
         opacity: 0 !important;
         width: 0 !important;
-        font-size: 14px !important;
+        font-size: 15px !important;
         font-weight: 500 !important;
         margin-left: 0 !important;
         overflow: hidden !important;
@@ -209,14 +185,14 @@
       #sidebar:hover #side-menu .menu-title {
         opacity: 1 !important;
         width: auto !important;
-        margin-left: 12px !important;
+        margin-left: 14px !important;
       }
       
       #sidebar #side-menu i.fa {
-        width: 20px !important;
-        min-width: 20px !important;
-        font-size: 18px !important;
-        color: #a0a0a0 !important;
+        width: 22px !important;
+        min-width: 22px !important;
+        font-size: 20px !important;
+        color: #ffffff !important;
         text-align: center !important;
         transition: all 0.2s ease !important;
       }
@@ -234,7 +210,7 @@
       /* Mobile menu toggle */
       .sidebar-toggle {
         background: transparent !important;
-        border: 1px solid #262626 !important;
+        border: 1px solid #1a1a1a !important;
         color: #ffffff !important;
         padding: 8px 12px !important;
         border-radius: 8px !important;
@@ -244,7 +220,7 @@
       
       .sidebar-toggle:hover {
         background-color: #1a1a1a !important;
-        border-color: #404040 !important;
+        border-color: #333333 !important;
       }
       
       .sidebar-toggle i {
@@ -272,7 +248,7 @@
         gap: 12px !important;
         padding: 6px 12px !important;
         background: transparent !important;
-        border: 1px solid #262626 !important;
+        border: 1px solid #1a1a1a !important;
         border-radius: 10px !important;
         transition: all 0.2s ease !important;
         text-decoration: none !important;
@@ -281,7 +257,7 @@
       
       .user-menu-trigger:hover {
         background-color: #1a1a1a !important;
-        border-color: #404040 !important;
+        border-color: #333333 !important;
       }
       
       .user-avatar {
@@ -314,13 +290,13 @@
       
       .user-org {
         font-size: 12px !important;
-        color: #a0a0a0 !important;
+        color: #ffffff !important;
         line-height: 1 !important;
       }
       
       .user-menu-trigger .fa-chevron-down {
         font-size: 12px !important;
-        color: #a0a0a0 !important;
+        color: #ffffff !important;
         transition: transform 0.2s ease !important;
       }
       
@@ -337,13 +313,24 @@
       /* Dropdown menu */
       .dropdown-menu {
         background-color: #0a0a0a !important;
-        border: 1px solid #262626 !important;
+        border: 1px solid #1a1a1a !important;
         border-radius: 12px !important;
         padding: 8px !important;
-        margin-top: 8px !important;
+        margin-top: 4px !important;
         min-width: 280px !important;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
         transition: opacity 0.15s ease, transform 0.15s ease !important;
+      }
+
+      /* Create invisible hover bridge between trigger and dropdown */
+      .dropdown-menu::before {
+        content: '' !important;
+        position: absolute !important;
+        top: -12px !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 16px !important;
+        background: transparent !important;
       }
 
       /* Keep dropdown visible on hover */
@@ -427,7 +414,7 @@
       
       .user-header-email {
         font-size: 12px !important;
-        color: #a0a0a0 !important;
+        color: #ffffff !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -437,7 +424,7 @@
         padding: 8px 12px 4px 12px !important;
         font-size: 11px !important;
         font-weight: 600 !important;
-        color: #737373 !important;
+        color: #e0e0e0 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
       }
@@ -446,7 +433,7 @@
         display: flex !important;
         align-items: center !important;
         gap: 10px !important;
-        color: #d4d4d4 !important;
+        color: #ffffff !important;
         padding: 10px 12px !important;
         border-radius: 8px !important;
         font-size: 14px !important;
@@ -457,7 +444,7 @@
       .dropdown-menu li a i {
         width: 16px !important;
         font-size: 14px !important;
-        color: #a0a0a0 !important;
+        color: #ffffff !important;
       }
       
       .dropdown-menu li a:hover {
@@ -497,7 +484,7 @@
       /* Dark mode toggle */
       .dark-mode-toggle {
         background: transparent !important;
-        border: 1px solid #262626 !important;
+        border: 1px solid #1a1a1a !important;
         color: #ffffff !important;
         padding: 8px 12px !important;
         border-radius: 8px !important;
@@ -507,7 +494,7 @@
       
       .dark-mode-toggle:hover {
         background-color: #1a1a1a !important;
-        border-color: #404040 !important;
+        border-color: #333333 !important;
       }
       
       /* Overlay for mobile menu */

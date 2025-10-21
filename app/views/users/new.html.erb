@@ -1,27 +1,27 @@
-<% content_for :breadcrumb do %> 	
-        <div class="page-header pull-left">
-            <div class="page-title">
-                New User
-            </div>
-        </div>
-    <ol class="breadcrumb page-breadcrumb pull-right">
-        <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li><a href="/users#">Users</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="active">New</li>
-    </ol>
-<%end%>
+<% content_for :breadcrumb do %>
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-white">New User</h1>
+      <p class="text-sm text-gray-400 mt-1">Create a new user account</p>
+    </div>
+  </div>
+  <nav class="flex text-sm text-gray-400 mb-6">
+    <a href="/" class="hover:text-white transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/users" class="hover:text-white transition-colors">Users</a>
+    <span class="mx-2">/</span>
+    <span class="text-white">New</span>
+  </nav>
+<% end %>
 
-<% content_for :main_body do %> 	
-        <div class="col-md-12"><h3></h3>
-            <div class="panel panel-violet">
-                <div class="panel-heading">
-                    New
-                </div>
-                <div class="panel-body pan">
-                    <%= render 'form' %>
-                    <%= link_to 'Back', users_path , class:"btn btn-default btn-sm"%>        
-                </div>
-            </div>                            
-        </div>
-<%end%>
+<% content_for :main_body do %>
+  <div class="max-w-3xl">
+    <div class="bg-gray-950 border border-gray-800 rounded-xl p-8">
+      <%= render 'form' %>
 
+      <div class="mt-6 pt-6 border-t border-gray-800">
+        <%= link_to 'Back', users_path, class: "inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium text-gray-300 bg-transparent border border-gray-700 rounded-xl hover:bg-gray-900 hover:text-white transition-colors" %>
+      </div>
+    </div>
+  </div>
+<% end %>
