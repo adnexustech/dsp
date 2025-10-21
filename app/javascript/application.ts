@@ -11,6 +11,7 @@ console.log("ADNEXUS DSP - Modern TypeScript Stack Loaded")
 document.addEventListener("turbo:load", () => {
   initializeDarkMode()
   initializeSidebar()
+  initializeDropdowns()
 })
 
 function initializeDarkMode() {
@@ -46,4 +47,74 @@ function initializeSidebar() {
 
   window.addEventListener('resize', handleResize)
   handleResize()
+}
+
+function initializeDropdowns() {
+  // Handle user dropdown menu
+  const dropdownToggles = document.querySelectorAll('[data-dropdown-toggle]')
+  
+  dropdownToggles.forEach(toggle => {
+    const dropdownId = toggle.getAttribute('data-dropdown-toggle')
+    const dropdown = document.getElementById(dropdownId!)
+    
+    if (!dropdown) return
+
+    let closeTimeout: number | null = null
+
+    // Toggle on click
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      
+      if (closeTimeout) {
+        clearTimeout(closeTimeout)
+        closeTimeout = null
+      }
+
+      const isOpen = dropdown.classList.contains('show') || dropdown.style.display === 'block'
+      
+      // Close all other dropdowns first
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.remove('show')
+        ;(menu as HTMLElement).style.display = 'none'
+      })
+
+      if (!isOpen) {
+        dropdown.classList.add('show')
+        dropdown.style.display = 'block'
+      }
+    })
+
+    // Keep open on hover over dropdown or toggle
+    const keepOpen = () => {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout)
+        closeTimeout = null
+      }
+    }
+
+    const scheduleClose = () => {
+      if (closeTimeout) clearTimeout(closeTimeout)
+      closeTimeout = window.setTimeout(() => {
+        dropdown.classList.remove('show')
+        dropdown.style.display = 'none'
+      }, 300) // 300ms delay before closing
+    }
+
+    toggle.addEventListener('mouseenter', keepOpen)
+    toggle.addEventListener('mouseleave', scheduleClose)
+    dropdown.addEventListener('mouseenter', keepOpen)
+    dropdown.addEventListener('mouseleave', scheduleClose)
+  })
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    if (!target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.remove('show')
+        ;(menu as HTMLElement).style.display = 'none'
+      })
+    }
+  })
 }

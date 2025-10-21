@@ -1,9 +1,8 @@
 //= link_tree ../images
+//= link_tree ../fonts
 //= link application.css
 //= link application.tailwind.css
-//= link font-awesome.css
 //= link_tree ../builds
-//= link vendor_libs.js
 //= link_tree ../stylesheets/styles .css
 //= link_directory ../javascripts .js
 //= link_tree ../../javascript .js
