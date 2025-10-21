@@ -5,30 +5,64 @@ export default class extends Controller {
   static targets = ["menu", "toggle"]
 
   connect() {
-    // Check localStorage for saved state
-    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true'
-    if (isCollapsed) {
-      this.collapse()
-    } else {
-      this.expand()
+    // Create overlay for mobile
+    this.createOverlay()
+    
+    // Desktop: sidebar always visible
+    // Mobile: sidebar hidden by default
+    if (window.innerWidth <= 768) {
+      this.closeMobile()
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        this.closeMobile()
+      }
+    })
+  }
+
+  disconnect() {
+    if (this.overlay) {
+      this.overlay.remove()
     }
   }
 
-  toggle() {
-    if (document.body.classList.contains('sidebar-collapsed')) {
-      this.expand()
-    } else {
-      this.collapse()
+  createOverlay() {
+    if (!this.overlay) {
+      this.overlay = document.createElement('div')
+      this.overlay.className = 'sidebar-overlay'
+      this.overlay.addEventListener('click', () => this.closeMobile())
+      document.body.appendChild(this.overlay)
     }
+  }
+
+  toggleMobile() {
+    if (document.body.classList.contains('sidebar-open')) {
+      this.closeMobile()
+    } else {
+      this.openMobile()
+    }
+  }
+
+  openMobile() {
+    document.body.classList.add('sidebar-open')
+  }
+
+  closeMobile() {
+    document.body.classList.remove('sidebar-open')
+  }
+
+  // Legacy methods for backward compatibility
+  toggle() {
+    this.toggleMobile()
   }
 
   collapse() {
-    document.body.classList.add('sidebar-collapsed')
-    localStorage.setItem('sidebarCollapsed', 'true')
+    this.closeMobile()
   }
 
   expand() {
-    document.body.classList.remove('sidebar-collapsed')
-    localStorage.setItem('sidebarCollapsed', 'false')
+    this.openMobile()
   }
 }
