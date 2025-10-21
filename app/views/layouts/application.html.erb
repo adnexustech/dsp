@@ -34,19 +34,39 @@
         color: #ffffff !important;
       }
       
+      /* Add padding for fixed header */
+      body {
+        padding-top: 64px !important;
+      }
+
       #wrapper, #page-wrapper, .page-content {
         background-color: #000000 !important;
       }
       
-      /* Header & Topbar - Pure Black */
+      /* Hide back-to-top button */
+      #totop {
+        display: none !important;
+      }
+
+      /* Header & Topbar - Pure Black, Fixed at Top */
+      .page-header-topbar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 1000 !important;
+        background-color: #000000 !important;
+      }
+
       #topbar {
         background-color: #000000 !important;
-        border-bottom: 1px solid #000000 !important;
+        border-bottom: 1px solid #1a1a1a !important;
         height: 64px !important;
         padding: 0 16px !important;
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
+        margin: 0 !important;
       }
 
       .navbar-header {
@@ -547,7 +567,7 @@
     </style>
 
     <%= csrf_meta_tags %>
-    <%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
 </head>
 <body class="h-full dark" data-controller="darkmode sidebar">
     <div>

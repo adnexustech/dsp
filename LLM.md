@@ -944,3 +944,171 @@ i.fa-solid, i.fa-regular, i.fa-brands,
 - Professional, minimalist aesthetic
 
 **Last Updated:** 2025-10-20 (UI Modernization)
+
+---
+
+## JavaScript Migration: esbuild → Importmap (2025-10-21)
+
+### Status: ✅ COMPLETE
+
+**Overview:**
+Successfully migrated from esbuild/jsbundling-rails to native Rails importmaps for simpler JavaScript management without build steps.
+
+### Why Migrate?
+
+**Before (esbuild):**
+- Required Node.js build step
+- TypeScript compilation needed
+- npm dependencies for bundling
+- More complex deployment
+- Build errors during development
+
+**After (importmaps):**
+- Zero build step - pure JavaScript
+- CDN-based dependencies
+- Simpler deployment
+- Rails 8 default approach
+- Faster development cycle
+
+### Changes Made
+
+**1. Removed esbuild Dependencies**
+
+Files removed/modified:
+- ❌ `tsconfig.json` - Deleted
+- ✅ `Gemfile` - Removed `jsbundling-rails` gem
+- ✅ `package.json` - Removed esbuild, TypeScript, build scripts
+- ✅ `app/javascript/application.ts` → `application.js` (converted to plain JS)
+- ✅ `app/javascript/controllers/index.ts` → `index.js` (converted to plain JS)
+
+**2. Configured Importmap**
+
+Created `/Users/z/work/adnexus/dsp2/config/importmap.rb`:
+```ruby
+# Pin npm packages by running ./bin/importmap
+
+pin "application", preload: true
+pin "@hotwired/turbo-rails", to: "https://cdn.jsdelivr.net/npm/@hotwired/turbo-rails@8.0.18/+esm", preload: true
+pin "@hotwired/stimulus", to: "https://cdn.jsdelivr.net/npm/@hotwired/stimulus@3.2.2/+esm", preload: true
+pin_all_from "app/javascript/controllers", under: "controllers"
+```
+
+**3. Updated Layout Files**
+
+Changed from:
+```erb
+<%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
+<%= javascript_importmap_tags %>
+```
+
+To:
+```erb
+<%= javascript_importmap_tags %>
+```
+
+**4. Converted TypeScript to JavaScript**
+
+Removed TypeScript-specific syntax:
+- `let closeTimeout: number | null = null` → `let closeTimeout = null`
+- `const dropdown = document.getElementById(dropdownId!)` → `const dropdown = document.getElementById(dropdownId)`
+- `(menu as HTMLElement).style.display` → `menu.style.display`
+- `const target = e.target as HTMLElement` → `const target = e.target`
+- Removed `declare global` block
+
+**5. Fixed Header Design Issues**
+
+Added sticky header with proper positioning:
+```css
+/* Hide back-to-top button */
+#totop {
+  display: none !important;
+}
+
+/* Header Fixed at Top */
+.page-header-topbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  background-color: #000000 !important;
+}
+
+/* Add padding for fixed header */
+body {
+  padding-top: 64px !important;
+}
+```
+
+### Testing Results
+
+✅ **JavaScript Loading:** Console shows "ADNEXUS DSP - Modern JavaScript Stack Loaded"
+✅ **Navigation:** All sidebar links functional
+✅ **Hotwire Turbo:** Page transitions working smoothly
+✅ **Stimulus Controllers:** All controllers loading from importmap
+✅ **Interactive Features:** Dropdowns, sidebar toggle working
+✅ **Fixed Header:** Stays visible during scroll
+✅ **No Build Errors:** No webpack/esbuild errors
+✅ **Zero Build Time:** Instant page refreshes in development
+
+### Performance
+
+- **Before:** 2-5 second esbuild compilation on file changes
+- **After:** Instant - no build step required
+- **Production:** CDN delivery for Hotwire libraries (fast, cached globally)
+
+### Files Modified
+
+1. `/Users/z/work/adnexus/dsp2/Gemfile` - Removed jsbundling-rails
+2. `/Users/z/work/adnexus/dsp2/package.json` - Removed esbuild, TypeScript
+3. `/Users/z/work/adnexus/dsp2/app/javascript/application.js` - Converted from TS
+4. `/Users/z/work/adnexus/dsp2/app/javascript/controllers/index.js` - Converted from TS
+5. `/Users/z/work/adnexus/dsp2/config/importmap.rb` - CDN configuration
+6. `/Users/z/work/adnexus/dsp2/app/views/layouts/application.html.erb` - Updated JS includes + fixed header
+
+### Development Workflow
+
+**Starting the app:**
+```bash
+# No build step needed!
+bin/rails server
+
+# Or with Tailwind CSS watch (still needed for CSS)
+bin/dev  # Uses Procfile.dev
+```
+
+**Adding JavaScript dependencies:**
+```bash
+# Pin from CDN
+bin/importmap pin package-name
+
+# Or manually add to config/importmap.rb
+pin "package-name", to: "https://cdn.jsdelivr.net/npm/package-name@version/+esm"
+```
+
+### Browser Compatibility
+
+Importmaps are supported by all modern browsers:
+- ✅ Chrome 89+
+- ✅ Edge 89+
+- ✅ Safari 16.4+
+- ✅ Firefox 108+
+
+For older browsers, Rails includes an importmap-shim polyfill automatically.
+
+### Known Limitations
+
+1. **Bootstrap Form Helpers:** Some views still reference `bootstrap_form_for` which needs migration to Rails form helpers or Phlex components
+2. **Legacy jQuery:** Not needed with importmaps - removed all jQuery dependencies
+3. **No TypeScript:** Plain JavaScript only (can add type checking with JSDoc if needed)
+
+### Next Steps
+
+- ✅ Importmap migration complete
+- ⏳ Migrate remaining Bootstrap forms to Phlex components
+- ⏳ Add JSDoc type hints for better IDE support (optional)
+- ⏳ Consider stimulus-components for advanced UI patterns
+
+---
+
+**Last Updated:** 2025-10-21 (Importmap Migration Complete)

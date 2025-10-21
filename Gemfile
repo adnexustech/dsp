@@ -8,9 +8,8 @@ gem 'rails', '~> 8.0.0'
 # Database
 gem 'mysql2', '~> 0.5'
 
-# Modern Asset Pipeline with TypeScript
+# Modern Asset Pipeline
 gem 'propshaft'  # Rails 8 asset pipeline
-gem 'jsbundling-rails'  # JavaScript bundling with esbuild
 
 # JSON APIs
 gem 'jbuilder', '~> 2.13'
