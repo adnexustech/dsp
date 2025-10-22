@@ -63,15 +63,33 @@
         height: 64px !important;
         padding: 0 16px !important;
         display: flex !important;
-        justify-content: space-between !important;
         align-items: center !important;
         margin: 0 !important;
+        position: relative !important;
       }
 
       .navbar-header {
         display: flex !important;
         align-items: center !important;
         gap: 16px !important;
+        flex: 0 0 auto !important;
+      }
+      
+      /* Center search bar in the middle of header */
+      .header-search {
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        max-width: 500px !important;
+        width: calc(100% - 480px) !important; /* Account for space needed by left and right items */
+        margin: 0 !important;
+      }
+      
+      @media (max-width: 1280px) {
+        .header-search {
+          max-width: 400px !important;
+          width: calc(100% - 420px) !important;
+        }
       }
 
       .topbar-main {
@@ -369,8 +387,40 @@
         }
       }
       
-      /* Dropdown menu */
-      .dropdown-menu {
+      /* Responsive search bar adjustments */
+      @media (max-width: 1024px) {
+        .header-search {
+          max-width: 300px !important;
+          width: calc(100% - 360px) !important;
+        }
+        
+        /* Hide "Search..." text on smaller screens */
+        .header-search button > span:nth-child(2) {
+          display: none !important;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .header-search {
+          max-width: 200px !important;
+          width: calc(100% - 300px) !important;
+        }
+        
+        /* Hide Cmd+K indicator on mobile */
+        .header-search button > div:last-child {
+          display: none !important;
+        }
+      }
+      
+      @media (max-width: 640px) {
+        .header-search {
+          display: none !important;
+        }
+      }
+      
+      /* Dropdown menu (user and org dropdowns) */
+      .dropdown-menu,
+      .org-dropdown-menu {
         background-color: #0a0a0a !important;
         border: 1px solid #1a1a1a !important;
         border-radius: 12px !important;
@@ -378,7 +428,13 @@
         margin-top: 4px !important;
         min-width: 280px !important;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
-        transition: opacity 0.15s ease, transform 0.15s ease !important;
+        transition: opacity 0.2s ease, transform 0.2s ease !important;
+        opacity: 0;
+      }
+      
+      .dropdown-menu[style*="display: block"],
+      .org-dropdown-menu[style*="display: block"] {
+        opacity: 1 !important;
       }
 
       /* Create invisible hover bridge between trigger and dropdown */
@@ -638,14 +694,28 @@
         padding-left: 0 !important;
       }
 
-      /* Credits Display - More rounded */
+      /* Credits Display - Match user dropdown styling */
       .credits-display a {
-        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 6px 12px !important;
+        background: transparent !important;
+        border: 1px solid #1a1a1a !important;
+        border-radius: 10px !important;
+        transition: all 0.2s ease !important;
         text-decoration: none !important;
+        color: #ffffff !important;
+      }
+
+      .credits-display a:hover {
+        background-color: #1a1a1a !important;
+        border-color: #333333 !important;
       }
 
       .credits-display i {
-        display: none !important;
+        font-size: 18px !important;
+        color: #22c55e !important;
       }
 
       /* Page Content Area - Adjust for sidebar */
@@ -799,19 +869,115 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <a id="logo" href="/" class="navbar-brand">
-                    <%= image_tag("logo.png", alt: "Adnexus", class: "logo-image", style: "height: 38px; width: auto;") %>
-                </a>
+                <!-- Organization Dropdown -->
+                <div class="organization-dropdown" style="position: relative;">
+                    <button 
+                        type="button"
+                        class="org-dropdown-trigger"
+                        data-dropdown-id="orgDropdown"
+                        style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: transparent; border: 1px solid #1a1a1a; border-radius: 8px; color: white; cursor: pointer; transition: all 0.2s;"
+                        onmouseenter="this.style.background='#1a1a1a'; this.style.borderColor='#3f3f46';"
+                        onmouseleave="this.style.background='transparent'; this.style.borderColor='#1a1a1a';"
+                    >
+                        <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 6px; font-weight: 600; font-size: 14px;">
+                            <%= current_user.current_org.name.split(' ').map(&:first).join.upcase[0..1] %>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                            <span style="font-size: 14px; font-weight: 600; line-height: 1.2;"><%= current_user.current_org.name.truncate(25) %></span>
+                            <span style="font-size: 11px; color: #71717a; line-height: 1.2;"><%= current_user.current_org.plan_features[:name] %></span>
+                        </div>
+                        <i class="fa fa-chevron-down" style="font-size: 12px; color: #71717a; margin-left: 4px;"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div 
+                        id="orgDropdown" 
+                        class="org-dropdown-menu" 
+                        style="display: none; position: absolute; top: calc(100% + 8px); left: 0; min-width: 280px; background: #18181b; border: 1px solid #27272a; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 9999; overflow: hidden;"
+                    >
+                        <!-- Current Organization Section -->
+                        <div style="padding: 12px 16px; border-bottom: 1px solid #27272a;">
+                            <div style="font-size: 11px; color: #71717a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Current Organization</div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 8px; font-weight: 600; font-size: 14px;">
+                                    <%= current_user.current_org.name.split(' ').map(&:first).join.upcase[0..1] %>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 14px; font-weight: 600; line-height: 1.2;"><%= current_user.current_org.name %></div>
+                                    <div style="font-size: 12px; color: #71717a; line-height: 1.2;"><%= current_user.current_org.plan_features[:name] %> Plan</div>
+                                </div>
+                                <i class="fa fa-check" style="color: #22c55e; font-size: 16px;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Other Organizations -->
+                        <% if current_user.organizations.count > 1 %>
+                            <div style="padding: 8px 0; border-bottom: 1px solid #27272a;">
+                                <div style="padding: 8px 16px; font-size: 11px; color: #71717a; text-transform: uppercase; letter-spacing: 0.5px;">Switch Organization</div>
+                                <% current_user.organizations.where.not(id: current_user.current_org.id).each do |org| %>
+                                    <%= form_with url: switch_organization_path(org), method: :post, local: true, style: "margin: 0;" do %>
+                                        <button 
+                                            type="submit"
+                                            style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: transparent; border: none; color: white; cursor: pointer; transition: background 0.2s;"
+                                            onmouseenter="this.style.background='#27272a';"
+                                            onmouseleave="this.style.background='transparent';"
+                                        >
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: #27272a; border-radius: 6px; font-weight: 600; font-size: 12px;">
+                                                <%= org.name.split(' ').map(&:first).join.upcase[0..1] %>
+                                            </div>
+                                            <div style="flex: 1; text-align: left;">
+                                                <div style="font-size: 13px; font-weight: 500; line-height: 1.2;"><%= org.name %></div>
+                                                <div style="font-size: 11px; color: #71717a; line-height: 1.2;"><%= org.plan_features[:name] %> Plan</div>
+                                            </div>
+                                        </button>
+                                    <% end %>
+                                <% end %>
+                            </div>
+                        <% end %>
+
+                        <!-- Organization Settings -->
+                        <div style="padding: 8px;">
+                            <a 
+                                href="/organization"
+                                style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: transparent; border-radius: 6px; color: white; text-decoration: none; transition: background 0.2s;"
+                                onmouseenter="this.style.background='#27272a';"
+                                onmouseleave="this.style.background='transparent';"
+                            >
+                                <i class="fa fa-cog" style="width: 16px; color: #71717a;"></i>
+                                <span style="font-size: 13px;">Organization Settings</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
+            <!-- Command+K Search Bar -->
+            <div class="header-search">
+                <button 
+                    id="searchTrigger"
+                    type="button"
+                    style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 8px 16px; background: transparent; border: 1px solid #1a1a1a; border-radius: 10px; color: #71717a; cursor: pointer; transition: all 0.2s;"
+                    onmouseenter="this.style.background='#1a1a1a'; this.style.borderColor='#333333';"
+                    onmouseleave="this.style.background='transparent'; this.style.borderColor='#1a1a1a';"
+                    onclick="document.getElementById('commandSearchBar').style.display='block'; document.getElementById('commandSearchInput').focus();"
+                >
+                    <i class="fa fa-search" style="color: #71717a; font-size: 14px;"></i>
+                    <span style="flex: 1; text-align: left; font-size: 14px;">Search...</span>
+                    <div style="display: flex; align-items: center; gap: 4px; padding: 2px 8px; background: #1a1a1a; border-radius: 6px; font-size: 12px; font-family: monospace;">
+                        <span>⌘</span><span>K</span>
+                    </div>
+                </button>
+            </div>
+            
             <div class="topbar-main">
                 <ul class="nav navbar navbar-top-links navbar-right mbn">
                     <!-- Wallet Balance -->
                     <li class="credits-display" style="margin-right: 15px;">
-                        <a href="/credits" style="display: flex; align-items: center; padding: 15px 10px;">
-                            <i class="fa-solid fa-wallet" style="font-size: 18px; margin-right: 8px; color: #28a745;"></i>
-                            <div style="display: flex; flex-direction: column; line-height: 1.2;">
-                                <span style="font-size: 16px; font-weight: 600; color: #28a745;">$<%= '%.2f' % current_user.credits_balance %></span>
-                                <span style="font-size: 11px; color: #6c757d;">Wallet</span>
+                        <a href="/credits">
+                            <i class="fa-solid fa-wallet"></i>
+                            <div style="display: flex; flex-direction: column; gap: 2px;">
+                                <span style="font-size: 14px; font-weight: 600; color: #22c55e; line-height: 1;">$<%= '%.2f' % current_user.credits_balance %></span>
+                                <span style="font-size: 12px; color: #71717a; line-height: 1;">Wallet</span>
                             </div>
                         </a>
                     </li>
@@ -880,6 +1046,9 @@
                     </li>
                     <li><a href="/lists"><i class="fa-solid fa-list fa-fw"></i><span class="menu-title">Lists</span></a>
                     </li>
+                    
+                     <li><a href="/organization"><i class="fa-solid fa-building fa-fw"></i><span class="menu-title">Organization</span></a>
+                    </li>
                         
                      <li><a href="/help"><i class="fa-solid fa-circle-question fa-fw"></i><span class="menu-title">Documentation</span></a>
                     </li>
@@ -935,6 +1104,182 @@
     </div>
      <%# Modern TypeScript bundle loaded in <head> - no legacy vendor_libs needed %>
      <%= yield(:javascript) if content_for?(:javascript) %>
+
+    <!-- Command+K Search Modal -->
+    <div id="commandSearchBar" class="command-search-modal" style="display: none;">
+        <div style="max-width: 640px; width: 100%;">
+            <div style="background: #18181b; border: 1px solid #27272a; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); overflow: hidden;">
+                <!-- Search Input -->
+                <div style="padding: 16px 20px; border-bottom: 1px solid #27272a; display: flex; align-items: center; gap: 12px;">
+                    <i class="fa fa-search" style="color: #71717a; font-size: 16px;"></i>
+                    <input 
+                        id="commandSearchInput"
+                        type="text"
+                        placeholder="Search campaigns, banners, videos, audiences..."
+                        style="flex: 1; background: transparent; border: none; outline: none; color: #ffffff; font-size: 16px; padding: 4px 0;"
+                        autofocus
+                    />
+                    <div style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: #27272a; border-radius: 6px; font-size: 12px; color: #71717a; font-family: monospace;">
+                        <span>ESC</span>
+                    </div>
+                </div>
+                
+                <!-- Search Results -->
+                <div id="searchResults" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Quick Links -->
+                    <div style="padding: 12px 20px;">
+                        <div style="font-size: 11px; color: #71717a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Quick Actions</div>
+                        <a href="/campaigns/new" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 8px; color: #ffffff; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='#27272a';" onmouseleave="this.style.background='transparent';">
+                            <i class="fa-solid fa-plus" style="color: #3b82f6; width: 20px;"></i>
+                            <span>New Campaign</span>
+                        </a>
+                        <a href="/banner_videos/new" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 8px; color: #ffffff; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='#27272a';" onmouseleave="this.style.background='transparent';">
+                            <i class="fa-solid fa-video" style="color: #8b5cf6; width: 20px;"></i>
+                            <span>New Video</span>
+                        </a>
+                        <a href="/targets/new" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 8px; color: #ffffff; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='#27272a';" onmouseleave="this.style.background='transparent';">
+                            <i class="fa-solid fa-users" style="color: #22c55e; width: 20px;"></i>
+                            <span>New Audience</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Navigation -->
+                    <div style="padding: 12px 20px; border-top: 1px solid #27272a;">
+                        <div style="font-size: 11px; color: #71717a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Navigate</div>
+                        <a href="/dashboards" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 8px; color: #ffffff; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='#27272a';" onmouseleave="this.style.background='transparent';">
+                            <i class="fa-solid fa-gauge" style="color: #71717a; width: 20px;"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="/campaigns" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 8px; color: #ffffff; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='#27272a';" onmouseleave="this.style.background='transparent';">
+                            <i class="fa-solid fa-bullhorn" style="color: #71717a; width: 20px;"></i>
+                            <span>Campaigns</span>
+                        </a>
+                        <a href="/banner_videos" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 8px; color: #ffffff; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='#27272a';" onmouseleave="this.style.background='transparent';">
+                            <i class="fa-solid fa-video" style="color: #71717a; width: 20px;"></i>
+                            <span>Videos</span>
+                        </a>
+                        <a href="/organization" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 8px; color: #ffffff; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='#27272a';" onmouseleave="this.style.background='transparent';">
+                            <i class="fa-solid fa-building" style="color: #71717a; width: 20px;"></i>
+                            <span>Organization Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Keyboard Shortcuts Help -->
+            <div style="margin-top: 12px; text-align: center; font-size: 12px; color: #71717a;">
+                <span style="padding: 2px 8px; background: #18181b; border-radius: 6px; margin: 0 4px;">↑↓</span> to navigate
+                <span style="padding: 2px 8px; background: #18181b; border-radius: 6px; margin: 0 4px;">↵</span> to select
+                <span style="padding: 2px 8px; background: #18181b; border-radius: 6px; margin: 0 4px;">ESC</span> to close
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generalized Dropdown Handler (works for org dropdown and user dropdown)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all dropdowns
+            initializeDropdown('.org-dropdown-trigger', '#orgDropdown');
+            initializeDropdown('.user-menu-trigger', '.dropdown-user');
+            
+            function initializeDropdown(triggerSelector, dropdownSelector) {
+                const trigger = document.querySelector(triggerSelector);
+                const dropdown = document.querySelector(dropdownSelector);
+                
+                if (!trigger || !dropdown) return;
+                
+                let hideTimeout = null;
+                
+                // Show dropdown on hover
+                trigger.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout);
+                    dropdown.style.display = 'block';
+                    dropdown.style.opacity = '1';
+                });
+                
+                // Keep dropdown open when hovering over it
+                dropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout);
+                    dropdown.style.display = 'block';
+                    dropdown.style.opacity = '1';
+                });
+                
+                // Hide dropdown with delay when leaving trigger
+                trigger.addEventListener('mouseleave', function() {
+                    hideTimeout = setTimeout(function() {
+                        dropdown.style.display = 'none';
+                        dropdown.style.opacity = '0';
+                    }, 300);
+                });
+                
+                // Hide dropdown with delay when leaving dropdown
+                dropdown.addEventListener('mouseleave', function() {
+                    hideTimeout = setTimeout(function() {
+                        dropdown.style.display = 'none';
+                        dropdown.style.opacity = '0';
+                    }, 300);
+                });
+                
+                // Toggle on click (for mobile/accessibility)
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isVisible = dropdown.style.display === 'block';
+                    dropdown.style.display = isVisible ? 'none' : 'block';
+                    dropdown.style.opacity = isVisible ? '0' : '1';
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.style.display = 'none';
+                        dropdown.style.opacity = '0';
+                    }
+                });
+                
+                // Prevent dropdown from closing when clicking inside
+                dropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Command+K Search Bar Toggle
+            const searchBar = document.getElementById('commandSearchBar');
+            const searchInput = document.getElementById('commandSearchInput');
+            
+            if (searchBar && searchInput) {
+                // Show search on Cmd+K / Ctrl+K
+                document.addEventListener('keydown', function(e) {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                        e.preventDefault();
+                        searchBar.style.display = 'block';
+                        searchInput.focus();
+                    }
+                    
+                    // Close on Escape
+                    if (e.key === 'Escape') {
+                        searchBar.style.display = 'none';
+                        searchInput.value = '';
+                    }
+                });
+                
+                // Close search when clicking outside
+                searchBar.addEventListener('click', function(e) {
+                    if (e.target === searchBar) {
+                        searchBar.style.display = 'none';
+                        searchInput.value = '';
+                    }
+                });
+                
+                // Handle search input
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.toLowerCase();
+                    // TODO: Implement search functionality
+                    console.log('Search query:', query);
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>

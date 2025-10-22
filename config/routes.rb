@@ -44,6 +44,16 @@ Rails.application.routes.draw do
   
   post "/lists/upload" => "lists#upload"
 
+  # Organization Routes
+  resource :organization, only: [:show, :update] do
+    get :members, on: :member
+    post :add_member, on: :member
+    delete :remove_member, on: :member
+  end
+  
+  # Organization switching route (uses ID for switching between organizations)
+  post '/organizations/:id/switch', to: 'organizations#switch', as: :switch_organization
+
   # Subscription & Billing Routes
   resources :subscriptions, only: [:index, :new, :create] do
     collection do

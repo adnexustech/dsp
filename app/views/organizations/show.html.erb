@@ -1,0 +1,201 @@
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Organization Settings</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Organization Settings</div>
+    </div>
+  </div>
+<%end%>
+
+<% content_for :main_body do %>
+  <div class="max-w-7xl mx-auto">
+    <!-- Organization Info Card -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold">Organization Information</h2>
+        <button type="button" id="editOrgBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+          <i class="fa fa-pencil mr-2"></i>Edit
+        </button>
+      </div>
+
+      <%= form_with model: @organization, url: organization_path, method: :patch, id: 'orgForm', class: 'space-y-4' do |f| %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-zinc-400 mb-2">Organization Name</label>
+            <%= f.text_field :name, 
+                class: "w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-blue-500 focus:outline-none",
+                disabled: true,
+                id: 'orgNameInput' %>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-zinc-400 mb-2">Organization Slug</label>
+            <%= f.text_field :slug, 
+                class: "w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-blue-500 focus:outline-none",
+                disabled: true,
+                id: 'orgSlugInput' %>
+          </div>
+        </div>
+
+        <div id="orgFormActions" class="hidden">
+          <%= f.submit "Save Changes", class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm" %>
+          <button type="button" id="cancelOrgBtn" class="px-4 py-2 bg-zinc-700 text-white rounded-lg hover:bg-zinc-600 text-sm ml-2">
+            Cancel
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Subscription Info Card -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-6">Subscription & Billing</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-zinc-800 rounded-lg p-4">
+          <div class="text-sm text-zinc-400 mb-1">Current Plan</div>
+          <div class="text-2xl font-semibold text-white">
+            <%= @organization.subscription_plan&.titleize || 'Free' %>
+          </div>
+        </div>
+
+        <div class="bg-zinc-800 rounded-lg p-4">
+          <div class="text-sm text-zinc-400 mb-1">Status</div>
+          <div class="text-2xl font-semibold">
+            <% if @organization.active_subscription? %>
+              <span class="text-green-500">Active</span>
+            <% else %>
+              <span class="text-zinc-400"><%= @organization.subscription_status&.titleize || 'N/A' %></span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="bg-zinc-800 rounded-lg p-4">
+          <div class="text-sm text-zinc-400 mb-1">Credits Balance</div>
+          <div class="text-2xl font-semibold text-green-500">
+            $<%= number_with_precision(@organization.credits_balance, precision: 2) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <%= link_to subscriptions_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm" do %>
+          <i class="fa fa-credit-card mr-2"></i>Manage Subscription
+        <% end %>
+
+        <%= link_to credits_path, class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm" do %>
+          <i class="fa fa-dollar-sign mr-2"></i>Add Credits
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Members Card -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold">Organization Members</h2>
+        <button type="button" id="addMemberBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+          <i class="fa fa-user-plus mr-2"></i>Add Member
+        </button>
+      </div>
+
+      <!-- Add Member Form (Hidden by default) -->
+      <div id="addMemberForm" class="hidden bg-zinc-800 rounded-lg p-4 mb-6">
+        <%= form_with url: add_member_organization_path, method: :post, class: 'space-y-4' do |f| %>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <%= f.email_field :email, 
+                  placeholder: "member@example.com",
+                  class: "w-full px-4 py-2 bg-zinc-700 border border-zinc-600 rounded-lg text-white focus:border-blue-500 focus:outline-none",
+                  required: true %>
+            </div>
+
+            <div>
+              <%= f.select :role, 
+                  [['Member', 'member'], ['Admin', 'admin']], 
+                  {},
+                  class: "w-full px-4 py-2 bg-zinc-700 border border-zinc-600 rounded-lg text-white focus:border-blue-500 focus:outline-none" %>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <%= f.submit "Add Member", class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm" %>
+            <button type="button" id="cancelAddMemberBtn" class="px-4 py-2 bg-zinc-700 text-white rounded-lg hover:bg-zinc-600 text-sm">
+              Cancel
+            </button>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Members List -->
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-zinc-800">
+              <th class="text-left py-3 px-4 text-sm font-semibold text-zinc-400">Name</th>
+              <th class="text-left py-3 px-4 text-sm font-semibold text-zinc-400">Email</th>
+              <th class="text-left py-3 px-4 text-sm font-semibold text-zinc-400">Role</th>
+              <th class="text-right py-3 px-4 text-sm font-semibold text-zinc-400">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @members.each do |member| %>
+              <tr class="border-b border-zinc-800 hover:bg-zinc-800">
+                <td class="py-3 px-4 text-sm"><%= member.user.name || 'N/A' %></td>
+                <td class="py-3 px-4 text-sm"><%= member.user.email %></td>
+                <td class="py-3 px-4 text-sm">
+                  <span class="px-2 py-1 rounded-full text-xs font-semibold
+                    <%= member.owner? ? 'bg-purple-900 text-purple-200' : 
+                        member.admin? ? 'bg-blue-900 text-blue-200' : 
+                        'bg-zinc-700 text-zinc-300' %>">
+                    <%= member.role.titleize %>
+                  </span>
+                </td>
+                <td class="py-3 px-4 text-sm text-right">
+                  <% unless member.owner? %>
+                    <%= button_to remove_member_organization_path(user_id: member.user.id), 
+                        method: :delete,
+                        data: { confirm: "Remove #{member.user.email} from organization?" },
+                        class: "px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 text-xs" do %>
+                      <i class="fa fa-trash mr-1"></i>Remove
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Edit Organization Button
+    document.getElementById('editOrgBtn').addEventListener('click', function() {
+      document.getElementById('orgNameInput').disabled = false;
+      document.getElementById('orgSlugInput').disabled = false;
+      document.getElementById('orgFormActions').classList.remove('hidden');
+      this.classList.add('hidden');
+    });
+
+    document.getElementById('cancelOrgBtn').addEventListener('click', function() {
+      document.getElementById('orgNameInput').disabled = true;
+      document.getElementById('orgSlugInput').disabled = true;
+      document.getElementById('orgFormActions').classList.add('hidden');
+      document.getElementById('editOrgBtn').classList.remove('hidden');
+    });
+
+    // Add Member Button
+    document.getElementById('addMemberBtn').addEventListener('click', function() {
+      document.getElementById('addMemberForm').classList.remove('hidden');
+      this.classList.add('hidden');
+    });
+
+    document.getElementById('cancelAddMemberBtn').addEventListener('click', function() {
+      document.getElementById('addMemberForm').classList.add('hidden');
+      document.getElementById('addMemberBtn').classList.remove('hidden');
+    });
+  </script>
+<%end%>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_21_044027) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_22_160205) do
   create_table "attachments", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.string "filename"
     t.string "content_type"
@@ -240,6 +240,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_044027) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "organization_members", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.bigint "organization_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_organization_members_on_organization_id"
+    t.index ["user_id"], name: "index_organization_members_on_user_id"
+  end
+
+  create_table "organizations", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "subscription_plan"
+    t.string "subscription_status"
+    t.decimal "credits_balance", precision: 10
+    t.integer "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_organizations_on_owner_id"
+  end
+
   create_table "report_commands", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.string "name", limit: 1024
     t.string "type", limit: 1024
@@ -313,7 +337,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_044027) do
     t.string "subscription_plan"
     t.datetime "trial_ends_at"
     t.decimal "credits_balance", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "current_organization_id"
   end
 
   add_foreign_key "credit_transactions", "users"
+  add_foreign_key "organization_members", "organizations"
+  add_foreign_key "organization_members", "users"
 end

@@ -1,30 +1,30 @@
-class User < ApplicationRecord
-  has_secure_password
-
+class Organization < ApplicationRecord
   # Associations
-  has_many :credit_transactions, dependent: :destroy
+  belongs_to :owner, class_name: 'User'
   has_many :organization_members, dependent: :destroy
-  has_many :organizations, through: :organization_members
-  has_many :owned_organizations, class_name: 'Organization', foreign_key: 'owner_id', dependent: :destroy
-  belongs_to :current_organization, class_name: 'Organization', optional: true
+  has_many :users, through: :organization_members
+  has_many :credit_transactions, dependent: :destroy
 
   # Constants
   MIN_DEPOSIT_AMOUNT = 10.00
   MIN_DAILY_BUDGET = 25.00
 
-  # Stripe subscription statuses (kept for backward compatibility during migration)
+  # Stripe subscription statuses
   SUBSCRIPTION_STATUSES = %w[trialing active past_due canceled unpaid incomplete incomplete_expired].freeze
   SUBSCRIPTION_PLANS = %w[free basic pro enterprise].freeze
 
   # Validations
-  validates :email, presence: true, uniqueness: true
+  validates :name, presence: true
+  validates :slug, presence: true, uniqueness: true
   validates :subscription_plan, inclusion: { in: SUBSCRIPTION_PLANS }, allow_nil: true
   validates :subscription_status, inclusion: { in: SUBSCRIPTION_STATUSES }, allow_nil: true
   validates :credits_balance, numericality: { greater_than_or_equal_to: 0 }
+  validates :owner_id, presence: true
 
   # Callbacks
+  before_validation :generate_slug, if: -> { slug.blank? }
   after_create :set_default_plan
-  after_create :create_personal_organization
+  after_create :add_owner_as_member
   before_destroy :cancel_stripe_subscription
 
   # Stripe Customer Methods
@@ -39,9 +39,9 @@ class User < ApplicationRecord
     return if stripe_customer_id.present?
 
     customer = Stripe::Customer.create(
-      email: email,
+      email: owner.email,
       name: name,
-      metadata: { user_id: id }
+      metadata: { organization_id: id, owner_id: owner_id }
     )
 
     update!(stripe_customer_id: customer.id)
@@ -162,43 +162,43 @@ class User < ApplicationRecord
     daily_budget >= MIN_DAILY_BUDGET && sufficient_credits?(daily_budget)
   end
 
-  # Organization Management
-  def personal_organization
-    owned_organizations.find_by(name: "#{name || email}'s Organization")
+  # Member Management
+  def add_member(user, role: 'member')
+    organization_members.create!(user: user, role: role)
   end
 
-  def switch_organization(organization)
-    return false unless can_access_organization?(organization)
-    update(current_organization: organization)
+  def remove_member(user)
+    return false if user.id == owner_id # Can't remove owner
+    organization_members.find_by(user: user)&.destroy
   end
 
-  def can_access_organization?(organization)
-    organizations.include?(organization)
+  def member?(user)
+    users.include?(user)
   end
 
-  def current_org
-    current_organization || personal_organization || organizations.first
+  def role_for(user)
+    organization_members.find_by(user: user)&.role
   end
 
   private
 
-  def create_personal_organization
-    org = Organization.create!(
-      name: "#{name || email}'s Organization",
-      owner: self
-    )
-    update(current_organization: org)
+  def generate_slug
+    self.slug = name.parameterize if name.present?
   end
 
   def set_default_plan
     update(subscription_plan: 'free', subscription_status: 'active') if subscription_plan.nil?
   end
 
+  def add_owner_as_member
+    organization_members.create!(user: owner, role: 'owner')
+  end
+
   def cancel_stripe_subscription
     cancel_subscription! if stripe_subscription_id.present?
   rescue Stripe::StripeError => e
     Rails.logger.error "Failed to cancel Stripe subscription: #{e.message}"
-    # Don't prevent user deletion if Stripe fails
+    # Don't prevent organization deletion if Stripe fails
     true
   end
 end
