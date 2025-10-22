@@ -1,6 +1,5 @@
 class SubscriptionsController < ApplicationController
   before_action :require_login
-  before_action :create_stripe_customer, only: [:create]
 
   def index
     @subscription = current_user.stripe_subscription_id ?
@@ -37,6 +36,16 @@ class SubscriptionsController < ApplicationController
     begin
       plan = STRIPE_PLANS[plan_name.to_sym]
       raise ArgumentError, "Invalid plan: #{plan_name}" unless plan
+
+      # Ensure Stripe customer exists
+      unless current_user.stripe_customer_id
+        customer = Stripe::Customer.create(
+          email: current_user.email,
+          name: current_user.name,
+          metadata: { user_id: current_user.id }
+        )
+        current_user.update!(stripe_customer_id: customer.id)
+      end
 
       # Create Stripe Checkout Session for subscription
       session = Stripe::Checkout::Session.create(
