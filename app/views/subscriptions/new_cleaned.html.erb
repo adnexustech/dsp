@@ -1,0 +1,171 @@
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li><a href="/subscriptions">Billing</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Change Plan</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Choose Your Plan</div>
+    </div>
+  </div>
+  <div class="page-actions">
+    <%= link_to 'Back to Billing', subscriptions_path, class: "btn btn-secondary" %>
+  </div>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  
+  <!-- Header -->
+  <div class="text-center mb-16">
+    <h2 class="text-4xl font-bold text-white mb-4">Choose the Perfect Plan</h2>
+    <p class="text-xl text-zinc-400">Select the plan that fits your advertising needs</p>
+  </div>
+
+  <!-- Pricing Cards - Grid with auto-rows-fr for equal heights -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr items-stretch mb-16">
+    <% @plans.each_with_index do |(plan_key, plan), index| %>
+      <% is_current = @current_plan == plan_key %>
+      <% is_popular = plan_key == :pro %>
+      
+      <!-- Card - h-full flex flex-col for proper alignment -->
+      <article class="relative h-full flex flex-col rounded-2xl bg-zinc-900 p-6 ring-1 <%= is_current ? 'ring-blue-500' : is_popular ? 'ring-purple-500' : 'ring-white/10' %> hover:scale-[1.01] hover:ring-white/20 transition-all duration-200 transform-gpu">
+        
+        <!-- "Most Popular" badge - absolutely positioned, doesn't affect layout -->
+        <% if is_popular %>
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 text-xs rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold whitespace-nowrap">
+            Most Popular
+          </span>
+        <% end %>
+
+        <!-- Header -->
+        <header class="space-y-2">
+          <h3 class="text-xl font-bold text-white"><%= plan[:name] %></h3>
+          
+          <!-- Price -->
+          <div class="flex items-baseline gap-1">
+            <% if plan_key == :free %>
+              <span class="text-3xl font-bold text-white">Free</span>
+            <% elsif plan_key == :enterprise %>
+              <span class="text-2xl font-bold text-white">Custom</span>
+            <% elsif plan[:price] %>
+              <span class="text-3xl font-bold text-white">$<%= plan[:price] / 100 %></span>
+              <span class="text-sm text-zinc-400">/mo</span>
+            <% end %>
+          </div>
+          
+          <% if plan_key == :enterprise %>
+            <p class="text-xs text-zinc-400">Contact for pricing</p>
+          <% end %>
+        </header>
+
+        <!-- Divider -->
+        <hr class="my-4 border-zinc-800">
+
+        <!-- Features - grows to fill available space -->
+        <ul class="space-y-3 text-sm grow">
+          <% features = plan[:features] %>
+          <li class="flex gap-2 items-start">
+            <i class="fa-solid fa-check text-green-500 mt-0.5 flex-shrink-0"></i>
+            <span class="text-zinc-300">
+              <strong class="text-white"><%= features[:campaigns_limit] || 'Unlimited' %></strong> campaigns
+            </span>
+          </li>
+          <li class="flex gap-2 items-start">
+            <i class="fa-solid fa-check text-green-500 mt-0.5 flex-shrink-0"></i>
+            <span class="text-zinc-300">
+              <strong class="text-white"><%= features[:banners_limit] || 'Unlimited' %></strong> banners
+            </span>
+          </li>
+          <li class="flex gap-2 items-start">
+            <i class="fa-solid fa-check text-green-500 mt-0.5 flex-shrink-0"></i>
+            <span class="text-zinc-300">
+              <strong class="text-white"><%= features[:videos_limit] || 'Unlimited' %></strong> videos
+            </span>
+          </li>
+          <li class="flex gap-2 items-start">
+            <i class="fa-solid fa-check text-green-500 mt-0.5 flex-shrink-0"></i>
+            <span class="text-zinc-300"><%= features[:support] %> support</span>
+          </li>
+          <% if features[:whitelabel] %>
+            <li class="flex gap-2 items-start">
+              <i class="fa-solid fa-check text-green-500 mt-0.5 flex-shrink-0"></i>
+              <span class="text-zinc-300">White label branding</span>
+            </li>
+          <% end %>
+          <% if features[:custom_features] %>
+            <li class="flex gap-2 items-start">
+              <i class="fa-solid fa-check text-green-500 mt-0.5 flex-shrink-0"></i>
+              <span class="text-zinc-300">Custom features</span>
+            </li>
+          <% end %>
+        </ul>
+
+        <!-- CTA - pinned to bottom with mt-auto -->
+        <div class="mt-auto pt-4">
+          <% if is_current %>
+            <div class="w-full rounded-xl px-4 py-2.5 text-center text-sm font-medium bg-zinc-800 text-zinc-400 ring-1 ring-white/10">
+              Current Plan
+            </div>
+          <% elsif plan_key == :enterprise %>
+            <a href="mailto:sales@adnexus.com?subject=Enterprise%20Plan%20Inquiry"
+               class="block w-full rounded-xl px-4 py-2.5 text-center text-sm font-medium bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-colors">
+              Contact Sales
+            </a>
+          <% else %>
+            <%= button_to "Select #{plan[:name]}",
+                subscriptions_path(plan: plan_key),
+                method: :post,
+                class: "w-full rounded-xl px-4 py-2.5 text-sm font-medium transition-colors #{
+                  is_popular ? 
+                    'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' : 
+                    'bg-white text-black hover:bg-zinc-200'
+                }",
+                data: { confirm: plan_key == :free ?
+                  "Are you sure you want to downgrade to the Free plan?" :
+                  "Subscribe to #{plan[:name]} plan for $#{plan[:price] / 100}/month?" } %>
+          <% end %>
+        </div>
+      </article>
+    <% end %>
+  </section>
+
+  <!-- Subscription Details -->
+  <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 mb-6">
+    <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+      <i class="fa-solid fa-circle-info text-blue-500 mr-3"></i>
+      Subscription Details
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex items-start">
+        <i class="fa-solid fa-credit-card text-green-500 mt-1 mr-3"></i>
+        <span class="text-zinc-300">Pay as you go - no long-term contracts</span>
+      </div>
+      <div class="flex items-start">
+        <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
+        <span class="text-zinc-300">Cancel anytime - no commitments</span>
+      </div>
+      <div class="flex items-start">
+        <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
+        <span class="text-zinc-300">Upgrade or downgrade anytime</span>
+      </div>
+      <div class="flex items-start">
+        <i class="fa-solid fa-lock text-green-500 mt-1 mr-3"></i>
+        <span class="text-zinc-300">Secure payment by Stripe</span>
+      </div>
+      <div class="flex items-start">
+        <i class="fa-solid fa-calendar text-green-500 mt-1 mr-3"></i>
+        <span class="text-zinc-300">Monthly billing cycle</span>
+      </div>
+      <div class="flex items-start">
+        <i class="fa-solid fa-shield-halved text-green-500 mt-1 mr-3"></i>
+        <span class="text-zinc-300">Money-back guarantee</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<%end%>
