@@ -842,9 +842,9 @@
                             <li class="divider"></li>
                             <li class="dropdown-section-title">Account</li>
                             <li><a href="/myaccount"><i class="fa-regular fa-user"></i>Account Overview</a></li>
-                            <li><a href="/credits"><i class="fa-solid fa-wallet"></i>Wallet</a></li>
                             <li><a href="/subscriptions"><i class="fa-regular fa-credit-card"></i>Billing & Plans</a></li>
                             <li><a href="/invoices"><i class="fa-regular fa-file-lines"></i>Invoices</a></li>
+                            <li><a href="/credits"><i class="fa-solid fa-wallet"></i>Wallet</a></li>
                             <li class="divider"></li>
                             <li><a href="/logout"><i class="fa fa-sign-out"></i>Log Out</a></li>
                         </ul>
@@ -882,6 +882,7 @@
                      <li><a href="/help"><i class="fa-solid fa-circle-question fa-fw"></i><span class="menu-title">Documentation</span></a>
                     </li>
 
+                    <%# Hidden from sidebar - accessible via dropdown menu
                      <li><a href="/myaccount"><i class="fa-regular fa-user fa-fw"></i><span class="menu-title">Account</span></a>
                     </li>
 
@@ -893,6 +894,7 @@
 
                      <li><a href="/invoices"><i class="fa-regular fa-file-lines fa-fw"></i><span class="menu-title">Invoices</span></a>
                     </li>
+                    %>
 
                     <% if current_user.admin %>
                      <li><a href="/users"><i class="fa-solid fa-user-gear fa-fw"></i><span class="menu-title">Admin Users</span></a>
