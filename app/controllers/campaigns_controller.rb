@@ -38,7 +38,7 @@ class CampaignsController < ApplicationController
         format.html { redirect_to @campaign, notice: notice }
         format.json { render :show, status: :created, location: @campaign }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @campaign.errors, status: :unprocessable_entity }
       end
     end
@@ -54,7 +54,7 @@ class CampaignsController < ApplicationController
         format.html { redirect_to @campaign,  notice: notice }
         format.json { render :show, status: :ok, location: @campaign }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @campaign.errors, status: :unprocessable_entity }
       end
     end
@@ -119,11 +119,20 @@ class CampaignsController < ApplicationController
 
     def campaign_params
     # Translate param arrays to comma separated strings
+      # Handle datetime-local format from modern form
       if str = params[:activate_time] 
-        params[:campaign][:activate_time] = Time.strptime(str, "%m/%d/%Y %H:%M")         
+        begin
+          params[:campaign][:activate_time] = Time.parse(str)
+        rescue
+          params[:campaign][:activate_time] = Time.strptime(str, "%m/%d/%Y %H:%M")
+        end
       end
       if str = params[:expire_time] 
-        params[:campaign][:expire_time] =  Time.strptime(str, "%m/%d/%Y %H:%M")  
+        begin
+          params[:campaign][:expire_time] = Time.parse(str)
+        rescue
+          params[:campaign][:expire_time] = Time.strptime(str, "%m/%d/%Y %H:%M")
+        end
       end
 
       ["exchanges","regions"].each do |attr|

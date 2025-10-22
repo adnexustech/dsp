@@ -68,6 +68,10 @@ group :test do
 
   # Database cleaner
   gem 'database_cleaner-active_record', '~> 2.2'
+
+  # E2E Testing
+  gem 'capybara', '~> 3.40'
+  gem 'selenium-webdriver', '~> 4.25'
 end
 
 group :development do

@@ -1,0 +1,170 @@
+<%= form_with(model: @campaign, local: true, class: "space-y-6 p-6") do |f| %>
+  <% if @campaign.errors.any? %>
+    <div class="bg-red-900/50 border border-red-700 rounded-lg p-4 mb-6">
+      <h3 class="text-red-400 font-semibold mb-2">
+        <%= pluralize(@campaign.errors.count, "error") %> prohibited this campaign from being saved:
+      </h3>
+      <ul class="list-disc list-inside text-red-300 text-sm space-y-1">
+        <% @campaign.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Campaign Name -->
+  <div class="space-y-2">
+    <%= f.label :name, "Campaign Name *", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :name, class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors", placeholder: "Enter campaign name" %>
+  </div>
+
+  <% if @campaign.persisted? %>
+    <!-- Campaign ID (read-only for existing campaigns) -->
+    <div class="space-y-2">
+      <%= f.label :id, "Campaign ID", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.text_field :id, readonly: true, class: "w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2.5 text-zinc-400 cursor-not-allowed" %>
+    </div>
+  <% end %>
+
+  <!-- Active Start/End Time -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="space-y-2">
+      <%= f.label :activate_time, "Active Start Time *", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.datetime_local_field :activate_time, 
+          value: (@campaign.activate_time&.strftime("%Y-%m-%dT%H:%M") || Time.now.strftime("%Y-%m-%dT%H:%M")),
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :expire_time, "Active End Time *", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.datetime_local_field :expire_time,
+          value: (@campaign.expire_time&.strftime("%Y-%m-%dT%H:%M") || (Time.now + 30.days).strftime("%Y-%m-%dT%H:%M")),
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+    </div>
+  </div>
+
+  <!-- Ad Domain -->
+  <div class="space-y-2">
+    <%= f.label :ad_domain, "Ad Domain *", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :ad_domain, class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors", placeholder: "example.com" %>
+  </div>
+
+  <!-- Regions -->
+  <div class="space-y-2">
+    <%= label_tag :regions, "Regions *", class: "block text-sm font-medium text-zinc-300" %>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 bg-zinc-900 border border-zinc-700 rounded-lg p-4">
+      <% Region.all.each do |region| %>
+        <label class="flex items-center space-x-2 cursor-pointer hover:bg-zinc-800 p-2 rounded transition-colors">
+          <%= check_box_tag "regions[]", region[:name], 
+              @campaign.regions.to_s.split(',').include?(region[:name]),
+              class: "w-4 h-4 text-blue-500 bg-zinc-800 border-zinc-600 rounded focus:ring-blue-500 focus:ring-2" %>
+          <span class="text-sm text-zinc-300"><%= region[:label] %></span>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Target -->
+  <div class="space-y-2">
+    <%= f.label :target_id, "Target", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.collection_select :target_id, Target.order(:name), :id, :name,
+        { include_blank: "Select a target (optional)" },
+        { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" } %>
+  </div>
+
+  <!-- Exchanges -->
+  <div class="space-y-2">
+    <%= label_tag :exchanges, "Exchanges", class: "block text-sm font-medium text-zinc-300" %>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 bg-zinc-900 border border-zinc-700 rounded-lg p-4">
+      <% Exchange.all.each do |exchange| %>
+        <label class="flex items-center space-x-2 cursor-pointer hover:bg-zinc-800 p-2 rounded transition-colors">
+          <%= check_box_tag "exchanges[]", exchange[:name],
+              @campaign.exchanges.to_s.split(',').include?(exchange[:name]),
+              class: "w-4 h-4 text-blue-500 bg-zinc-800 border-zinc-600 rounded focus:ring-blue-500 focus:ring-2" %>
+          <span class="text-sm text-zinc-300"><%= exchange[:name].camelize %></span>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Shard -->
+  <div class="space-y-2">
+    <%= f.label :shard, "Shard", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :shard, class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors", placeholder: "Optional shard identifier" %>
+  </div>
+
+  <!-- Status -->
+  <div class="space-y-2">
+    <%= f.label :status, "Status", class: "block text-sm font-medium text-zinc-300" %>
+    <div class="flex space-x-4 bg-zinc-900 border border-zinc-700 rounded-lg p-4">
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= f.radio_button :status, "runnable", class: "w-4 h-4 text-blue-500 bg-zinc-800 border-zinc-600 focus:ring-blue-500 focus:ring-2" %>
+        <span class="text-sm text-zinc-300">Runnable</span>
+      </label>
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= f.radio_button :status, "offline", class: "w-4 h-4 text-blue-500 bg-zinc-800 border-zinc-600 focus:ring-blue-500 focus:ring-2" %>
+        <span class="text-sm text-zinc-300">Offline</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Budget Fields -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="space-y-2">
+      <%= f.label :budget_limit_hourly, "Hourly Budget", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+        <%= f.number_field :budget_limit_hourly, step: 0.01, class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors", placeholder: "0.00" %>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :budget_limit_daily, "Daily Budget", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+        <%= f.number_field :budget_limit_daily, step: 0.01, class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors", placeholder: "0.00" %>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :total_budget, "Total Budget *", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+        <%= f.number_field :total_budget, step: 0.01, class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors", placeholder: "0.00" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fraud Detection -->
+  <div class="space-y-2">
+    <%= f.label :forensiq, "Fraud Detection", class: "block text-sm font-medium text-zinc-300" %>
+    <div class="flex space-x-4 bg-zinc-900 border border-zinc-700 rounded-lg p-4">
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= f.radio_button :forensiq, "yes", class: "w-4 h-4 text-blue-500 bg-zinc-800 border-zinc-600 focus:ring-blue-500 focus:ring-2" %>
+        <span class="text-sm text-zinc-300">Yes</span>
+      </label>
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= f.radio_button :forensiq, "no", class: "w-4 h-4 text-blue-500 bg-zinc-800 border-zinc-600 focus:ring-blue-500 focus:ring-2" %>
+        <span class="text-sm text-zinc-300">No</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- RTB Standards (Rules) -->
+  <div class="space-y-2">
+    <%= f.label :rtb_standard_ids, "Rules", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.collection_select :rtb_standard_ids, RtbStandard.order(:name), :id, :name,
+        {},
+        { multiple: true, 
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+          style: "min-height: 120px;" } %>
+    <p class="text-xs text-zinc-500 mt-1">Hold Ctrl/Cmd to select multiple rules</p>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex items-center space-x-3 pt-4 border-t border-zinc-800">
+    <%= f.submit (@campaign.persisted? ? "Update Campaign" : "Create Campaign"), 
+        class: "btn btn-primary" %>
+    <%= link_to "Cancel", campaigns_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

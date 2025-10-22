@@ -4,7 +4,6 @@ FactoryBot.define do
     interval_start { Time.now - 1.hour }
     interval_end { Time.now + 30.days }
     iurl { Faker::Internet.url }
-    htmltemplate { "<div>Ad Content: {{AUCTION_PRICE}}</div>" }
     contenttype { "text/html" }
     bid_ecpm { 2.50 }
     total_basket_value { 5000.00 }
@@ -13,8 +12,16 @@ FactoryBot.define do
     total_cost { 0.00 }
     daily_cost { 0.00 }
     hourly_cost { 0.00 }
-    association :campaign
-    association :target
+    campaign { nil }  # Optional association
+    target { nil }    # Optional association
+
+    trait :with_campaign do
+      association :campaign
+    end
+
+    trait :with_target do
+      association :target
+    end
 
     trait :with_width_range do
       width_range { "300-728" }

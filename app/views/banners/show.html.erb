@@ -28,9 +28,19 @@
                             Show
                         </div>
                         <div class="panel-body pan">
-                            <%= render 'showform' %>
-                            <%= link_to 'Edit', edit_banner_path(@banner) , class:"btn btn-default btn-sm" %> |
-                            <%= link_to 'Banners', banners_path , class:"btn btn-default btn-sm"%>        
+                            <div class="p-6">
+                              <div class="space-y-4">
+                                <div><strong>Name:</strong> <%= @banner.name %></div>
+                                <div><strong>Bid ECPM:</strong> $<%= '%.2f' % @banner.bid_ecpm %></div>
+                                <div><strong>Content Type:</strong> <%= @banner.contenttype %></div>
+                                <div><strong>Image URL:</strong> <%= @banner.iurl %></div>
+                                <div><strong>Hourly Budget:</strong> $<%= '%.2f' % @banner.hourly_budget if @banner.hourly_budget %></div>
+                                <div><strong>Daily Budget:</strong> $<%= '%.2f' % @banner.daily_budget if @banner.daily_budget %></div>
+                                <div><strong>Total Budget:</strong> $<%= '%.2f' % @banner.total_basket_value if @banner.total_basket_value %></div>
+                              </div>
+                            </div>
+                            <%= link_to 'Edit', edit_banner_path(@banner) , class:"btn btn-primary" %>
+                            <%= link_to 'Banners', banners_path , class:"btn btn-secondary"%>        
                         </div>
                     </div>                            
                 </div>

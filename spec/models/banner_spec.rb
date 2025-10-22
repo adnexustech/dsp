@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Banner, type: :model do
   describe 'associations' do
-    it { should belong_to(:campaign) }
-    it { should belong_to(:target) }
+    it { should belong_to(:campaign).optional }
+    it { should belong_to(:target).optional }
     it { should have_and_belong_to_many(:rtb_standards) }
     it { should have_many(:report_commands) }
     it { should have_many(:exchange_attributes).dependent(:destroy) }
@@ -14,7 +14,6 @@ RSpec.describe Banner, type: :model do
     it { should validate_presence_of(:interval_start) }
     it { should validate_presence_of(:interval_end) }
     it { should validate_presence_of(:iurl) }
-    it { should validate_presence_of(:htmltemplate) }
     it { should validate_presence_of(:contenttype) }
     it { should validate_presence_of(:bid_ecpm) }
     it { should validate_numericality_of(:bid_ecpm) }

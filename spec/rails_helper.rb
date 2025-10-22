@@ -16,6 +16,7 @@ require 'faker'
 require 'database_cleaner/active_record'
 require 'shoulda/matchers'
 require 'webmock/rspec'
+require 'capybara/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -92,7 +93,27 @@ RSpec.configure do |config|
 
   # Infer spec type from file location
   config.infer_spec_type_from_file_location!
+
+  # Capybara configuration
+  config.before(:each, type: :system) do
+    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
+  end
 end
+
+# Capybara configuration
+Capybara.register_driver :selenium_chrome_headless do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless')
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--disable-gpu')
+  options.add_argument('--window-size=1400,1400')
+  
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+
+Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :selenium_chrome_headless
 
 # Shoulda Matchers configuration
 Shoulda::Matchers.configure do |config|
