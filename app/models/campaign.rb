@@ -2,7 +2,7 @@ class Campaign < ApplicationRecord
     
     
     has_many :banners, :dependent => :destroy
-    belongs_to :target
+    belongs_to :target, optional: true
     has_many :banner_videos, :dependent => :destroy
     has_and_belongs_to_many :rtb_standards
     
