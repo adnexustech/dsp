@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :organizations, through: :organization_members
   has_many :owned_organizations, class_name: 'Organization', foreign_key: 'owner_id', dependent: :destroy
   belongs_to :current_organization, class_name: 'Organization', optional: true
+  has_one_attached :avatar
 
   # Constants
   MIN_DEPOSIT_AMOUNT = 10.00
@@ -178,6 +179,35 @@ class User < ApplicationRecord
 
   def current_org
     current_organization || personal_organization || organizations.first
+  end
+
+  # Profile Methods
+  def avatar_url
+    avatar.attached? ? Rails.application.routes.url_helpers.rails_blob_path(avatar, only_path: true) : nil
+  end
+
+  def initials
+    if name.present?
+      name.split(' ').map(&:first).join.upcase[0..1]
+    else
+      email[0..1].upcase
+    end
+  end
+
+  def skills_array
+    skills.present? ? skills.split(',').map(&:strip) : []
+  end
+
+  def service_categories_array
+    service_categories.present? ? service_categories.split(',').map(&:strip) : []
+  end
+
+  def profile_complete?
+    bio.present? && skills.present? && avatar.attached?
+  end
+
+  def service_provider?
+    available_for_hire && profile_complete?
   end
 
   private

@@ -1,0 +1,164 @@
+🚀 Starting Responsive Design Tests
+Base URL: http://localhost:4000
+
+Viewport configurations:
+  • MOBILE: 375x667 (iPhone SE)
+  • TABLET: 768x1024 (iPad)
+  • DESKTOP: 1920x1080 (Desktop)
+
+🌐 Initializing browser context with DESKTOP viewport...
+🔐 Logging in...
+✓ Successfully logged in - Redirected to: http://localhost:4000/
+
+
+📱 Testing /myaccount Page
+============================================================
+
+=== Testing myaccount at MOBILE (375x667) ===
+✓ Screenshot saved: myaccount-mobile.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      My Account
+    
+    
+      Account Overview"
+⚠ Stat cards: Not found (may use different classes)
+✓ Card elements found: 3
+✓ Profile content visible
+✓ Grid layout: grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8
+
+=== Testing myaccount at TABLET (768x1024) ===
+✓ Screenshot saved: myaccount-tablet.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      My Account
+    
+    
+      Account Overview"
+⚠ Stat cards: Not found (may use different classes)
+✓ Card elements found: 3
+✓ Profile content visible
+✓ Grid layout: grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8
+
+=== Testing myaccount at DESKTOP (1920x1080) ===
+✓ Screenshot saved: myaccount-desktop.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      My Account
+    
+    
+      Account Overview"
+⚠ Stat cards: Not found (may use different classes)
+✓ Card elements found: 3
+✓ Profile content visible
+✓ Grid layout: grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8
+
+
+🎯 Testing Dashboard Page
+============================================================
+
+=== Testing dashboards at MOBILE (375x667) ===
+✓ Screenshot saved: dashboards-mobile.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      Dashboard
+    
+    
+      Real Time Bidder Dashboard"
+✓ Stat cards found: 4
+  Grid parent classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+✓ Card elements found: 9
+✓ Grid layout: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+
+=== Testing dashboards at TABLET (768x1024) ===
+✓ Screenshot saved: dashboards-tablet.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      Dashboard
+    
+    
+      Real Time Bidder Dashboard"
+✓ Stat cards found: 4
+  Grid parent classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+✓ Card elements found: 9
+✓ Grid layout: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+
+=== Testing dashboards at DESKTOP (1920x1080) ===
+✓ Screenshot saved: dashboards-desktop.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      Dashboard
+    
+    
+      Real Time Bidder Dashboard"
+✓ Stat cards found: 4
+  Grid parent classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+✓ Card elements found: 9
+✓ Grid layout: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+
+
+🏠 Testing Home Page (/)
+============================================================
+
+=== Testing home at MOBILE (375x667) ===
+✓ Screenshot saved: home-mobile.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      Dashboard
+    
+    
+      Real Time Bidder Dashboard"
+✓ Stat cards found: 4
+  Grid parent classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+✓ Card elements found: 9
+✓ Grid layout: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+
+=== Testing home at TABLET (768x1024) ===
+✓ Screenshot saved: home-tablet.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      Dashboard
+    
+    
+      Real Time Bidder Dashboard"
+✓ Stat cards found: 4
+  Grid parent classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+✓ Card elements found: 9
+✓ Grid layout: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+
+=== Testing home at DESKTOP (1920x1080) ===
+✓ Screenshot saved: home-desktop.png
+✓ Page title: Adnexus
+✓ Breadcrumbs: "Home
+      
+      Dashboard
+    
+    
+      Real Time Bidder Dashboard"
+✓ Stat cards found: 4
+  Grid parent classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+✓ Card elements found: 9
+✓ Grid layout: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8
+
+
+✅ All tests completed!
+Screenshots saved to: /Users/z/work/adnexus/dsp/responsive-screenshots
+
+Screenshot files:
+  • dashboards-desktop.png
+  • dashboards-mobile.png
+  • dashboards-tablet.png
+  • home-desktop.png
+  • home-mobile.png
+  • home-tablet.png
+  • myaccount-desktop.png
+  • myaccount-mobile.png
+  • myaccount-tablet.png

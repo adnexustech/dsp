@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_22_205025) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -368,6 +368,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205025) do
     t.datetime "trial_ends_at"
     t.decimal "credits_balance", precision: 10, scale: 2, default: "0.0", null: false
     t.integer "current_organization_id"
+    t.text "bio"
+    t.text "skills"
+    t.decimal "hourly_rate", precision: 10
+    t.string "portfolio_url"
+    t.string "twitter_url"
+    t.string "linkedin_url"
+    t.boolean "available_for_hire"
+    t.text "service_categories"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

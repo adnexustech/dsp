@@ -1,0 +1,231 @@
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">My Profile</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Professional Profile</div>
+    </div>
+  </div>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="max-w-7xl mx-auto">
+  <!-- Profile Header -->
+  <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl p-8 mb-0" style="height: 200px;"></div>
+
+  <div class="bg-zinc-900 border border-zinc-800 border-t-0 rounded-b-xl p-6 mb-6" style="margin-top: -100px;">
+    <div class="flex flex-col md:flex-row gap-6 items-start">
+      <!-- Avatar -->
+      <div class="flex-shrink-0">
+        <div style="width: 160px; height: 160px; border-radius: 16px; overflow: hidden; border: 4px solid #18181b; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+          <% if @user.avatar.attached? %>
+            <%= image_tag @user.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+          <% else %>
+            <span style="font-size: 48px; font-weight: 600; color: white;"><%= @user.initials %></span>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- User Info -->
+      <div class="flex-1">
+        <div class="flex justify-between items-start flex-wrap gap-4">
+          <div>
+            <h1 class="text-3xl font-bold mb-2"><%= @user.name || @user.email %></h1>
+            <p class="text-zinc-400 mb-3"><%= @user.email %></p>
+
+            <% if @user.available_for_hire %>
+              <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold">
+                <i class="fa-solid fa-circle-check"></i>
+                Available for Hire
+              </span>
+            <% else %>
+              <span class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-700 text-zinc-300 rounded-lg text-sm">
+                <i class="fa-solid fa-circle"></i>
+                Not Available
+              </span>
+            <% end %>
+          </div>
+
+          <div class="flex gap-3">
+            <%= link_to edit_profile_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" do %>
+              <i class="fa-solid fa-pencil mr-2"></i>Edit Profile
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Profile Completion -->
+        <div class="mt-6">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-zinc-400">Profile Completion</span>
+            <span class="text-sm font-semibold"><%= @profile_completion %>%</span>
+          </div>
+          <div class="w-full bg-zinc-800 rounded-full h-2">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all" style="width: <%= @profile_completion %>%"></div>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <% if @user.twitter_url.present? || @user.linkedin_url.present? || @user.portfolio_url.present? %>
+          <div class="flex gap-3 mt-4">
+            <% if @user.twitter_url.present? %>
+              <%= link_to @user.twitter_url, target: "_blank", class: "flex items-center gap-2 px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors" do %>
+                <i class="fa-brands fa-twitter text-blue-400"></i>Twitter
+              <% end %>
+            <% end %>
+
+            <% if @user.linkedin_url.present? %>
+              <%= link_to @user.linkedin_url, target: "_blank", class: "flex items-center gap-2 px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors" do %>
+                <i class="fa-brands fa-linkedin text-blue-500"></i>LinkedIn
+              <% end %>
+            <% end %>
+
+            <% if @user.portfolio_url.present? %>
+              <%= link_to @user.portfolio_url, target: "_blank", class: "flex items-center gap-2 px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors" do %>
+                <i class="fa-solid fa-link text-purple-400"></i>Portfolio
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Column -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- About / Bio -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-user text-blue-500"></i>
+          About Me
+        </h2>
+        <% if @user.bio.present? %>
+          <p class="text-zinc-300 leading-relaxed whitespace-pre-wrap"><%= @user.bio %></p>
+        <% else %>
+          <div class="text-center py-8">
+            <i class="fa-solid fa-file-lines text-4xl text-zinc-700 mb-3"></i>
+            <p class="text-zinc-500 mb-4">Your bio is empty</p>
+            <%= link_to edit_profile_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 inline-block" do %>
+              Add Bio
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Skills -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+          Skills & Expertise
+        </h2>
+        <% if @user.skills_array.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @user.skills_array.each do |skill| %>
+              <span class="px-4 py-2 bg-blue-600/10 border border-blue-500/20 text-blue-400 rounded-lg text-sm font-medium">
+                <%= skill %>
+              </span>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <i class="fa-solid fa-lightbulb text-4xl text-zinc-700 mb-3"></i>
+            <p class="text-zinc-500 mb-4">No skills added yet</p>
+            <%= link_to edit_profile_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 inline-block" do %>
+              Add Skills
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="space-y-6">
+      <!-- Service Info -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-briefcase text-purple-500"></i>
+          Service Information
+        </h3>
+
+        <div class="space-y-4">
+          <% if @user.hourly_rate.present? %>
+            <div class="flex justify-between">
+              <span class="text-zinc-400">Hourly Rate</span>
+              <span class="font-semibold text-green-500">$<%= number_with_precision(@user.hourly_rate, precision: 2) %>/hr</span>
+            </div>
+          <% end %>
+
+          <% if @user.service_categories_array.any? %>
+            <div>
+              <span class="text-zinc-400 block mb-2">Services Offered</span>
+              <div class="flex flex-wrap gap-2">
+                <% @user.service_categories_array.each do |category| %>
+                  <span class="px-3 py-1 bg-purple-600/10 border border-purple-500/20 text-purple-400 rounded-full text-xs font-medium">
+                    <%= category %>
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="flex justify-between border-t border-zinc-800 pt-4">
+            <span class="text-zinc-400">Member Since</span>
+            <span class="font-medium"><%= @user.created_at.strftime('%B %Y') %></span>
+          </div>
+
+          <% if @user.service_provider? %>
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 text-center">
+              <i class="fa-solid fa-star text-yellow-400 text-2xl mb-2"></i>
+              <p class="text-white font-semibold mb-1">Verified Provider</p>
+              <p class="text-blue-100 text-xs">Profile complete and available in marketplace</p>
+            </div>
+          <% else %>
+            <div class="bg-zinc-800 border border-zinc-700 rounded-lg p-4 text-center">
+              <i class="fa-solid fa-exclamation-circle text-zinc-500 text-2xl mb-2"></i>
+              <p class="text-zinc-400 font-semibold mb-1">Complete Your Profile</p>
+              <p class="text-zinc-500 text-xs mb-3">Add bio, skills, and avatar to appear in marketplace</p>
+              <%= link_to edit_profile_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm inline-block" do %>
+                Complete Profile
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+        <div class="space-y-2">
+          <%= link_to market_index_path, class: "flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group" do %>
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-store text-blue-500"></i>
+              <span>Browse Marketplace</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 text-xs"></i>
+          <% end %>
+
+          <%= link_to myaccount_path, class: "flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group" do %>
+            <div class="flex items-center gap-3">
+              <i class="fa-regular fa-user text-green-500"></i>
+              <span>Account Settings</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 text-xs"></i>
+          <% end %>
+
+          <%= link_to organization_path, class: "flex items-center justify-between p-3 rounded-lg hover:bg-zinc-800 transition-colors group" do %>
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-building text-orange-500"></i>
+              <span>Organization</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-zinc-600 group-hover:text-zinc-400 text-xs"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%end%>

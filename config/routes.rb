@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get "market/index"
+  get "market/show"
+  get "profiles/show"
+  get "profiles/edit"
+  get "profiles/update"
   resources :banners
   resources :campaigns
   resources :banner_videos
@@ -70,6 +75,17 @@ Rails.application.routes.draw do
 
   # Invoices
   resources :invoices, only: [:index]
+
+  # Profile Routes
+  resource :profile, only: [:show, :edit, :update], controller: 'profiles'
+
+  # Marketplace
+  get '/market', to: 'market#index', as: :market_index
+  get '/market/:id', to: 'market#show', as: :market_provider
+
+  # Referral & Affiliate Programs
+  get '/referrals', to: 'referrals#index', as: :referrals
+  get '/affiliates', to: 'affiliates#index', as: :affiliates
 
   # Admin Routes
   namespace :admin do
