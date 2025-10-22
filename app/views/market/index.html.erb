@@ -1,4 +1,272 @@
-<div>
-  <h1 class="font-bold text-4xl">Market#index</h1>
-  <p>Find me in app/views/market/index.html.erb</p>
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Marketplace</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Browse Service Providers</div>
+    </div>
+  </div>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="max-w-7xl mx-auto">
+  
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 mb-6">
+    <div class="max-w-3xl">
+      <h1 class="text-3xl font-bold mb-3">Find Expert Marketing Professionals</h1>
+      <p class="text-blue-100 text-lg mb-4">Connect with experienced campaign managers, video producers, designers, and more to help grow your advertising success.</p>
+      
+      <!-- Search Bar -->
+      <div class="relative">
+        <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+        <input type="text" id="providerSearch" placeholder="Search by name, skills, or category..." class="w-full pl-12 pr-4 py-3 bg-white/10 backdrop-blur border border-white/20 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:border-white/40 transition-colors">
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    
+    <!-- Sidebar Filters -->
+    <div class="lg:col-span-1">
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 sticky top-20">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-filter text-blue-500"></i>
+          Filter by Category
+        </h3>
+        
+        <div class="space-y-2">
+          <%= link_to market_index_path, class: "flex items-center justify-between p-3 rounded-lg #{@category.nil? ? 'bg-blue-600 text-white' : 'hover:bg-zinc-800'} transition-colors" do %>
+            <span>All Categories</span>
+            <% if @category.nil? %>
+              <i class="fa-solid fa-check text-sm"></i>
+            <% end %>
+          <% end %>
+          
+          <% @categories.each do |category| %>
+            <%= link_to market_index_path(category: category), class: "flex items-center justify-between p-3 rounded-lg #{@category == category ? 'bg-blue-600 text-white' : 'hover:bg-zinc-800'} transition-colors" do %>
+              <span class="text-sm"><%= category %></span>
+              <% if @category == category %>
+                <i class="fa-solid fa-check text-sm"></i>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <!-- Stats -->
+        <div class="mt-6 pt-6 border-t border-zinc-800">
+          <div class="text-sm text-zinc-400 mb-2">Providers Found</div>
+          <div class="text-2xl font-bold"><%= @providers.total_count %></div>
+        </div>
+
+        <!-- Become a Provider CTA -->
+        <div class="mt-6 p-4 bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-lg">
+          <div class="text-sm font-semibold mb-2">
+            <i class="fa-solid fa-star text-yellow-400"></i>
+            Offer Your Services
+          </div>
+          <p class="text-xs text-zinc-400 mb-3">Join our marketplace and connect with clients</p>
+          <%= link_to "Complete Your Profile", profile_path, class: "block w-full px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center text-sm transition-colors" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Provider Grid -->
+    <div class="lg:col-span-3">
+      <% if @category.present? %>
+        <div class="mb-4 flex items-center gap-3">
+          <span class="text-zinc-400">Filtered by:</span>
+          <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-600/10 border border-blue-500/20 text-blue-400 rounded-full text-sm">
+            <%= @category %>
+            <%= link_to market_index_path, class: "hover:text-blue-300" do %>
+              <i class="fa-solid fa-times"></i>
+            <% end %>
+          </span>
+        </div>
+      <% end %>
+
+      <% if @providers.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <% @providers.each do |provider| %>
+            <%= link_to market_provider_path(provider), class: "block bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all group" do %>
+              
+              <!-- Provider Card -->
+              <div class="flex items-start gap-4 mb-4">
+                <!-- Avatar -->
+                <div style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; border: 2px solid #27272a; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <% if provider.avatar.attached? %>
+                    <%= image_tag provider.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+                  <% else %>
+                    <span style="font-size: 24px; font-weight: 600; color: white;"><%= provider.initials %></span>
+                  <% end %>
+                </div>
+
+                <!-- Info -->
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-semibold text-lg mb-1 group-hover:text-blue-400 transition-colors truncate">
+                    <%= provider.name || provider.email %>
+                  </h3>
+                  
+                  <% if provider.hourly_rate.present? %>
+                    <div class="text-green-500 font-semibold text-sm mb-2">
+                      $<%= number_with_precision(provider.hourly_rate, precision: 0) %>/hr
+                    </div>
+                  <% end %>
+
+                  <!-- Availability Badge -->
+                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-green-600/10 border border-green-500/20 text-green-400 rounded text-xs font-medium">
+                    <i class="fa-solid fa-circle text-[8px]"></i>
+                    Available
+                  </span>
+                </div>
+              </div>
+
+              <!-- Bio Preview -->
+              <% if provider.bio.present? %>
+                <p class="text-sm text-zinc-400 mb-4 line-clamp-2">
+                  <%= provider.bio.truncate(120) %>
+                </p>
+              <% end %>
+
+              <!-- Skills -->
+              <% if provider.skills_array.any? %>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <% provider.skills_array.take(3).each do |skill| %>
+                    <span class="px-2 py-1 bg-blue-600/10 border border-blue-500/20 text-blue-400 rounded text-xs">
+                      <%= skill %>
+                    </span>
+                  <% end %>
+                  <% if provider.skills_array.length > 3 %>
+                    <span class="px-2 py-1 bg-zinc-800 text-zinc-400 rounded text-xs">
+                      +<%= provider.skills_array.length - 3 %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <!-- View Profile Button -->
+              <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+                <span class="text-sm text-zinc-500">
+                  Member since <%= provider.created_at.strftime('%b %Y') %>
+                </span>
+                <span class="text-blue-400 text-sm font-medium group-hover:gap-2 inline-flex items-center gap-1 transition-all">
+                  View Profile
+                  <i class="fa-solid fa-arrow-right text-xs"></i>
+                </span>
+              </div>
+
+            <% end %>
+          <% end %>
+        </div>
+
+        <!-- Pagination -->
+        <% if @providers.total_pages > 1 %>
+          <div class="mt-8 flex justify-center">
+            <%= paginate @providers, theme: 'twitter-bootstrap-4', outer_window: 1, inner_window: 2 %>
+          </div>
+        <% end %>
+
+      <% else %>
+        <!-- Empty State -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-12 text-center">
+          <div class="max-w-md mx-auto">
+            <i class="fa-solid fa-users-slash text-6xl text-zinc-700 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">No Providers Found</h3>
+            <p class="text-zinc-400 mb-6">
+              <% if @category.present? %>
+                No service providers found in "<%= @category %>". Try browsing all categories.
+              <% else %>
+                No service providers are currently available. Check back soon!
+              <% end %>
+            </p>
+            <% if @category.present? %>
+              <%= link_to "View All Categories", market_index_path, class: "inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
 </div>
+
+<script>
+  // Live search functionality
+  const searchInput = document.getElementById('providerSearch');
+  const providerCards = document.querySelectorAll('[href^="/market/"]').forEach(card => {
+    // Store original content for searching
+    card.dataset.searchContent = card.textContent.toLowerCase();
+  });
+
+  searchInput.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    
+    document.querySelectorAll('[href^="/market/"]').forEach(card => {
+      if (!card.dataset.searchContent) return;
+      
+      if (searchTerm === '' || card.dataset.searchContent.includes(searchTerm)) {
+        card.parentElement.style.display = '';
+      } else {
+        card.parentElement.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Kaminari Pagination Styling */
+  .pagination {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pagination .page-item {
+    list-style: none;
+  }
+  
+  .pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem 1rem;
+    background: #18181b;
+    border: 1px solid #27272a;
+    color: #a1a1aa;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .pagination .page-link:hover {
+    background: #27272a;
+    border-color: #3b82f6;
+    color: #ffffff;
+  }
+  
+  .pagination .page-item.active .page-link {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: #ffffff;
+  }
+  
+  .pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Line clamp utility */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+<%end%>

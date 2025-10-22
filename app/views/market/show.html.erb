@@ -1,4 +1,266 @@
-<div>
-  <h1 class="font-bold text-4xl">Market#show</h1>
-  <p>Find me in app/views/market/show.html.erb</p>
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li><a href="<%= market_index_path %>">Marketplace</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active"><%= @provider.name || @provider.email %></li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Service Provider Profile</div>
+    </div>
+  </div>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="max-w-7xl mx-auto">
+  
+  <!-- Profile Header -->
+  <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl p-8 mb-0" style="height: 200px;"></div>
+
+  <div class="bg-zinc-900 border border-zinc-800 border-t-0 rounded-b-xl p-6 mb-6" style="margin-top: -100px;">
+    <div class="flex flex-col md:flex-row gap-6 items-start">
+      <!-- Avatar -->
+      <div class="flex-shrink-0">
+        <div style="width: 160px; height: 160px; border-radius: 16px; overflow: hidden; border: 4px solid #18181b; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+          <% if @provider.avatar.attached? %>
+            <%= image_tag @provider.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+          <% else %>
+            <span style="font-size: 48px; font-weight: 600; color: white;"><%= @provider.initials %></span>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Provider Info -->
+      <div class="flex-1">
+        <div class="flex justify-between items-start flex-wrap gap-4">
+          <div>
+            <h1 class="text-3xl font-bold mb-2"><%= @provider.name || @provider.email %></h1>
+            <p class="text-zinc-400 mb-3"><%= @provider.email %></p>
+
+            <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold">
+              <i class="fa-solid fa-circle-check"></i>
+              Available for Hire
+            </span>
+          </div>
+
+          <div class="flex gap-3">
+            <a href="mailto:<%= @provider.email %>" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-flex items-center gap-2">
+              <i class="fa-solid fa-envelope"></i>
+              Contact Provider
+            </a>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <% if @provider.twitter_url.present? || @provider.linkedin_url.present? || @provider.portfolio_url.present? %>
+          <div class="flex gap-3 mt-4">
+            <% if @provider.twitter_url.present? %>
+              <%= link_to @provider.twitter_url, target: "_blank", class: "flex items-center gap-2 px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors" do %>
+                <i class="fa-brands fa-twitter text-blue-400"></i>Twitter
+              <% end %>
+            <% end %>
+
+            <% if @provider.linkedin_url.present? %>
+              <%= link_to @provider.linkedin_url, target: "_blank", class: "flex items-center gap-2 px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors" do %>
+                <i class="fa-brands fa-linkedin text-blue-500"></i>LinkedIn
+              <% end %>
+            <% end %>
+
+            <% if @provider.portfolio_url.present? %>
+              <%= link_to @provider.portfolio_url, target: "_blank", class: "flex items-center gap-2 px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors" do %>
+                <i class="fa-solid fa-link text-purple-400"></i>Portfolio
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Left Column -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- About / Bio -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-user text-blue-500"></i>
+          About
+        </h2>
+        <% if @provider.bio.present? %>
+          <p class="text-zinc-300 leading-relaxed whitespace-pre-wrap"><%= @provider.bio %></p>
+        <% else %>
+          <div class="text-center py-8">
+            <i class="fa-solid fa-file-lines text-4xl text-zinc-700 mb-3"></i>
+            <p class="text-zinc-500">This provider hasn't added a bio yet.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Skills -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+          Skills & Expertise
+        </h2>
+        <% if @provider.skills_array.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @provider.skills_array.each do |skill| %>
+              <span class="px-4 py-2 bg-blue-600/10 border border-blue-500/20 text-blue-400 rounded-lg text-sm font-medium">
+                <%= skill %>
+              </span>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <i class="fa-solid fa-lightbulb text-4xl text-zinc-700 mb-3"></i>
+            <p class="text-zinc-500">No skills listed yet.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Related Providers -->
+      <% if @related_providers.any? %>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+          <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+            <i class="fa-solid fa-users text-purple-500"></i>
+            Other Service Providers
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <% @related_providers.each do |related| %>
+              <%= link_to market_provider_path(related), class: "block bg-zinc-800/50 border border-zinc-700 rounded-lg p-4 hover:border-blue-500/50 hover:bg-zinc-800 transition-all group" do %>
+                
+                <!-- Avatar -->
+                <div class="flex justify-center mb-3">
+                  <div style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; border: 2px solid #27272a; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center;">
+                    <% if related.avatar.attached? %>
+                      <%= image_tag related.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+                    <% else %>
+                      <span style="font-size: 24px; font-weight: 600; color: white;"><%= related.initials %></span>
+                    <% end %>
+                  </div>
+                </div>
+
+                <h3 class="font-semibold text-center mb-1 group-hover:text-blue-400 transition-colors truncate">
+                  <%= related.name || related.email %>
+                </h3>
+                
+                <% if related.hourly_rate.present? %>
+                  <div class="text-green-500 font-semibold text-sm text-center">
+                    $<%= number_with_precision(related.hourly_rate, precision: 0) %>/hr
+                  </div>
+                <% end %>
+
+              <% end %>
+            <% end %>
+          </div>
+
+          <div class="mt-4 text-center">
+            <%= link_to market_index_path, class: "inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm font-medium" do %>
+              Browse All Providers
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <!-- Right Column -->
+    <div class="space-y-6">
+      
+      <!-- Service Info -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-briefcase text-purple-500"></i>
+          Service Information
+        </h3>
+
+        <div class="space-y-4">
+          <% if @provider.hourly_rate.present? %>
+            <div class="p-4 bg-green-600/10 border border-green-500/20 rounded-lg">
+              <div class="text-sm text-green-400 mb-1">Hourly Rate</div>
+              <div class="text-2xl font-bold text-green-500">
+                $<%= number_with_precision(@provider.hourly_rate, precision: 2) %><span class="text-base font-normal">/hr</span>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @provider.service_categories_array.any? %>
+            <div>
+              <span class="text-zinc-400 block mb-2 text-sm">Services Offered</span>
+              <div class="flex flex-wrap gap-2">
+                <% @provider.service_categories_array.each do |category| %>
+                  <span class="px-3 py-1 bg-purple-600/10 border border-purple-500/20 text-purple-400 rounded-full text-xs font-medium">
+                    <%= category %>
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="flex justify-between border-t border-zinc-800 pt-4">
+            <span class="text-zinc-400 text-sm">Member Since</span>
+            <span class="font-medium"><%= @provider.created_at.strftime('%B %Y') %></span>
+          </div>
+
+          <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 text-center">
+            <i class="fa-solid fa-star text-yellow-400 text-2xl mb-2"></i>
+            <p class="text-white font-semibold mb-1">Verified Provider</p>
+            <p class="text-blue-100 text-xs">Profile verified and active</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Card -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4">Get in Touch</h3>
+        
+        <p class="text-sm text-zinc-400 mb-4">
+          Interested in working with <%= @provider.name || 'this provider' %>? Reach out to discuss your project needs.
+        </p>
+
+        <a href="mailto:<%= @provider.email %>" class="block w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-center">
+          <i class="fa-solid fa-envelope mr-2"></i>
+          Send Message
+        </a>
+
+        <div class="mt-4 text-center text-xs text-zinc-500">
+          Response times vary by provider
+        </div>
+      </div>
+
+      <!-- Safety Notice -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <div class="flex items-start gap-3">
+          <i class="fa-solid fa-shield-halved text-blue-500 text-xl flex-shrink-0 mt-0.5"></i>
+          <div>
+            <h4 class="font-semibold text-sm mb-2">Safety Tips</h4>
+            <ul class="text-xs text-zinc-400 space-y-1">
+              <li>• Communicate through the platform</li>
+              <li>• Verify credentials and reviews</li>
+              <li>• Set clear project expectations</li>
+              <li>• Use secure payment methods</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back to Marketplace -->
+      <div class="text-center">
+        <%= link_to market_index_path, class: "inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm transition-colors" do %>
+          <i class="fa-solid fa-arrow-left"></i>
+          Back to Marketplace
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+
 </div>
+<%end%>

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "affiliates/index"
+  get "referrals/index"
   get "market/index"
   get "market/show"
   get "profiles/show"

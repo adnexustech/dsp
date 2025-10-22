@@ -1,0 +1,266 @@
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Referral Program</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Referral Program</div>
+    </div>
+  </div>
+<%end%>
+
+<% content_for :main_body do %>
+<div class="max-w-7xl mx-auto">
+  
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-8 mb-6">
+    <div class="max-w-3xl">
+      <h1 class="text-3xl font-bold mb-3">Earn Rewards by Referring Friends</h1>
+      <p class="text-purple-100 text-lg mb-4">Share AdNexus with your network and earn credits when they sign up and start advertising.</p>
+      
+      <div class="flex gap-4">
+        <div class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg">
+          <i class="fa-solid fa-gift text-yellow-400 text-xl"></i>
+          <div>
+            <div class="text-xs text-purple-200">You Earn</div>
+            <div class="font-bold">$50 Credits</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg">
+          <i class="fa-solid fa-users text-blue-400 text-xl"></i>
+          <div>
+            <div class="text-xs text-purple-200">They Get</div>
+            <div class="font-bold">$25 Bonus</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- Your Referral Link -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-link text-purple-500"></i>
+          Your Unique Referral Link
+        </h2>
+        
+        <p class="text-zinc-400 text-sm mb-4">Share this link with friends and colleagues. When they sign up through your link, you both earn rewards!</p>
+        
+        <div class="flex gap-3">
+          <input type="text" readonly value="https://adnexus.com/ref/<%= current_user.id %>-<%= current_user.email.parameterize %>" id="referralLink" class="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white font-mono text-sm">
+          <button onclick="copyReferralLink()" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold inline-flex items-center gap-2">
+            <i class="fa-solid fa-copy"></i>
+            Copy
+          </button>
+        </div>
+
+        <!-- Social Share Buttons -->
+        <div class="mt-4 flex gap-3">
+          <a href="mailto:?subject=Join%20AdNexus&body=I%20think%20you'd%20love%20AdNexus%20for%20your%20advertising%20needs.%20Use%20my%20referral%20link:%20https://adnexus.com/ref/<%= current_user.id %>" class="flex-1 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-center transition-colors">
+            <i class="fa-solid fa-envelope text-zinc-400 mr-2"></i>
+            <span class="text-sm">Email</span>
+          </a>
+          <a href="https://twitter.com/intent/tweet?text=Join%20me%20on%20AdNexus!&url=https://adnexus.com/ref/<%= current_user.id %>" target="_blank" class="flex-1 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-center transition-colors">
+            <i class="fa-brands fa-twitter text-blue-400 mr-2"></i>
+            <span class="text-sm">Twitter</span>
+          </a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://adnexus.com/ref/<%= current_user.id %>" target="_blank" class="flex-1 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-center transition-colors">
+            <i class="fa-brands fa-linkedin text-blue-500 mr-2"></i>
+            <span class="text-sm">LinkedIn</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-circle-info text-blue-500"></i>
+          How It Works
+        </h2>
+
+        <div class="space-y-6">
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center font-bold">1</div>
+            <div class="flex-1">
+              <h3 class="font-semibold mb-1">Share Your Link</h3>
+              <p class="text-sm text-zinc-400">Send your unique referral link to friends via email, social media, or direct message.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center font-bold">2</div>
+            <div class="flex-1">
+              <h3 class="font-semibold mb-1">They Sign Up</h3>
+              <p class="text-sm text-zinc-400">Your friend creates an account using your referral link and gets $25 in bonus credits.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center font-bold">3</div>
+            <div class="flex-1">
+              <h3 class="font-semibold mb-1">They Add Credits</h3>
+              <p class="text-sm text-zinc-400">When your referral adds their first $100 in credits, you earn your reward.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 bg-green-600 rounded-full flex items-center justify-center font-bold">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold mb-1">Earn Rewards</h3>
+              <p class="text-sm text-zinc-400">Receive $50 in credits automatically added to your account. Unlimited referrals!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Referral Activity -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-clock-rotate-left text-green-500"></i>
+          Recent Referral Activity
+        </h2>
+
+        <!-- Empty State (will be replaced with actual data) -->
+        <div class="text-center py-12">
+          <i class="fa-solid fa-inbox text-6xl text-zinc-700 mb-4"></i>
+          <h3 class="text-lg font-semibold mb-2">No Referrals Yet</h3>
+          <p class="text-zinc-400 mb-4">Start sharing your referral link to see your activity here.</p>
+        </div>
+
+        <!-- Example of what activity will look like (commented out)
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                <span class="font-semibold">JD</span>
+              </div>
+              <div>
+                <div class="font-semibold">john.doe@example.com</div>
+                <div class="text-xs text-zinc-500">Signed up 2 days ago</div>
+              </div>
+            </div>
+            <span class="px-3 py-1 bg-yellow-600/10 border border-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">
+              Pending
+            </span>
+          </div>
+        </div>
+        -->
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      
+      <!-- Your Stats -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4">Your Referral Stats</h3>
+        
+        <div class="space-y-4">
+          <div class="p-4 bg-purple-600/10 border border-purple-500/20 rounded-lg">
+            <div class="text-sm text-purple-400 mb-1">Total Referrals</div>
+            <div class="text-3xl font-bold">0</div>
+          </div>
+
+          <div class="p-4 bg-green-600/10 border border-green-500/20 rounded-lg">
+            <div class="text-sm text-green-400 mb-1">Completed</div>
+            <div class="text-3xl font-bold">0</div>
+          </div>
+
+          <div class="p-4 bg-yellow-600/10 border border-yellow-500/20 rounded-lg">
+            <div class="text-sm text-yellow-400 mb-1">Pending</div>
+            <div class="text-3xl font-bold">0</div>
+          </div>
+
+          <div class="p-4 bg-blue-600/10 border border-blue-500/20 rounded-lg">
+            <div class="text-sm text-blue-400 mb-1">Credits Earned</div>
+            <div class="text-3xl font-bold">$0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Program Terms -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-file-contract text-orange-500"></i>
+          Program Terms
+        </h3>
+        
+        <ul class="text-xs text-zinc-400 space-y-2">
+          <li class="flex gap-2">
+            <i class="fa-solid fa-check text-green-500 flex-shrink-0 mt-0.5"></i>
+            <span>Unlimited referrals - earn $50 for each successful referral</span>
+          </li>
+          <li class="flex gap-2">
+            <i class="fa-solid fa-check text-green-500 flex-shrink-0 mt-0.5"></i>
+            <span>Referral must add minimum $100 in credits to qualify</span>
+          </li>
+          <li class="flex gap-2">
+            <i class="fa-solid fa-check text-green-500 flex-shrink-0 mt-0.5"></i>
+            <span>Credits are awarded within 24 hours of qualification</span>
+          </li>
+          <li class="flex gap-2">
+            <i class="fa-solid fa-check text-green-500 flex-shrink-0 mt-0.5"></i>
+            <span>Your friend receives $25 bonus immediately upon signup</span>
+          </li>
+          <li class="flex gap-2">
+            <i class="fa-solid fa-check text-green-500 flex-shrink-0 mt-0.5"></i>
+            <span>Self-referrals and fraudulent activity not permitted</span>
+          </li>
+        </ul>
+
+        <a href="#" class="block mt-4 text-center text-xs text-blue-400 hover:text-blue-300">
+          View Full Terms & Conditions
+        </a>
+      </div>
+
+      <!-- Need Help? -->
+      <div class="bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-xl p-6">
+        <h3 class="font-semibold mb-2">Need Help?</h3>
+        <p class="text-xs text-zinc-400 mb-4">Have questions about the referral program?</p>
+        <a href="mailto:support@adnexus.com" class="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center text-sm transition-colors">
+          Contact Support
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function copyReferralLink() {
+    const input = document.getElementById('referralLink');
+    input.select();
+    input.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(input.value).then(function() {
+      // Show success feedback
+      const button = event.target.closest('button');
+      const originalHTML = button.innerHTML;
+      
+      button.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Copied!';
+      button.classList.add('bg-green-600', 'hover:bg-green-700');
+      button.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+      
+      setTimeout(function() {
+        button.innerHTML = originalHTML;
+        button.classList.remove('bg-green-600', 'hover:bg-green-700');
+        button.classList.add('bg-purple-600', 'hover:bg-purple-700');
+      }, 2000);
+    }, function(err) {
+      alert('Failed to copy link. Please copy manually.');
+    });
+  }
+</script>
+<%end%>
