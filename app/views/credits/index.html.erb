@@ -80,7 +80,7 @@
 
       <!-- Card Body -->
       <div class="p-6">
-        <%= form_with url: credits_path, method: :post, id: 'credits-form', class: 'space-y-5' do |f| %>
+        <%= form_with url: credits_path, method: :post, id: 'credits-form', class: 'space-y-5', local: true, data: { turbo: false } do |f| %>
           <!-- Amount Input -->
           <div>
             <label for="amount" class="block text-sm font-medium text-zinc-300 mb-1.5">
