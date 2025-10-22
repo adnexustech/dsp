@@ -29,6 +29,9 @@ gem 'bootstrap_form', '~> 5.0'
 # Search
 gem 'elasticsearch', '~> 8.0'
 
+# Pagination
+gem 'kaminari', '~> 1.2'
+
 # Web Server
 gem 'puma', '~> 6.0'
 
