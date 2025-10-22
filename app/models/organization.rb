@@ -4,6 +4,7 @@ class Organization < ApplicationRecord
   has_many :organization_members, dependent: :destroy
   has_many :users, through: :organization_members
   has_many :credit_transactions, dependent: :destroy
+  has_one_attached :logo
 
   # Constants
   MIN_DEPOSIT_AMOUNT = 10.00
@@ -20,6 +21,8 @@ class Organization < ApplicationRecord
   validates :subscription_status, inclusion: { in: SUBSCRIPTION_STATUSES }, allow_nil: true
   validates :credits_balance, numericality: { greater_than_or_equal_to: 0 }
   validates :owner_id, presence: true
+  validates :primary_color, format: { with: /\A#[0-9A-F]{6}\z/i }, allow_blank: true
+  validates :secondary_color, format: { with: /\A#[0-9A-F]{6}\z/i }, allow_blank: true
 
   # Callbacks
   before_validation :generate_slug, if: -> { slug.blank? }
@@ -178,6 +181,23 @@ class Organization < ApplicationRecord
 
   def role_for(user)
     organization_members.find_by(user: user)&.role
+  end
+
+  # Branding Methods
+  def brand_primary_color
+    primary_color.presence || '#3b82f6' # Default blue
+  end
+
+  def brand_secondary_color
+    secondary_color.presence || '#8b5cf6' # Default purple
+  end
+
+  def logo_url
+    logo.attached? ? Rails.application.routes.url_helpers.rails_blob_path(logo, only_path: true) : nil
+  end
+
+  def initials
+    name.split(' ').map(&:first).join.upcase[0..1]
   end
 
   private
