@@ -1,15 +1,18 @@
-<% content_for :breadcrumb do %> 	
-        <div class="page-header pull-left">
-            <div class="page-title">
-                Show Target: <em> <%=@target.name%> </em></div>
-        </div>
-        <ol class="breadcrumb page-breadcrumb pull-right">
-            <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-            <li><a href="/targets#">Targets</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-            <li class="active">Show</li>
-        </ol>
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li><a href="/targets">Audiences</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Show</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Audience Details: <em><%=@target.name%></em></div>
+    </div>
+  </div>
 <%end%>
-<% content_for :main_body do %> 	
+<% content_for :main_body do %>
         <div class="col-md-12"><h3></h3>
             <div class="row mtl">
                 <div class="col-md-3">
@@ -21,7 +24,7 @@
                             <%= render 'stats' %>
                         </div>
                     </div>
-                </div>    
+                </div>
                 <div class="col-md-9">
                     <div class="panel panel-grey">
                         <div class="panel-heading">
@@ -30,7 +33,7 @@
                         <div class="panel-body pan">
                             <div class="p-6">
                               <div class="space-y-4">
-                                <div><strong>Target ID:</strong> <%= @target.id %></div>
+                                <div><strong>Audience ID:</strong> <%= @target.id %></div>
                                 <div><strong>Name:</strong> <%= @target.name %></div>
                                 <div><strong>Active Time:</strong> <%= @target.activate_time&.strftime('%m/%d/%Y %H:%M') %> to <%= @target.expire_time&.strftime('%m/%d/%Y %H:%M') %></div>
                                 <div><strong>Domains:</strong> <%= @target.list_of_domains&.split(',')&.first(5)&.join(', ') %><%= ' ...' if @target.list_of_domains&.split(',')&.length.to_i > 5 %></div>
@@ -39,11 +42,10 @@
                               </div>
                             </div>
                             <%= link_to 'Edit', edit_target_path(@target) , class:"btn btn-default btn-sm" %> |
-                            <%= link_to 'Targets', targets_path , class:"btn btn-default btn-sm"%>
+                            <%= link_to 'Audiences', targets_path , class:"btn btn-default btn-sm"%>
                         </div>
                     </div>                            
                 </div>
             </div>
         </div>
 <%end%>
-

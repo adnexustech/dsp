@@ -1,12 +1,14 @@
 <% content_for :breadcrumb do %> 
-        <div class="page-header pull-left">
-            <div class="page-title">
-                Sets</div>
-        </div>
-        <ol class="breadcrumb page-breadcrumb pull-right">
-            <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-            <li class="active">Sets</li>
-        </ol>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">Lists</li>
+    </ol>
+    <div class="page-header">
+      <div class="page-title">Lists</div>
+    </div>
+  </div>
 <%end%>
 
 
@@ -35,7 +37,7 @@
 			<thead>
 			<tr>
 				<th>Name</th>			
-				<th>Set Type</th>
+				<th>List Type</th>
 				<th>Assigned To</th>
 				<th width="3%"></th>
 				<th width="3%"></th>
@@ -58,7 +60,7 @@
 							Rule <%=rule.name%> (<%= link_to "ID #{rule.id}", edit_rtb_standard_path(rule)%>)<br/>
 						<%end%>
 						<% obj.targets.each do |target| %>
-							Target <%=target.name%> (<%= link_to "ID #{target.id}", edit_target_path(target)%>)<br/>
+							Audience <%=target.name%> (<%= link_to "ID #{target.id}", edit_target_path(target)%>)<br/>
 						<%end%>
 					</td>
 

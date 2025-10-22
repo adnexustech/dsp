@@ -1,18 +1,20 @@
 
-<% content_for :breadcrumb do %> 	
-        <div class="page-header pull-left">
-            <div class="page-title">
-                New Campaign
-            </div>
-        </div>
-    <ol class="breadcrumb page-breadcrumb pull-right">
-        <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li><a href="/campaigns#">Campaign</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="active">New</li>
+<% content_for :breadcrumb do %>
+  <div class="page-title-left">
+    <ol class="breadcrumb page-breadcrumb">
+      <li><i class="fa fa-home"></i><a href="/">Home</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li><a href="/campaigns">Campaigns</a></li>
+      <li><i class="fa fa-angle-right"></i></li>
+      <li class="active">New</li>
     </ol>
+    <div class="page-header">
+      <div class="page-title">New Campaign</div>
+    </div>
+  </div>
 <%end%>
 
-<% content_for :main_body do %> 	
+<% content_for :main_body do %>
         <div class="col-md-12"><h3></h3>
             <div class="panel panel-violet">
                 <div class="panel-heading">
@@ -20,8 +22,8 @@
                 </div>
                 <div class="panel-body pan">
                     <%= render 'form' %>
-                    <%= link_to 'Campaigns', campaigns_path , class:"btn btn-default btn-sm"%>        
+                    <%= link_to 'Campaigns', campaigns_path , class:"btn btn-default btn-sm"%>
                 </div>
-            </div>                            
+            </div>
         </div>
 <%end%>
