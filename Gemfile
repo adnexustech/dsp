@@ -47,6 +47,9 @@ gem 'bootsnap', require: false
 gem 'csv'
 
 group :development, :test do
+  # Environment variables
+  gem 'dotenv-rails', '~> 3.1'
+
   # Debugging
   gem 'debug', platforms: %i[ mri mingw x64_mingw ]
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
