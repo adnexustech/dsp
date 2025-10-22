@@ -1,0 +1,469 @@
+<style>
+	#editor_container {
+		border: 1px solid #3f3f46;
+		border-radius: 8px;
+		width:100%;
+		height:200px;
+		padding: 0.5em;
+		background: #18181b;
+	}
+	#editor {
+		position:relative;
+		width:100%;
+		height:100%;
+	}
+</style>
+
+<%= form_with(model: @banner_video, local: true, class: "space-y-6 p-6") do |f| %>
+  <% if @banner_video.errors.any? %>
+    <div class="rounded-lg bg-red-900/20 border border-red-700 p-4">
+      <h2 class="text-lg font-semibold text-red-400 mb-2">
+        <%= pluralize(@banner_video.errors.count, "error") %> prohibited this banner video from being saved:
+      </h2>
+      <ul class="list-disc list-inside text-red-300 space-y-1">
+        <% @banner_video.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Campaign Selection -->
+  <div class="space-y-2">
+    <%= f.label :campaign_id, "Campaign", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.collection_select :campaign_id,
+        Campaign.order(:name),
+        :id,
+        :name,
+        { prompt: "Select a campaign", include_blank: true },
+        { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors nosearch" } %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Video ID -->
+    <% if @banner_video.persisted? %>
+      <div class="space-y-2">
+        <%= f.label :id, "Video ID", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :id,
+            readonly: true,
+            class: "w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2.5 text-zinc-400 cursor-not-allowed" %>
+      </div>
+    <% end %>
+
+    <!-- Video Name -->
+    <div class="space-y-2">
+      <%= f.label :name, "Video Name *", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.text_field :name,
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+          placeholder: "Enter video name" %>
+    </div>
+  </div>
+
+  <!-- Interval Start/End -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="space-y-2">
+      <%= f.label :interval_start, "Interval Start *", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.datetime_local_field :interval_start,
+          value: (@banner_video.interval_start&.strftime("%Y-%m-%dT%H:%M") || Time.now.strftime("%Y-%m-%dT%H:%M")),
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :interval_end, "Interval End *", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.datetime_local_field :interval_end,
+          value: (@banner_video.interval_end&.strftime("%Y-%m-%dT%H:%M") || Time.now.strftime("%Y-%m-%dT%H:%M")),
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+    </div>
+  </div>
+
+  <!-- Creative Size Options -->
+  <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 space-y-4">
+    <h3 class="text-lg font-semibold text-white">Creative Size Options</h3>
+
+    <%
+      size_match_type = "none"
+      if !(@banner_video.vast_video_width.nil? || @banner_video.vast_video_width.to_s.empty? || @banner_video.vast_video_width.to_i == 0) ||
+         !(@banner_video.vast_video_height.nil? || @banner_video.vast_video_height.to_s.empty? || @banner_video.vast_video_height.to_i == 0)
+        size_match_type = "width_height_only"
+      elsif !(@banner_video.width_range.nil? || @banner_video.width_range.empty?) ||
+            !(@banner_video.height_range.nil? || @banner_video.height_range.empty?)
+        size_match_type = "width_height_range"
+      elsif !(@banner_video.width_height_list.nil? || @banner_video.width_height_list.empty?)
+        size_match_type = "width_height_list"
+      end
+    %>
+
+    <div class="flex flex-wrap gap-4">
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= radio_button_tag 'size_match_type', 'none', size_match_type == 'none',
+            class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-600" %>
+        <span class="text-sm text-zinc-300">Match any width/height</span>
+      </label>
+
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= radio_button_tag 'size_match_type', 'width_height_only', size_match_type == 'width_height_only',
+            class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-600" %>
+        <span class="text-sm text-zinc-300">Match specified width/height</span>
+      </label>
+
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= radio_button_tag 'size_match_type', 'width_height_range', size_match_type == 'width_height_range',
+            class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-600" %>
+        <span class="text-sm text-zinc-300">Match width/height ranges</span>
+      </label>
+
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= radio_button_tag 'size_match_type', 'width_height_list', size_match_type == 'width_height_list',
+            class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-600" %>
+        <span class="text-sm text-zinc-300">Match width/height list</span>
+      </label>
+    </div>
+
+    <!-- Width/Height Only -->
+    <div id="width_height_only_div" style="<%= size_match_type == 'width_height_only' ? '' : 'display:none' %>" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <div class="space-y-2">
+        <%= f.label :vast_video_width, "Width", class: "block text-sm font-medium text-zinc-300" %>
+        <div class="relative">
+          <%= f.number_field :vast_video_width,
+              class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-16 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+              placeholder: "0" %>
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">pixels</span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :vast_video_height, "Height", class: "block text-sm font-medium text-zinc-300" %>
+        <div class="relative">
+          <%= f.number_field :vast_video_height,
+              class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-16 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+              placeholder: "0" %>
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">pixels</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Width/Height Range -->
+    <div id="width_height_range_div" style="<%= size_match_type == 'width_height_range' ? '' : 'display:none' %>" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <div class="space-y-2">
+        <%= f.label :width_range, "Width Range", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :width_range,
+            placeholder: "e.g., 300-320",
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+        <p class="text-xs text-zinc-500">Leave empty to match any width</p>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :height_range, "Height Range", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :height_range,
+            placeholder: "e.g., 480-600",
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+        <p class="text-xs text-zinc-500">Leave empty to match any height</p>
+      </div>
+    </div>
+
+    <!-- Width x Height List -->
+    <div id="width_height_list_div" style="<%= size_match_type == 'width_height_list' ? '' : 'display:none' %>" class="mt-4">
+      <div class="space-y-2">
+        <%= f.label :width_height_list, "Width x Height List", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :width_height_list,
+            placeholder: "e.g., 300x250,320x480",
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+        <p class="text-xs text-zinc-500">Comma-separated width×height pairs</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bid ECPM -->
+  <div class="space-y-2">
+    <%= f.label :bid_ecpm, "Bid ECPM", class: "block text-sm font-medium text-zinc-300" %>
+    <div class="relative">
+      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+      <%= f.text_field :bid_ecpm,
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+          placeholder: "0.00",
+          step: "0.01" %>
+    </div>
+  </div>
+
+  <!-- Deals Section -->
+  <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 space-y-4">
+    <h3 class="text-lg font-semibold text-white">Deals</h3>
+
+    <%
+      if @banner_video.deals.nil? || @banner_video.deals.to_s.empty?
+        dealtype = "none"
+      elsif @banner_video.bid_ecpm.to_i == 0
+        dealtype = "private_only"
+      else
+        dealtype = "private_preferred"
+      end
+    %>
+
+    <div class="flex flex-wrap gap-4">
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= radio_button_tag 'deal_type', 'none', dealtype == 'none',
+            class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-600" %>
+        <span class="text-sm text-zinc-300">No Deals</span>
+      </label>
+
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= radio_button_tag 'deal_type', 'private_only', dealtype == 'private_only',
+            class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-600" %>
+        <span class="text-sm text-zinc-300">Private Only</span>
+      </label>
+
+      <label class="flex items-center space-x-2 cursor-pointer">
+        <%= radio_button_tag 'deal_type', 'private_preferred', dealtype == 'private_preferred',
+            class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-600" %>
+        <span class="text-sm text-zinc-300">Private Preferred</span>
+      </label>
+    </div>
+
+    <div id="deals_table_div" style="<%= dealtype == 'none' ? 'display:none' : '' %>" class="mt-4">
+      <table class="w-full text-sm" id="deals_table">
+        <thead class="bg-zinc-800">
+          <tr>
+            <th class="px-4 py-2 text-left text-zinc-300">Deal ID</th>
+            <th class="px-4 py-2 text-left text-zinc-300">Deal Price (ECPM)</th>
+            <th class="px-4 py-2 w-20"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if dealtype == "none" || @banner_video.deals.to_s.empty? %>
+            <tr>
+              <td class="px-4 py-2">
+                <%= text_field_tag 'deal_id[]', '',
+                    class: "w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-white" %>
+              </td>
+              <td class="px-4 py-2">
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+                  <%= text_field_tag 'deal_price[]', '',
+                      class: "w-full bg-zinc-900 border border-zinc-700 rounded pl-7 pr-3 py-1.5 text-white" %>
+                </div>
+              </td>
+              <td class="px-4 py-2 text-center">
+                <i class="fa fa-plus-circle text-blue-500 cursor-pointer tableRowAdd"></i>
+              </td>
+            </tr>
+          <% else %>
+            <% @banner_video.deals.split(",").each_with_index do |dealStr, idx|
+                 deal_id, price = dealStr.split(":") %>
+              <tr>
+                <td class="px-4 py-2">
+                  <%= text_field_tag 'deal_id[]', deal_id,
+                      class: "w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-white" %>
+                </td>
+                <td class="px-4 py-2">
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+                    <%= text_field_tag 'deal_price[]', price,
+                        class: "w-full bg-zinc-900 border border-zinc-700 rounded pl-7 pr-3 py-1.5 text-white" %>
+                  </div>
+                </td>
+                <td class="px-4 py-2 text-center">
+                  <i class="fa fa-plus-circle text-blue-500 cursor-pointer tableRowAdd"></i>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Video Specifications -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="space-y-2">
+      <%= f.label :bitrate, "Bitrate", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <%= f.number_field :bitrate,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-16 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "0" %>
+        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">kbps</span>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :mime_type, "MIME Type", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.select :mime_type,
+          BannerVideoMimeTypes.all.collect { |v| [v[:name], v[:name]] },
+          { include_blank: false },
+          { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors nosearch" } %>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :vast_video_duration, "Duration", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <%= f.number_field :vast_video_duration,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-20 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "0" %>
+        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">seconds</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="space-y-2">
+      <%= f.label :vast_video_linerarity, "Linearity", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.select :vast_video_linerarity,
+          VastVideoLinerarity.all.collect { |v| [v[:description], v[:value]] },
+          { include_blank: false },
+          { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors nosearch" } %>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :vast_video_type, "Video Type", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.select :vast_video_type,
+          VastVideoType.all.collect { |v| [v[:description], v[:value]] },
+          { include_blank: false },
+          { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors nosearch" } %>
+    </div>
+  </div>
+
+  <!-- VAST Video Outgoing File -->
+  <div class="space-y-2">
+    <label class="block text-sm font-medium text-zinc-300">VAST Video Outgoing File</label>
+    <span style="display:none"><%= f.text_area :vast_video_outgoing_file %></span>
+    <div id="editor_container">
+      <div name="editor" id="editor"></div>
+    </div>
+  </div>
+
+  <!-- Budgets -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="space-y-2">
+      <%= f.label :hourly_budget, "Hourly Budget", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+        <%= f.number_field :hourly_budget,
+            step: "0.01",
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "0.00" %>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :daily_budget, "Daily Budget", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+        <%= f.number_field :daily_budget,
+            step: "0.01",
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "0.00" %>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :total_basket_value, "Total Budget", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+        <%= f.number_field :total_basket_value,
+            step: "0.01",
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "0.00" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Frequency Capping -->
+  <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 space-y-4">
+    <h3 class="text-lg font-semibold text-white mb-4">Frequency Capping</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="space-y-2">
+        <%= f.label :frequency_spec, "Frequency Spec", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :frequency_spec,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "e.g., device.ip" %>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :frequency_expire, "Frequency Expire", class: "block text-sm font-medium text-zinc-300" %>
+        <div class="relative">
+          <%= f.number_field :frequency_expire,
+              class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-20 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+              placeholder: "0" %>
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">minutes</span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :frequency_count, "Frequency Count", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.number_field :frequency_count,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "0" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- RTB Rules -->
+  <div class="space-y-2">
+    <%= f.label :rtb_standard_ids, "RTB Rules", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.collection_select :rtb_standard_ids,
+        RtbStandard.order(:name),
+        :id,
+        :name,
+        {},
+        { multiple: true,
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors search_rules",
+          style: "min-height: 150px;" } %>
+    <p class="text-xs text-zinc-500">Hold Ctrl/Cmd to select multiple rules</p>
+  </div>
+
+  <!-- Exchange Attributes -->
+  <div id="exchange_attributes_div">
+    <% if camp = @banner_video.campaign and
+          !camp.exchanges.to_s.empty? and
+          exchanges = camp.exchanges.split(",")
+        then
+          attrObj = {}
+          exchanges.each do |exchg|
+            attrHash = {}
+            @banner_video.exchange_attributes.each { |i| attrHash[i.name] = i.value if i.exchange.to_s.eql?(exchg) }
+            attrObj[exchg] = attrHash
+          end
+    %>
+      <%= render partial: '/banners/exchange_attributes', locals: { attrObj: attrObj } %>
+    <% end %>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex gap-3 pt-4">
+    <%= f.submit (@banner_video.persisted? ? "Update Video" : "Create Video"),
+        class: "px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+    <%= link_to 'Cancel', banner_videos_path,
+        class: "px-6 py-2.5 bg-zinc-700 hover:bg-zinc-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+  </div>
+<% end %>
+
+<script>
+// Show/hide size match divs based on radio selection
+document.addEventListener('DOMContentLoaded', function() {
+  const sizeRadios = document.querySelectorAll('input[name="size_match_type"]');
+  sizeRadios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.getElementById('width_height_only_div').style.display = 'none';
+      document.getElementById('width_height_range_div').style.display = 'none';
+      document.getElementById('width_height_list_div').style.display = 'none';
+
+      if (this.value === 'width_height_only') {
+        document.getElementById('width_height_only_div').style.display = 'grid';
+      } else if (this.value === 'width_height_range') {
+        document.getElementById('width_height_range_div').style.display = 'grid';
+      } else if (this.value === 'width_height_list') {
+        document.getElementById('width_height_list_div').style.display = 'block';
+      }
+    });
+  });
+
+  // Show/hide deals table based on radio selection
+  const dealRadios = document.querySelectorAll('input[name="deal_type"]');
+  dealRadios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      const dealsDiv = document.getElementById('deals_table_div');
+      dealsDiv.style.display = (this.value === 'none') ? 'none' : 'block';
+    });
+  });
+});
+</script>

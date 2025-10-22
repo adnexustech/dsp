@@ -28,9 +28,20 @@
                             Show
                         </div>
                         <div class="panel-body pan">
-                            <%= render 'showform' %>
+                            <div class="p-6">
+                              <div class="space-y-4">
+                                <div><strong>Campaign ID:</strong> <%= @campaign.id %></div>
+                                <div><strong>Name:</strong> <%= @campaign.name %></div>
+                                <div><strong>Status:</strong> <span class="<%= @campaign.status == 'runnable' ? 'text-green-500' : 'text-red-500' %>"><%= @campaign.status&.upcase %></span></div>
+                                <div><strong>Active Time:</strong> <%= @campaign.activate_time&.strftime('%m/%d/%Y %H:%M') %> to <%= @campaign.expire_time&.strftime('%m/%d/%Y %H:%M') %></div>
+                                <div><strong>Domain:</strong> <%= @campaign.domain %></div>
+                                <div><strong>Hourly Budget:</strong> $<%= '%.2f' % @campaign.budget_limit_hourly if @campaign.budget_limit_hourly %></div>
+                                <div><strong>Daily Budget:</strong> $<%= '%.2f' % @campaign.budget_limit_daily if @campaign.budget_limit_daily %></div>
+                                <div><strong>Total Budget:</strong> $<%= '%.2f' % @campaign.total_budget if @campaign.total_budget %></div>
+                              </div>
+                            </div>
                             <%= link_to 'Edit', edit_campaign_path(@campaign) , class:"btn btn-default btn-sm" %> |
-                            <%= link_to 'Campaigns', campaigns_path , class:"btn btn-default btn-sm"%>        
+                            <%= link_to 'Campaigns', campaigns_path , class:"btn btn-default btn-sm"%>
                         </div>
                     </div>                            
                 </div>

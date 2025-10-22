@@ -1,0 +1,113 @@
+<%= form_with(model: @rtb_standard, local: true, class: "space-y-6 p-6") do |f| %>
+  <% if @rtb_standard.errors.any? %>
+    <div class="rounded-lg bg-red-900/20 border border-red-700 p-4">
+      <h2 class="text-lg font-semibold text-red-400 mb-2">
+        <%= pluralize(@rtb_standard.errors.count, "error") %> prohibited this rule from being saved:
+      </h2>
+      <ul class="list-disc list-inside text-red-300 space-y-1">
+        <% @rtb_standard.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Rule Name -->
+  <div class="space-y-2">
+    <%= f.label :name, "Rule Name *", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :name,
+        class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+        placeholder: "Enter rule name" %>
+  </div>
+
+  <!-- Rule ID (readonly for editing) -->
+  <% if @rtb_standard.persisted? %>
+    <div class="space-y-2">
+      <%= f.label :id, "Rule ID", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.text_field :id,
+          readonly: true,
+          class: "w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2.5 text-zinc-400 cursor-not-allowed" %>
+    </div>
+  <% end %>
+
+  <!-- Description -->
+  <div class="space-y-2">
+    <%= f.label :description, "Description", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_area :description,
+        rows: 4,
+        class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none",
+        placeholder: "Rule description" %>
+  </div>
+
+  <!-- RTB Specification -->
+  <div class="space-y-2">
+    <%= f.label :rtbspecification, "RTB Specification", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.select :rtbspecification,
+        ExchangeRtbspecs.order("rtbspecification").collect { |v|
+          [ v[:rtbspecification], v[:rtbspecification], {:operand_type => v[:operand_type], :operand_ordinal => v[:operand_ordinal]} ]
+        }.unshift(["", ""]),
+        {},
+        { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors select2_single" } %>
+  </div>
+
+  <!-- Operator -->
+  <div class="space-y-2">
+    <%= f.label :operator, "Operator", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.select :operator,
+        RtbStandardOperator.all.collect { |v| [v[:name], v[:name]] },
+        { include_blank: true },
+        { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors nosearch" } %>
+  </div>
+
+  <!-- Operand Value -->
+  <div class="space-y-2">
+    <%= f.label :operand, "Operand Value", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :operand,
+        class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+        placeholder: "Enter operand value" %>
+  </div>
+
+  <!-- Use Set as Operand -->
+  <div class="space-y-2">
+    <%= f.label :operand_list_id, "Use Set as Operand", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.select :operand_list_id,
+        List.all.collect { |v| [v[:name], v[:id]] },
+        { include_blank: true },
+        { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors search" } %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Operand Type -->
+    <div class="space-y-2">
+      <%= f.label :operand_type, "Operand Type", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.select :operand_type,
+          [["Integer", "I"], ["String", "S"], ["Double", "D"]],
+          { include_blank: true },
+          { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors nosearch" } %>
+    </div>
+
+    <!-- Operand Ordinal -->
+    <div class="space-y-2">
+      <%= f.label :operand_ordinal, "Operand Ordinal", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.select :operand_ordinal,
+          [["Scalar", "S"], ["List", "L"]],
+          { include_blank: true },
+          { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors nosearch" } %>
+    </div>
+  </div>
+
+  <!-- RTB Required Checkbox -->
+  <div class="flex items-center space-x-3">
+    <%= f.check_box :rtb_required,
+        class: "h-5 w-5 rounded border-zinc-700 bg-zinc-900 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+    <%= f.label :rtb_required, "RTB Required", class: "text-sm font-medium text-zinc-300 cursor-pointer" %>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex gap-3 pt-4">
+    <%= f.submit (@rtb_standard.persisted? ? "Update Rule" : "Create Rule"),
+        class: "px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+    <%= link_to 'Cancel', rtb_standards_path,
+        class: "px-6 py-2.5 bg-zinc-700 hover:bg-zinc-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+  </div>
+<% end %>

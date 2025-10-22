@@ -1,0 +1,225 @@
+<%= form_with(model: @target, local: true, class: "space-y-6 p-6") do |f| %>
+  <% if @target.errors.any? %>
+    <div class="bg-red-900/50 border border-red-700 rounded-lg p-4 mb-6">
+      <h3 class="text-red-400 font-semibold mb-2">
+        <%= pluralize(@target.errors.count, "error") %> prohibited this target from being saved:
+      </h3>
+      <ul class="list-disc list-inside text-red-300 text-sm space-y-1">
+        <% @target.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Target Name -->
+  <div class="space-y-2">
+    <%= f.label :name, "Target Name *", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :name, class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors", placeholder: "e.g., Tech Enthusiasts Desktop" %>
+  </div>
+
+  <% if @target.persisted? %>
+    <!-- Target ID (read-only) -->
+    <div class="space-y-2">
+      <%= f.label :id, "Target ID", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.text_field :id, readonly: true, class: "w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2.5 text-zinc-400 cursor-not-allowed" %>
+    </div>
+  <% end %>
+
+  <!-- Active Start/End Time -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="space-y-2">
+      <%= f.label :activate_time, "Active Start Time *", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.datetime_local_field :activate_time,
+          value: (@target.activate_time&.strftime("%Y-%m-%dT%H:%M") || Time.now.strftime("%Y-%m-%dT%H:%M")),
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :expire_time, "Active End Time *", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.datetime_local_field :expire_time,
+          value: (@target.expire_time&.strftime("%Y-%m-%dT%H:%M") || (Time.now + 30.days).strftime("%Y-%m-%dT%H:%M")),
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" %>
+    </div>
+  </div>
+
+  <!-- Domain Targeting Section -->
+  <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 space-y-4">
+    <h3 class="text-lg font-semibold text-white mb-4">Domain Targeting</h3>
+
+    <div class="space-y-2">
+      <%= f.label :domain_targetting, "Domain List Type", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.select :domain_targetting,
+          [["Blacklist", "blacklist"], ["Whitelist", "whitelist"]],
+          { include_blank: "No domain filtering" },
+          { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" } %>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :list_of_domains, "Domain Values", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.text_area :list_of_domains,
+          rows: 4,
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors font-mono text-sm",
+          placeholder: "example.com\ntest.com\nsite.org" %>
+      <p class="text-xs text-zinc-500">Enter one domain per line</p>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :domains_list_id, "Or Use Predefined Set", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.select :domains_list_id,
+          List.all.collect { |v| [v[:name], v[:id]] },
+          { include_blank: "Select a domain list (optional)" },
+          { class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" } %>
+    </div>
+  </div>
+
+  <!-- Geographic Targeting Section -->
+  <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 space-y-4">
+    <h3 class="text-lg font-semibold text-white mb-4">Geographic Targeting</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="space-y-2">
+        <%= f.label :geo_latitude, "Latitude", class: "block text-sm font-medium text-zinc-300" %>
+        <div class="relative">
+          <%= f.text_field :geo_latitude,
+              class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-20 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+              placeholder: "0.0" %>
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">degrees</span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :geo_longitude, "Longitude", class: "block text-sm font-medium text-zinc-300" %>
+        <div class="relative">
+          <%= f.text_field :geo_longitude,
+              class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-20 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+              placeholder: "0.0" %>
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">degrees</span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :geo_range, "Range", class: "block text-sm font-medium text-zinc-300" %>
+        <div class="relative">
+          <%= f.number_field :geo_range,
+              class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-4 pr-20 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+              placeholder: "0" %>
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">meters</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= f.label :geo_region, "Region", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.text_field :geo_region,
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+          placeholder: "e.g., California, New York" %>
+    </div>
+
+    <!-- Country Selection -->
+    <div class="space-y-2">
+      <%= label_tag :country, "Countries", class: "block text-sm font-medium text-zinc-300" %>
+      <%= select_tag "country[]",
+          options_for_select(
+            Country.where("country_type='Independent State' OR country_type='Proto Independent State'")
+                   .order(:common_name)
+                   .collect { |v| [v[:common_name], v["iso_3166-1_3_letter_code"]] },
+            @target.country.to_s.split(',')
+          ),
+          { multiple: true,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            style: "min-height: 150px;" } %>
+      <p class="text-xs text-zinc-500">Hold Ctrl/Cmd to select multiple countries</p>
+    </div>
+  </div>
+
+  <!-- Device Targeting Section -->
+  <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 space-y-4">
+    <h3 class="text-lg font-semibold text-white mb-4">Device Targeting</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <%= f.label :carrier, "Carrier", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :carrier,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "e.g., Verizon, AT&T" %>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :os, "Operating System", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :os,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "e.g., iOS, Android, Windows" %>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :make, "Device Make", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :make,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "e.g., Apple, Samsung" %>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :model, "Device Model", class: "block text-sm font-medium text-zinc-300" %>
+        <%= f.text_field :model,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            placeholder: "e.g., iPhone 15, Galaxy S24" %>
+      </div>
+    </div>
+
+    <!-- Device Type -->
+    <div class="space-y-2">
+      <%= label_tag :devicetype, "Device Type", class: "block text-sm font-medium text-zinc-300" %>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 bg-zinc-800 border border-zinc-700 rounded-lg p-4">
+        <% DeviceType.all.sort_by { |obj| obj[:description] }.each do |device_type| %>
+          <label class="flex items-center space-x-2 cursor-pointer hover:bg-zinc-700 p-2 rounded transition-colors">
+            <%= check_box_tag "devicetype[]", device_type[:value],
+                @target.devicetype.to_s.split(',').include?(device_type[:value].to_s),
+                class: "w-4 h-4 text-blue-500 bg-zinc-900 border-zinc-600 rounded focus:ring-blue-500 focus:ring-2" %>
+            <span class="text-sm text-zinc-300"><%= device_type[:description] %></span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- IAB Category Targeting -->
+  <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 space-y-4">
+    <h3 class="text-lg font-semibold text-white mb-4">Content Category Targeting</h3>
+
+    <!-- IAB Categories Whitelist -->
+    <div class="space-y-2">
+      <%= label_tag :IAB_category, "IAB Categories - Whitelist", class: "block text-sm font-medium text-zinc-300" %>
+      <%= select_tag "IAB_category[]",
+          options_for_select(
+            IabCategory.all.collect { |v| ["#{v[:iab_id]} - #{v[:name]}", v[:iab_id]] },
+            @target.IAB_category.to_s.split(',')
+          ),
+          { multiple: true,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            style: "min-height: 120px;" } %>
+      <p class="text-xs text-zinc-500">Select categories to allow (leave empty for all)</p>
+    </div>
+
+    <!-- IAB Categories Blacklist -->
+    <div class="space-y-2">
+      <%= label_tag :IAB_category_blklist, "IAB Categories - Blacklist", class: "block text-sm font-medium text-zinc-300" %>
+      <%= select_tag "IAB_category_blklist[]",
+          options_for_select(
+            IabCategory.all.collect { |v| ["#{v[:iab_id]} - #{v[:name]}", v[:iab_id]] },
+            @target.IAB_category_blklist.to_s.split(',')
+          ),
+          { multiple: true,
+            class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+            style: "min-height: 120px;" } %>
+      <p class="text-xs text-zinc-500">Select categories to block</p>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex items-center space-x-3 pt-4 border-t border-zinc-800">
+    <%= f.submit (@target.persisted? ? "Update Target" : "Create Target"),
+        class: "btn btn-primary" %>
+    <%= link_to "Cancel", targets_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

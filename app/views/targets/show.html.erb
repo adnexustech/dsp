@@ -28,9 +28,18 @@
                             Show
                         </div>
                         <div class="panel-body pan">
-                            <%= render 'showform' %>
-                             <%= link_to 'Edit', edit_target_path(@target) , class:"btn btn-default btn-sm" %> |
-                    <%= link_to 'Targets', targets_path , class:"btn btn-default btn-sm"%>            
+                            <div class="p-6">
+                              <div class="space-y-4">
+                                <div><strong>Target ID:</strong> <%= @target.id %></div>
+                                <div><strong>Name:</strong> <%= @target.name %></div>
+                                <div><strong>Active Time:</strong> <%= @target.activate_time&.strftime('%m/%d/%Y %H:%M') %> to <%= @target.expire_time&.strftime('%m/%d/%Y %H:%M') %></div>
+                                <div><strong>Domains:</strong> <%= @target.list_of_domains&.split(',')&.first(5)&.join(', ') %><%= ' ...' if @target.list_of_domains&.split(',')&.length.to_i > 5 %></div>
+                                <div><strong>Countries:</strong> <%= @target.country&.split(',')&.join(', ') %></div>
+                                <div><strong>Device Types:</strong> <%= @target.devicetype&.split(',')&.join(', ') %></div>
+                              </div>
+                            </div>
+                            <%= link_to 'Edit', edit_target_path(@target) , class:"btn btn-default btn-sm" %> |
+                            <%= link_to 'Targets', targets_path , class:"btn btn-default btn-sm"%>
                         </div>
                     </div>                            
                 </div>

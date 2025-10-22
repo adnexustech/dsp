@@ -1,0 +1,79 @@
+<style>
+	#editor_container {
+		border: 1px;
+		border-radius: 6px 6px 6px 6px;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
+		width:100%;
+		height:400px;
+		padding: 0.5em;
+	}
+	#editor {
+		position:relative;
+		width:100%;
+		height:100%;
+	}
+</style>
+
+<%= form_with(model: @document, local: true, class: "space-y-6 p-6") do |f| %>
+  <% if @document.errors.any? %>
+    <div class="rounded-lg bg-red-900/20 border border-red-700 p-4">
+      <h2 class="text-lg font-semibold text-red-400 mb-2">
+        <%= pluralize(@document.errors.count, "error") %> prohibited this document from being saved:
+      </h2>
+      <ul class="list-disc list-inside text-red-300 space-y-1">
+        <% @document.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Document Name -->
+  <div class="space-y-2">
+    <%= f.label :name, "Document Name *", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :name,
+        class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+        placeholder: "Enter document name" %>
+  </div>
+
+  <!-- Description -->
+  <div class="space-y-2">
+    <%= f.label :description, "Description", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :description,
+        class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+        placeholder: "Brief description" %>
+  </div>
+
+  <%= f.hidden_field :doctype, value: "html" %>
+
+  <!-- Categories -->
+  <div class="space-y-2">
+    <%= f.label :category_ids, "Categories", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.collection_select :category_ids,
+        Category.order(:name),
+        :id,
+        :name,
+        {},
+        { multiple: true,
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors search_categories",
+          style: "min-height: 120px;" } %>
+    <p class="text-xs text-zinc-500">Hold Ctrl/Cmd to select multiple categories</p>
+  </div>
+
+  <!-- Hidden Code Textarea (for JS editor) -->
+  <span style="display:none"><%= f.text_area :code, label: " " %></span>
+
+  <!-- Code Editor -->
+  <div class="space-y-2">
+    <label class="block text-sm font-medium text-zinc-300">HTML Code</label>
+    <div id="editor_container" class="bg-zinc-900 border border-zinc-700 rounded-lg">
+      <div name="editor" id="editor"></div>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex gap-3 pt-4">
+    <%= f.submit "Save Document", class: "px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+    <%= link_to 'Cancel', documents_path, class: "px-6 py-2.5 bg-zinc-700 hover:bg-zinc-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+  </div>
+<% end %>

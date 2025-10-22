@@ -29,9 +29,21 @@
                             Show
                         </div>
                         <div class="panel-body pan">
-                            <%= render 'showform' %>
-                            <%= link_to 'Edit', edit_banner_video_path(@banner_video) , class:"btn btn-default btn-sm" %> |
-                            <%= link_to 'Videos', banner_videos_path , class:"btn btn-default btn-sm"%>        
+                            <div class="p-6">
+                              <div class="space-y-4">
+                                <div><strong>Video ID:</strong> <%= @banner_video.id %></div>
+                                <div><strong>Name:</strong> <%= @banner_video.name %></div>
+                                <div><strong>Bid ECPM:</strong> $<%= '%.2f' % @banner_video.bid_ecpm %></div>
+                                <div><strong>MIME Type:</strong> <%= @banner_video.mime_type %></div>
+                                <div><strong>Bitrate:</strong> <%= @banner_video.bitrate %> kbps</div>
+                                <div><strong>Duration:</strong> <%= @banner_video.vast_video_duration %> seconds</div>
+                                <div><strong>Hourly Budget:</strong> $<%= '%.2f' % @banner_video.hourly_budget if @banner_video.hourly_budget %></div>
+                                <div><strong>Daily Budget:</strong> $<%= '%.2f' % @banner_video.daily_budget if @banner_video.daily_budget %></div>
+                                <div><strong>Total Budget:</strong> $<%= '%.2f' % @banner_video.total_basket_value if @banner_video.total_basket_value %></div>
+                              </div>
+                            </div>
+                            <%= link_to 'Edit', edit_banner_video_path(@banner_video), class:"btn btn-default btn-sm" %> |
+                            <%= link_to 'Videos', banner_videos_path, class:"btn btn-default btn-sm" %>
                         </div>
                     </div>                            
                 </div>

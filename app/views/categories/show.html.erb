@@ -20,9 +20,16 @@
                             Show
                         </div>
                         <div class="panel-body pan">
-                            <%= render 'showform' %>
-                           <%= link_to 'Edit', edit_category_path(@category) %> |
-                            <%= link_to 'Back', categories_path %>      
+                            <div class="p-6">
+                              <div class="space-y-4">
+                                <div><strong>ID:</strong> <%= @category.id %></div>
+                                <div><strong>Name:</strong> <%= @category.name %></div>
+                                <div><strong>Description:</strong> <%= @category.description %></div>
+                                <div><strong>Documents:</strong> <%= @category.documents.map(&:name).join(', ') %></div>
+                              </div>
+                            </div>
+                            <%= link_to 'Edit', edit_category_path(@category), class:"btn btn-default btn-sm" %> |
+                            <%= link_to 'Back', categories_path, class:"btn btn-default btn-sm" %>
                         </div>
                     </div>                            
                 </div>

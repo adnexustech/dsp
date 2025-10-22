@@ -28,9 +28,19 @@
                             Show
                         </div>
                         <div class="panel-body pan">
-                            <%= render 'showform' %>
-                             <%= link_to 'Edit', edit_rtb_standard_path(@rtb_standard) , class:"btn btn-default btn-sm" %> |
-                             <%= link_to 'Rules', rtb_standards_path , class:"btn btn-default btn-sm"%>            
+                            <div class="p-6">
+                              <div class="space-y-4">
+                                <div><strong>Rule ID:</strong> <%= @rtb_standard.id %></div>
+                                <div><strong>Name:</strong> <%= @rtb_standard.name %></div>
+                                <div><strong>Description:</strong> <%= @rtb_standard.description %></div>
+                                <div><strong>RTB Specification:</strong> <%= @rtb_standard.rtbspecification %></div>
+                                <div><strong>Operator:</strong> <%= @rtb_standard.operator %></div>
+                                <div><strong>Operand:</strong> <%= @rtb_standard.operand %></div>
+                                <div><strong>RTB Required:</strong> <%= @rtb_standard.rtb_required ? 'Yes' : 'No' %></div>
+                              </div>
+                            </div>
+                            <%= link_to 'Edit', edit_rtb_standard_path(@rtb_standard), class:"btn btn-default btn-sm" %> |
+                            <%= link_to 'Rules', rtb_standards_path, class:"btn btn-default btn-sm" %>
                         </div>
                     </div>                            
                 </div>

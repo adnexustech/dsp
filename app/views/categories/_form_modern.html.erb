@@ -1,0 +1,63 @@
+<%= form_with(model: @category, local: true, class: "space-y-6 p-6") do |f| %>
+  <% if @category.errors.any? %>
+    <div class="rounded-lg bg-red-900/20 border border-red-700 p-4">
+      <h2 class="text-lg font-semibold text-red-400 mb-2">
+        <%= pluralize(@category.errors.count, "error") %> prohibited this category from being saved:
+      </h2>
+      <ul class="list-disc list-inside text-red-300 space-y-1">
+        <% @category.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Category ID (readonly for editing) -->
+  <% if @category.persisted? %>
+    <div class="space-y-2">
+      <%= f.label :id, "Category ID", class: "block text-sm font-medium text-zinc-300" %>
+      <%= f.text_field :id,
+          readonly: true,
+          class: "w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2.5 text-zinc-400 cursor-not-allowed" %>
+    </div>
+  <% end %>
+
+  <!-- Category Name -->
+  <div class="space-y-2">
+    <%= f.label :name, "Category Name *", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_field :name,
+        class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors",
+        placeholder: "Enter category name" %>
+  </div>
+
+  <!-- Description -->
+  <div class="space-y-2">
+    <%= f.label :description, "Description", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.text_area :description,
+        rows: 4,
+        class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none",
+        placeholder: "Category description" %>
+  </div>
+
+  <!-- Documents -->
+  <div class="space-y-2">
+    <%= f.label :document_ids, "Documents", class: "block text-sm font-medium text-zinc-300" %>
+    <%= f.collection_select :document_ids,
+        Document.order(:name),
+        :id,
+        :name,
+        {},
+        { multiple: true,
+          class: "w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors search_documents",
+          style: "min-height: 150px;" } %>
+    <p class="text-xs text-zinc-500">Hold Ctrl/Cmd to select multiple documents</p>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex gap-3 pt-4">
+    <%= f.submit (@category.persisted? ? "Update Category" : "Create Category"),
+        class: "px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+    <%= link_to 'Cancel', categories_path,
+        class: "px-6 py-2.5 bg-zinc-700 hover:bg-zinc-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-950" %>
+  </div>
+<% end %>
