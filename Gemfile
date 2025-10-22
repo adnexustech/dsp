@@ -32,6 +32,10 @@ gem 'elasticsearch', '~> 8.0'
 # Web Server
 gem 'puma', '~> 6.0'
 
+# Background Jobs
+gem 'sidekiq', '~> 7.0'
+gem 'redis', '~> 5.0'
+
 # AWS
 gem 'aws-sdk-s3', '~> 1.0'  # Use specific S3 gem instead of full aws-sdk
 gem 's3_direct_upload'

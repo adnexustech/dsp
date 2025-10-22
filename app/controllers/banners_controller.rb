@@ -42,7 +42,9 @@ class BannersController < ApplicationController
         format.html { redirect_to @banner, notice: notice }
         format.json { render :show, status: :created, location: @banner }
       else
-        format.html { render :new }
+        @campaigns = Campaign.order(:name)
+        @rtb_standards = RtbStandard.order(:name)
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @banner.errors, status: :unprocessable_entity }
       end
     end
@@ -68,12 +70,16 @@ class BannersController < ApplicationController
             old_campaign.update_bidder           
         end
         if @banner.campaign and not @banner.campaign.update_bidder 
+        @campaigns = Campaign.order(:name)
+        @rtb_standards = RtbStandard.order(:name)
             notice += ' <span class="text-danger">Error on bidder synch process. Please try again.</span>'
         end        
         format.html { redirect_to @banner, notice: notice }
         format.json { render :show, status: :ok, location: @banner }
       else
-        format.html { render :edit }
+        @campaigns = Campaign.order(:name)
+        @rtb_standards = RtbStandard.order(:name)
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @banner.errors, status: :unprocessable_entity }
       end
     end

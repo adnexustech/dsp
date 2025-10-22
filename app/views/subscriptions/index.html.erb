@@ -1,12 +1,5 @@
 <% content_for :breadcrumb do %>
-<div class="page-header pull-left">
-  <div class="page-title">Billing & Subscription</div>
-</div>
-<ol class="breadcrumb page-breadcrumb pull-right">
-  <li><i class="fa fa-home"></i>&nbsp;<a href="/">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-  <li><a href="<%= myaccount_path %>">My Account</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-  <li class="active">Billing</li>
-</ol>
+<!-- Breadcrumb hidden on subscriptions page -->
 <%end%>
 
 <% content_for :main_body do %>
@@ -18,10 +11,10 @@
       <p class="text-gray-400">Manage your subscription and payment methods</p>
     </div>
     <div class="flex gap-3">
-      <%= link_to new_subscription_path, class: 'px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+      <%= link_to new_subscription_path, class: 'btn btn-primary' do %>
         <i class="fa fa-refresh mr-2"></i>Change Plan
       <% end %>
-      <%= link_to myaccount_path, class: 'px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors' do %>
+      <%= link_to myaccount_path, class: 'btn btn-secondary' do %>
         <i class="fa fa-arrow-left mr-2"></i>Back to Account
       <% end %>
     </div>
@@ -44,7 +37,7 @@
             <i class="fa fa-info-circle text-blue-400"></i>
             <span class="text-blue-200 ml-2">Upgrade to unlock more campaigns, banners, and premium features!</span>
           </div>
-          <%= link_to new_subscription_path, class: 'block w-full text-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+          <%= link_to new_subscription_path, class: 'block w-full text-center btn btn-primary' do %>
             <i class="fa fa-arrow-up mr-2"></i>View Plans
           <% end %>
         <% else %>
@@ -127,7 +120,7 @@
           <div class="text-center py-6">
             <i class="fa fa-shield text-gray-400 text-4xl mb-4"></i>
             <p class="text-gray-300 mb-6">Your payment information is securely stored with Stripe</p>
-            <%= link_to portal_subscriptions_path, class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+            <%= link_to portal_subscriptions_path, class: 'inline-flex items-center btn btn-primary' do %>
               <i class="fa fa-cog mr-2"></i>
               Manage Payment Methods
               <i class="fa fa-external-link ml-2"></i>
@@ -140,7 +133,7 @@
           <div class="text-center py-8">
             <i class="fa fa-credit-card text-gray-600 text-5xl mb-4"></i>
             <p class="text-gray-400 mb-4">No payment method on file</p>
-            <%= link_to new_subscription_path, class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors' do %>
+            <%= link_to new_subscription_path, class: 'inline-flex items-center btn btn-primary' do %>
               <i class="fa fa-plus mr-2"></i>Add Payment Method
             <% end %>
           </div>

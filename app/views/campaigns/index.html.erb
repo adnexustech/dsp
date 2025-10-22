@@ -13,9 +13,9 @@
   </div>
   <div class="page-actions">
     <%= form_tag campaigns_path, method: "get", style: "display: inline-flex; gap: 12px; align-items: center;" do %>
-      <button type="submit" class="px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors">Refresh</button>
-      <%= link_to 'New Campaign', new_campaign_path, class: "px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors" %>
-      <button type="button" class="px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors" id="bidder_sync_all">Push Synch All Campaigns</button>
+      <button type="submit" class="btn btn-primary">Refresh</button>
+      <%= link_to 'New Campaign', new_campaign_path, class: "btn btn-primary" %>
+      <button type="button" class="btn btn-primary" id="bidder_sync_all">Push Synch All Campaigns</button>
       <span id="bidder_sync_all_response"></span>
     <% end %>
   </div>

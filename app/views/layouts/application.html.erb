@@ -535,15 +535,35 @@
         font-size: 14px !important;
       }
       
-      .btn-primary, button[type="submit"], input[type="submit"] {
-        background-color: #fafafa !important;
-        color: #0a0a0a !important;
-        border: 1px solid #404040 !important;
+      /* Standard white buttons with black text */
+      .btn, .btn-primary, .btn-default, button[type="submit"], input[type="submit"], a.btn {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #e5e5e5 !important;
+        padding: 8px 16px !important;
+        border-radius: 8px !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        display: inline-block !important;
+        transition: all 0.2s ease !important;
       }
       
-      .btn-primary:hover, button[type="submit"]:hover, input[type="submit"]:hover {
+      .btn:hover, .btn-primary:hover, .btn-default:hover, button[type="submit"]:hover, input[type="submit"]:hover, a.btn:hover {
         background-color: #e5e5e5 !important;
-        border-color: #525252 !important;
+        color: #000000 !important;
+        border-color: #d4d4d4 !important;
+      }
+      
+      /* Secondary outline buttons */
+      .btn-secondary {
+        background-color: transparent !important;
+        color: #ffffff !important;
+        border: 1px solid #3f3f46 !important;
+      }
+      
+      .btn-secondary:hover {
+        background-color: #27272a !important;
+        border-color: #52525b !important;
       }
       
       /* Dark mode toggle */
@@ -750,6 +770,11 @@
         .page-content {
           padding: 16px !important;
         }
+      }
+      
+      /* Full width tables */
+      table, .table {
+        width: 100% !important;
       }
     </style>
 

@@ -1,12 +1,12 @@
 class Banner < ApplicationRecord
     
-    belongs_to :campaign
-    belongs_to :target
+    belongs_to :campaign, optional: true
+    belongs_to :target, optional: true
     has_and_belongs_to_many :rtb_standards
     has_many :report_commands
     has_many :exchange_attributes, dependent: :destroy
     
-    validates :name, :interval_start,:interval_end,:iurl,:htmltemplate,:contenttype , :presence => true
+    validates :name, :interval_start,:interval_end,:iurl,:contenttype , :presence => true
     validates :bid_ecpm,  :numericality => { :allow_blank => false }, :presence => true
     validate :interval_end_cannot_be_in_the_past
     
