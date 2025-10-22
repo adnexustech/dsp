@@ -1,11 +1,4 @@
 Rails.application.routes.draw do
-  get "affiliates/index"
-  get "referrals/index"
-  get "market/index"
-  get "market/show"
-  get "profiles/show"
-  get "profiles/edit"
-  get "profiles/update"
   resources :banners
   resources :campaigns
   resources :banner_videos

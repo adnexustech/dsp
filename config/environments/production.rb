@@ -62,6 +62,10 @@ Rails.application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
+  # Store uploaded files on the local file system (see config/storage.yml for options).
+  # For production, consider using :amazon or another cloud storage service.
+  config.active_storage.service = :local
+
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "workspace_production"
