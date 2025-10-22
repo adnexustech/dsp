@@ -21,28 +21,36 @@ class CreditsController < ApplicationController
     end
 
     begin
-      # Create Stripe Payment Intent for credits purchase
-      payment_intent = Stripe::PaymentIntent.create(
-        amount: (amount * 100).to_i, # Convert to cents
-        currency: 'usd',
-        customer: current_user.stripe_customer_id || create_stripe_customer_for_credits,
+      # Ensure user has a Stripe customer
+      customer_id = current_user.stripe_customer_id || create_stripe_customer
+
+      # Create a Stripe Checkout Session for REAL payment collection
+      session = Stripe::Checkout::Session.create(
+        customer: customer_id,
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Advertising Credits',
+              description: "Purchase $#{amount} in advertising credits"
+            },
+            unit_amount: (amount * 100).to_i # Convert to cents
+          },
+          quantity: 1
+        }],
+        mode: 'payment',
+        success_url: credits_success_url(amount: amount),
+        cancel_url: new_credit_url,
         metadata: {
           user_id: current_user.id,
+          amount: amount,
           type: 'credit_purchase'
-        },
-        description: "Purchase $#{amount} in advertising credits"
+        }
       )
 
-      # For now, we'll simulate successful payment and add credits immediately
-      # In production, you'd wait for webhook confirmation
-      current_user.add_credits(
-        amount,
-        "Credit purchase via Stripe - $#{amount}",
-        CreditTransaction::DEPOSIT
-      )
-
-      flash[:success] = "Successfully added $#{amount} to your account!"
-      redirect_to credits_path
+      # Redirect to Stripe Checkout page
+      redirect_to session.url, allow_other_host: true
     rescue Stripe::StripeError => e
       flash[:error] = "Payment failed: #{e.message}"
       redirect_to new_credit_path
@@ -50,6 +58,19 @@ class CreditsController < ApplicationController
       flash[:error] = "An error occurred: #{e.message}"
       redirect_to new_credit_path
     end
+  end
+
+  def success
+    # This is called after successful payment
+    # Actual credit addition happens via webhook
+    amount = params[:amount].to_f
+    flash[:success] = "Payment successful! Your $#{amount} in credits will be added shortly."
+    redirect_to credits_path
+  end
+
+  def cancel
+    flash[:warning] = "Payment cancelled. No charges were made."
+    redirect_to new_credit_path
   end
 
   private
@@ -61,7 +82,7 @@ class CreditsController < ApplicationController
     end
   end
 
-  def create_stripe_customer_for_credits
+  def create_stripe_customer
     customer = Stripe::Customer.create(
       email: current_user.email,
       name: current_user.name,

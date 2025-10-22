@@ -52,6 +52,8 @@ Rails.application.routes.draw do
 
   # Credits Management
   resources :credits, only: [:index, :new, :create]
+  get 'credits/success', to: 'credits#success', as: :credits_success
+  get 'credits/cancel', to: 'credits#cancel', as: :credits_cancel
 
   # Invoices
   resources :invoices, only: [:index]

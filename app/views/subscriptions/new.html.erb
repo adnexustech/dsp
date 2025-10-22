@@ -57,13 +57,16 @@
             
             <!-- Price -->
             <div class="mt-4">
-              <% if plan[:price] %>
+              <% if plan_key == :free %>
+                <div class="text-5xl font-bold text-white">Free</div>
+              <% elsif plan_key == :enterprise %>
+                <div class="text-4xl font-bold text-white">Custom</div>
+                <div class="text-sm text-zinc-400 mt-2">Contact for pricing</div>
+              <% elsif plan[:price] %>
                 <div class="flex items-baseline">
                   <span class="text-5xl font-bold text-white">$<%= plan[:price] / 100 %></span>
                   <span class="text-zinc-400 ml-2">/month</span>
                 </div>
-              <% else %>
-                <div class="text-5xl font-bold text-white">Free</div>
               <% end %>
             </div>
           </div>

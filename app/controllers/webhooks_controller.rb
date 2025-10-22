@@ -5,6 +5,8 @@ class WebhooksController < ApplicationController
 
   def stripe
     case @event.type
+    when 'checkout.session.completed'
+      handle_checkout_completed
     when 'customer.subscription.created'
       handle_subscription_created
     when 'customer.subscription.updated'
@@ -26,6 +28,28 @@ class WebhooksController < ApplicationController
   end
 
   private
+
+  def handle_checkout_completed
+    session = @event.data.object
+    
+    # Check if this is a credit purchase
+    if session.metadata&.[]('type') == 'credit_purchase'
+      user_id = session.metadata['user_id']
+      amount = session.metadata['amount'].to_f
+      
+      user = User.find_by(id: user_id)
+      return unless user
+      
+      # Add credits to user account
+      user.add_credits(
+        amount,
+        "Credit purchase via Stripe Checkout - $#{amount}",
+        CreditTransaction::DEPOSIT
+      )
+      
+      Rails.logger.info "Added $#{amount} credits to user #{user.id} from Checkout Session #{session.id}"
+    end
+  end
 
   def verify_stripe_signature
     payload = request.body.read
