@@ -1,4 +1,5 @@
 class ProfilesController < ApplicationController
+  before_action :authorize
   before_action :set_user
 
   def show
