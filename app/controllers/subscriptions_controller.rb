@@ -21,6 +21,9 @@ class SubscriptionsController < ApplicationController
     plan_name = params[:plan]
 
     if plan_name == 'free'
+      # Cancel existing subscription if any
+      current_user.cancel_subscription! if current_user.stripe_subscription_id
+      
       current_user.update!(
         subscription_plan: 'free',
         subscription_status: 'active',
@@ -32,25 +35,35 @@ class SubscriptionsController < ApplicationController
     end
 
     begin
-      subscription = current_user.subscribe_to_plan!(plan_name)
+      plan = STRIPE_PLANS[plan_name.to_sym]
+      raise ArgumentError, "Invalid plan: #{plan_name}" unless plan
 
-      # Redirect to Stripe Checkout or return payment intent client secret for frontend
-      if subscription.latest_invoice&.payment_intent
-        payment_intent = subscription.latest_invoice.payment_intent
+      # Create Stripe Checkout Session for subscription
+      session = Stripe::Checkout::Session.create(
+        customer: current_user.stripe_customer_id,
+        payment_method_types: ['card'],
+        line_items: [{
+          price: plan[:stripe_price_id],
+          quantity: 1
+        }],
+        mode: 'subscription',
+        success_url: subscriptions_url + '?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url: new_subscription_url,
+        subscription_data: {
+          metadata: {
+            user_id: current_user.id,
+            plan_name: plan_name
+          }
+        }
+      )
 
-        # For now, redirect to success page
-        # In production, you'd handle payment intent on frontend
-        flash[:success] = "Subscription created! Please complete payment."
-        redirect_to subscriptions_path
-      else
-        flash[:success] = 'Subscription activated successfully!'
-        redirect_to subscriptions_path
-      end
+      # Redirect to Stripe Checkout page
+      redirect_to session.url, allow_other_host: true
     rescue ArgumentError => e
       flash[:error] = e.message
       redirect_to new_subscription_path
     rescue Stripe::StripeError => e
-      flash[:error] = "Subscription failed: #{e.message}"
+      flash[:error] = "Unable to start checkout: #{e.message}"
       redirect_to new_subscription_path
     end
   end

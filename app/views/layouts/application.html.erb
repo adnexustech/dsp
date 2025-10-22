@@ -805,13 +805,13 @@
             </div>
             <div class="topbar-main">
                 <ul class="nav navbar navbar-top-links navbar-right mbn">
-                    <!-- Credits Balance -->
+                    <!-- Wallet Balance -->
                     <li class="credits-display" style="margin-right: 15px;">
                         <a href="/credits" style="display: flex; align-items: center; padding: 15px 10px;">
-                            <i class="fa-solid fa-coins" style="font-size: 18px; margin-right: 8px; color: #28a745;"></i>
+                            <i class="fa-solid fa-wallet" style="font-size: 18px; margin-right: 8px; color: #28a745;"></i>
                             <div style="display: flex; flex-direction: column; line-height: 1.2;">
                                 <span style="font-size: 16px; font-weight: 600; color: #28a745;">$<%= '%.2f' % current_user.credits_balance %></span>
-                                <span style="font-size: 11px; color: #6c757d;">Credits</span>
+                                <span style="font-size: 11px; color: #6c757d;">Wallet</span>
                             </div>
                         </a>
                     </li>
@@ -842,7 +842,7 @@
                             <li class="divider"></li>
                             <li class="dropdown-section-title">Account</li>
                             <li><a href="/myaccount"><i class="fa-regular fa-user"></i>Account Overview</a></li>
-                            <li><a href="/credits"><i class="fa-solid fa-coins"></i>Credits & Wallet</a></li>
+                            <li><a href="/credits"><i class="fa-solid fa-wallet"></i>Wallet</a></li>
                             <li><a href="/subscriptions"><i class="fa-regular fa-credit-card"></i>Billing & Plans</a></li>
                             <li><a href="/invoices"><i class="fa-regular fa-file-lines"></i>Invoices</a></li>
                             <li class="divider"></li>
@@ -885,7 +885,7 @@
                      <li><a href="/myaccount"><i class="fa-regular fa-user fa-fw"></i><span class="menu-title">Account</span></a>
                     </li>
 
-                     <li><a href="/credits"><i class="fa-solid fa-coins fa-fw"></i><span class="menu-title">Credits</span></a>
+                     <li><a href="/credits"><i class="fa-solid fa-wallet fa-fw"></i><span class="menu-title">Wallet</span></a>
                     </li>
 
                      <li><a href="/subscriptions"><i class="fa-regular fa-credit-card fa-fw"></i><span class="menu-title">Billing & Plans</span></a>
@@ -897,7 +897,7 @@
                     <% if current_user.admin %>
                      <li><a href="/users"><i class="fa-solid fa-user-gear fa-fw"></i><span class="menu-title">Admin Users</span></a>
                     </li>
-                      <li><a href="/admin/credits"><i class="fa-solid fa-coins fa-fw"></i><span class="menu-title">Admin Credits</span></a>
+                      <li><a href="/admin/credits"><i class="fa-solid fa-wallet fa-fw"></i><span class="menu-title">Admin Wallet</span></a>
                      </li>
                      <li><a href="/categories"><i class="fa-solid fa-folder-tree fa-fw"></i><span class="menu-title">Admin Categories</span></a>
                     </li>

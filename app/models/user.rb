@@ -95,7 +95,6 @@ class User < ApplicationRecord
       payment_behavior: 'default_incomplete',
       payment_settings: { save_default_payment_method: 'on_subscription' },
       expand: ['latest_invoice.payment_intent'],
-      trial_period_days: 14 # 14-day trial
     )
 
     update!(

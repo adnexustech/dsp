@@ -1395,3 +1395,200 @@ For older browsers, Rails includes an importmap-shim polyfill automatically.
 ---
 
 **Last Updated:** 2025-10-21 (Importmap Migration Complete)
+
+---
+
+## Admin Pricing Management System - Pending Implementation (2025-10-21)
+
+### Requirements
+
+**Status:** 📋 PLANNED - Not yet implemented
+
+User requirements:
+1. "make sure we can have custom enterprise and agency plans easily created on our admin side"
+2. "configure who gets what cuts / margin/ etc..."
+
+### Proposed Implementation
+
+#### 1. Database Schema
+
+Create new tables for flexible pricing management:
+
+```ruby
+# db/migrate/YYYYMMDDHHMMSS_create_custom_pricing_plans.rb
+create_table :custom_pricing_plans do |t|
+  t.references :user, foreign_key: true
+  t.string :plan_type # 'enterprise', 'agency', 'custom'
+  t.string :name
+  t.decimal :monthly_price, precision: 10, scale: 2
+  t.decimal :cashback_percent, precision: 5, scale: 2
+  t.decimal :margin_percent, precision: 5, scale: 2
+  t.integer :ctv_views_monthly
+  t.integer :campaigns_limit
+  t.boolean :premium_ctv, default: false
+  t.integer :unskippable_minutes, default: 0
+  t.boolean :whitelabel, default: false
+  t.boolean :reseller, default: false
+  t.string :stripe_price_id
+  t.text :notes
+  t.datetime :effective_from
+  t.datetime :expires_at
+  t.timestamps
+end
+
+# Revenue share configuration
+create_table :revenue_splits do |t|
+  t.references :custom_pricing_plan, foreign_key: true
+  t.string :party_name # 'platform', 'agency', 'reseller', 'advertiser'
+  t.decimal :percentage, precision: 5, scale: 2
+  t.decimal :fixed_fee, precision: 10, scale: 2
+  t.timestamps
+end
+```
+
+#### 2. Admin Interface Components
+
+**Routes:**
+```ruby
+namespace :admin do
+  resources :pricing_plans do
+    member do
+      post :activate
+      post :deactivate
+    end
+    resources :revenue_splits
+  end
+end
+```
+
+**Controllers:**
+- `Admin::PricingPlansController` - CRUD for custom plans
+- `Admin::RevenueSplitsController` - Configure profit margins/cuts
+
+**Views:**
+- `/admin/pricing_plans` - List all custom plans
+- `/admin/pricing_plans/new` - Create new enterprise/agency plan
+- `/admin/pricing_plans/:id/edit` - Edit plan details
+- `/admin/pricing_plans/:id/revenue_splits` - Configure revenue sharing
+
+#### 3. Key Features
+
+**Custom Plan Creation:**
+- Select plan type (Enterprise, Agency, Custom)
+- Set custom pricing (monthly fee or custom model)
+- Configure cashback percentage (0-20%)
+- Set feature limits (campaigns, CTV views, etc.)
+- Enable premium features (Premium CTV, unskippable ads, white-label, reseller)
+- Assign to specific user or user group
+- Set effective dates (from/to)
+
+**Revenue/Margin Configuration:**
+- Define split percentages for each party
+  - Platform/AdNexus cut
+  - Agency commission
+  - Reseller margin
+  - Advertiser cost
+- Fixed fees per transaction
+- Different splits for different plan types
+- Historical tracking of margin changes
+
+**Admin Dashboard:**
+- Overview of all custom plans
+- Revenue projections per plan
+- Active/inactive plan status
+- Quick actions: activate, deactivate, edit, duplicate
+
+#### 4. Integration with Existing System
+
+**Update `User` model:**
+```ruby
+class User < ApplicationRecord
+  has_one :custom_pricing_plan
+  
+  def plan_features
+    if custom_pricing_plan&.active?
+      custom_pricing_plan.to_features_hash
+    else
+      # Fallback to standard plans
+      plan_key = subscription_plan&.to_sym || :free
+      STRIPE_PLANS[plan_key] || STRIPE_PLANS[:free]
+    end
+  end
+end
+```
+
+**Update `config/initializers/stripe.rb`:**
+- Keep standard plans (free, basic, pro, business)
+- Add method to load custom plans from database
+- Generate Stripe Price IDs for custom plans on-the-fly
+
+**Pricing Page Integration:**
+- Show custom plan if user has one assigned
+- Display custom features and pricing
+- Handle custom "Contact" pricing for Enterprise/Agency
+
+#### 5. Admin Permissions
+
+Add authorization:
+```ruby
+# app/policies/pricing_plan_policy.rb (using Pundit)
+class PricingPlanPolicy < ApplicationPolicy
+  def index?
+    user.admin?
+  end
+  
+  def create?
+    user.admin?
+  end
+  
+  def update?
+    user.admin?
+  end
+end
+```
+
+### Implementation Tasks
+
+**Phase 1: Database & Models**
+- [ ] Create migration for `custom_pricing_plans`
+- [ ] Create migration for `revenue_splits`
+- [ ] Create `CustomPricingPlan` model with validations
+- [ ] Create `RevenueSplit` model with validations
+- [ ] Add associations to `User` model
+- [ ] Write model tests
+
+**Phase 2: Admin Interface**
+- [ ] Create admin routes
+- [ ] Create `Admin::PricingPlansController`
+- [ ] Create `Admin::RevenueSplitsController`
+- [ ] Build admin views (list, new, edit, revenue splits)
+- [ ] Add admin navigation link
+- [ ] Implement authorization with Pundit
+
+**Phase 3: Integration**
+- [ ] Update `User#plan_features` to check for custom plans
+- [ ] Update pricing page to display custom plans
+- [ ] Add Stripe integration for custom pricing
+- [ ] Update webhook handler for custom plan events
+- [ ] Add background job for plan activation/deactivation
+
+**Phase 4: Reporting & Analytics**
+- [ ] Dashboard showing custom plan revenue
+- [ ] Revenue split reports
+- [ ] Margin analysis per plan
+- [ ] Export functionality (CSV, PDF)
+
+### Future Enhancements
+
+1. **Bulk Operations:** Create multiple custom plans from CSV upload
+2. **Plan Templates:** Save common configurations as templates
+3. **A/B Testing:** Test different pricing strategies
+4. **Auto-scaling:** Automatically adjust pricing based on usage
+5. **Contract Management:** Upload and attach contracts to custom plans
+6. **Notification System:** Alert when plans are about to expire
+7. **Approval Workflow:** Require approval for high-value custom plans
+
+---
+
+**Last Updated:** 2025-10-21 (Admin Pricing Requirements Documented)
+**Status:** 📋 Awaiting implementation prioritization

@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
   get '/logout' => 'sessions#destroy'
+  get '/signup' => 'users#signup', as: 'signup'
+  post '/signup' => 'users#create'
   
   get '/myaccount' => 'users#myaccount'
   patch '/myaccountUpdate' => 'users#myaccountUpdate'
@@ -51,7 +53,8 @@ Rails.application.routes.draw do
   end
 
   # Credits Management
-  resources :credits, only: [:index, :new, :create]
+  resources :credits, only: [:index, :create]
+  get 'credits/new', to: redirect('/credits')  # Redirect to combined page
   get 'credits/success', to: 'credits#success', as: :credits_success
   get 'credits/cancel', to: 'credits#cancel', as: :credits_cancel
 

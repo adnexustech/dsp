@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :authorize
+  before_action :authorize, except: [:signup, :create]
+  skip_before_action :verify_authenticity_token, only: [:create], if: :public_signup?
 
   # GET /users
   # GET /users.json
@@ -19,6 +20,12 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  # GET /signup
+  def signup
+    @user = User.new
+    render layout: 'login'
+  end
+
   # GET /users/1/edit
   def edit
   end
@@ -27,12 +34,27 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
+    
+    # Set admin to false for public signups
+    @user.admin = false if public_signup?
+    
     respond_to do |format|
       if @user.save
-        format.html { redirect_to users_url, notice: 'User was successfully created.' }
+        if public_signup?
+          # Log in the new user automatically
+          session[:user_id] = @user.id
+          format.html { redirect_to root_url, notice: 'Account created successfully! Welcome to AdNexus.' }
+        else
+          # Admin creating user
+          format.html { redirect_to users_url, notice: 'User was successfully created.' }
+        end
         format.json { render :index, status: :created, location: @user }
       else
-        format.html { render :new }
+        if public_signup?
+          format.html { render :signup, layout: 'login' }
+        else
+          format.html { render :new }
+        end
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -93,6 +115,12 @@ class UsersController < ApplicationController
 
 
 
+
+
+      # Check if this is a public signup (not an admin creating a user)
+      def public_signup?
+        action_name == 'create' && current_user.nil?
+      end
 
 
 end

@@ -16,7 +16,7 @@ class CreditsController < ApplicationController
 
     if amount < User::MIN_DEPOSIT_AMOUNT
       flash[:error] = "Minimum deposit is $#{User::MIN_DEPOSIT_AMOUNT}"
-      redirect_to new_credit_path
+      redirect_to credits_path
       return
     end
 
@@ -41,7 +41,7 @@ class CreditsController < ApplicationController
         }],
         mode: 'payment',
         success_url: credits_success_url(amount: amount),
-        cancel_url: new_credit_url,
+        cancel_url: credits_url,
         metadata: {
           user_id: current_user.id,
           amount: amount,
@@ -53,10 +53,10 @@ class CreditsController < ApplicationController
       redirect_to session.url, allow_other_host: true
     rescue Stripe::StripeError => e
       flash[:error] = "Payment failed: #{e.message}"
-      redirect_to new_credit_path
+      redirect_to credits_path
     rescue => e
       flash[:error] = "An error occurred: #{e.message}"
-      redirect_to new_credit_path
+      redirect_to credits_path
     end
   end
 
@@ -64,13 +64,12 @@ class CreditsController < ApplicationController
     # This is called after successful payment
     # Actual credit addition happens via webhook
     amount = params[:amount].to_f
-    flash[:success] = "Payment successful! Your $#{amount} in credits will be added shortly."
-    redirect_to credits_path
+    redirect_to credits_path(success: true, amount: amount)
   end
 
   def cancel
     flash[:warning] = "Payment cancelled. No charges were made."
-    redirect_to new_credit_path
+    redirect_to credits_path
   end
 
   private

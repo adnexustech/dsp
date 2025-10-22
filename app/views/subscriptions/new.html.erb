@@ -17,166 +17,268 @@
 <%end%>
 
 <% content_for :main_body do %>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-  
-  <!-- Header -->
-  <div class="text-center mb-16">
-    <h2 class="text-4xl font-bold text-white mb-4">Choose the Perfect Plan</h2>
-    <p class="text-xl text-zinc-400">Select the plan that fits your advertising needs</p>
-  </div>
+<!-- Pricing page with proper spacing and structure -->
+<section class="mx-auto max-w-6xl px-4 py-10">
+  <h1 class="text-3xl font-semibold text-center mb-2 text-zinc-200">Pay As You Go CTV Advertising</h1>
+  <p class="text-center text-zinc-400 mb-12">Get cashback on your ad spend • $15 CPM Connected TV Views</p>
 
-  <!-- Pricing Cards - 4 columns on desktop -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-    <% @plans.each_with_index do |(plan_key, plan), index| %>
+  <!-- Standard Plans Grid (4 cards) -->
+  <% standard_plans = @plans.select { |k, v| [:free, :basic, :pro, :business].include?(k) } %>
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+    <% standard_plans.each_with_index do |(plan_key, plan), index| %>
       <% is_current = @current_plan == plan_key %>
       <% is_popular = plan_key == :pro %>
-      
-      <div class="relative flex flex-col <%= is_popular ? 'lg:scale-105 lg:z-10' : '' %>">
-        <!-- Popular Badge -->
-        <% if is_popular %>
-          <div class="absolute -top-4 left-0 right-0 flex justify-center">
-            <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
-              Most Popular
-            </span>
-          </div>
+      <% features = plan[:features] %>
+
+      <!-- Card with proper vertical structure -->
+      <article class="relative flex flex-col justify-between bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 min-h-[480px] transition-all duration-200 hover:border-emerald-500 hover:-translate-y-1 <%= is_popular ? 'ring-1 ring-emerald-500/30' : '' %>">
+        
+        <!-- Badge (absolutely positioned above card) -->
+        <% if is_current %>
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300 whitespace-nowrap">
+            Current Plan
+          </span>
+        <% elsif is_popular %>
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300 whitespace-nowrap">
+            Most Popular
+          </span>
         <% end %>
 
-        <!-- Card -->
-        <div class="flex-1 bg-zinc-900 border <%= is_current ? 'border-blue-500' : is_popular ? 'border-purple-500' : 'border-zinc-800' %> rounded-2xl p-8 flex flex-col hover:border-zinc-700 transition-all duration-200">
+        <!-- Section 1: Header -->
+        <header class="mb-6">
+          <h2 class="text-xl font-semibold text-zinc-200 mb-3"><%= plan[:name] %></h2>
           
-          <!-- Header -->
-          <div class="mb-8">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="text-2xl font-bold text-white"><%= plan[:name] %></h3>
-              <% if is_current %>
-                <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                  Current
-                </span>
-              <% end %>
-            </div>
-            
-            <!-- Price -->
-            <div class="mt-4">
-              <% if plan_key == :free %>
-                <div class="text-5xl font-bold text-white">Free</div>
-              <% elsif plan_key == :enterprise %>
-                <div class="text-4xl font-bold text-white">Custom</div>
-                <div class="text-sm text-zinc-400 mt-2">Contact for pricing</div>
-              <% elsif plan[:price] %>
-                <div class="flex items-baseline">
-                  <span class="text-5xl font-bold text-white">$<%= plan[:price] / 100 %></span>
-                  <span class="text-zinc-400 ml-2">/month</span>
-                </div>
-              <% end %>
-            </div>
-          </div>
-
-          <!-- Features -->
-          <ul class="space-y-4 mb-8 flex-1">
-            <% features = plan[:features] %>
-            <li class="flex items-start">
-              <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-              <span class="text-zinc-300">
-                <strong class="text-white"><%= features[:campaigns_limit] || 'Unlimited' %></strong> campaigns
-              </span>
-            </li>
-            <li class="flex items-start">
-              <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-              <span class="text-zinc-300">
-                <strong class="text-white"><%= features[:banners_limit] || 'Unlimited' %></strong> banners
-              </span>
-            </li>
-            <li class="flex items-start">
-              <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-              <span class="text-zinc-300">
-                <strong class="text-white"><%= features[:videos_limit] || 'Unlimited' %></strong> videos
-              </span>
-            </li>
-            <li class="flex items-start">
-              <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-              <span class="text-zinc-300"><%= features[:support] %> support</span>
-            </li>
-            <% if features[:whitelabel] %>
-              <li class="flex items-start">
-                <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-                <span class="text-zinc-300">White label branding</span>
-              </li>
-            <% end %>
-            <% if features[:custom_features] %>
-              <li class="flex items-start">
-                <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-                <span class="text-zinc-300">Custom features</span>
-              </li>
-            <% end %>
-          </ul>
-
-          <!-- CTA Button -->
-          <div class="mt-auto">
-            <% if is_current %>
-              <button type="button" 
-                      disabled
-                      class="w-full py-3 px-6 rounded-lg bg-zinc-800 text-zinc-400 font-semibold cursor-not-allowed">
-                Current Plan
-              </button>
-            <% elsif plan_key == :enterprise %>
-              <a href="mailto:sales@adnexus.com?subject=Enterprise%20Plan%20Inquiry"
-                 class="block w-full py-3 px-6 rounded-lg text-center font-semibold transition-all duration-200
-                        bg-gradient-to-r from-blue-600 to-purple-600 text-white
-                        hover:from-blue-700 hover:to-purple-700">
-                Contact Sales
-              </a>
+          <!-- Price -->
+          <div class="flex items-baseline gap-1">
+            <% if plan_key == :free %>
+              <span class="text-4xl font-bold text-white leading-none">Free</span>
+              <span class="text-sm text-zinc-400">/mo</span>
+            <% elsif plan[:price].nil? %>
+              <span class="text-2xl font-bold text-white leading-none">Contact</span>
             <% else %>
-              <%= button_to "Select #{plan[:name]}",
-                  subscriptions_path(plan: plan_key),
-                  method: :post,
-                  class: "w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 #{
-                    is_popular ? 
-                      'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' : 
-                      'bg-white text-black hover:bg-zinc-200'
-                  }",
-                  data: { confirm: plan_key == :free ?
-                    "Are you sure you want to downgrade to the Free plan?" :
-                    "Subscribe to #{plan[:name]} plan for $#{plan[:price] / 100}/month?" } %>
+              <span class="text-4xl font-bold text-white leading-none">$<%= plan[:price] / 100 %></span>
+              <span class="text-sm text-zinc-400">/mo</span>
             <% end %>
           </div>
+        </header>
+
+        <!-- Section 2: Features (grows to fill space) -->
+        <ul class="flex-1 space-y-3 text-sm text-zinc-300">
+          <% if features[:cashback] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span class="text-emerald-400 font-semibold"><%= features[:cashback] %></span>
+            </li>
+          <% end %>
+          
+          <% if features[:ctv_views] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span><strong class="text-white"><%= features[:ctv_views] %></strong> CTV views/month</span>
+            </li>
+          <% end %>
+          
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span><strong class="text-white">$15 CPM</strong> Performance Network</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span><strong class="text-white"><%= features[:campaigns_limit] || 'Unlimited' %></strong> active campaigns</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span>30-second video ads</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span><%= features[:support] %> support</span>
+          </li>
+          <% if features[:premium] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span class="text-yellow-400 font-semibold">Premium CTV Network</span>
+            </li>
+          <% end %>
+          <% if features[:unskippable] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span class="text-yellow-400 font-semibold"><%= features[:unskippable] %></span>
+            </li>
+          <% end %>
+          <% if features[:whitelabel] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span>White-label branding</span>
+            </li>
+          <% end %>
+          <% if features[:reseller] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span>Reseller program access</span>
+            </li>
+          <% end %>
+        </ul>
+
+        <!-- Section 3: Button (pinned to bottom) -->
+        <div class="mt-6">
+          <% if plan_key == :enterprise || plan_key == :agency %>
+            <a href="https://cal.com/adnexus"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="block w-full rounded-xl border border-emerald-500/40 bg-transparent px-4 py-2.5 text-center text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 hover:brightness-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 transition-all">
+              Book a Call
+            </a>
+          <% elsif plan_key == :free %>
+            <%= link_to "Add Credits",
+                credits_path,
+                class: "block w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-center bg-white text-black hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white transition-all" %>
+          <% elsif is_current %>
+            <button disabled class="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-semibold text-zinc-400 cursor-not-allowed">
+              Current Plan
+            </button>
+          <% else %>
+            <%= button_to "Subscribe",
+                subscriptions_path,
+                params: { plan: plan_key },
+                method: :post,
+                class: "w-full rounded-xl px-4 py-2.5 text-sm font-semibold bg-white text-black hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white transition-all" %>
+          <% end %>
         </div>
-      </div>
+      </article>
     <% end %>
   </div>
 
-  <!-- Subscription Details -->
-  <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 mb-8">
-    <h3 class="text-xl font-bold text-white mb-6 flex items-center">
-      <i class="fa-solid fa-circle-info text-blue-500 mr-3"></i>
-      Subscription Details
-    </h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="flex items-start">
-        <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-        <span class="text-zinc-300">14-day free trial on all paid plans</span>
-      </div>
-      <div class="flex items-start">
-        <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-        <span class="text-zinc-300">Cancel anytime - no commitments</span>
-      </div>
-      <div class="flex items-start">
-        <i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i>
-        <span class="text-zinc-300">Upgrade or downgrade anytime</span>
-      </div>
-      <div class="flex items-start">
-        <i class="fa-solid fa-lock text-green-500 mt-1 mr-3"></i>
-        <span class="text-zinc-300">Secure payment by Stripe</span>
-      </div>
-      <div class="flex items-start">
-        <i class="fa-solid fa-calendar text-green-500 mt-1 mr-3"></i>
-        <span class="text-zinc-300">Monthly billing cycle</span>
-      </div>
-      <div class="flex items-start">
-        <i class="fa-solid fa-shield-halved text-green-500 mt-1 mr-3"></i>
-        <span class="text-zinc-300">Money-back guarantee</span>
-      </div>
-    </div>
+  <!-- Enterprise Plans Grid (2 cards) -->
+  <% enterprise_plans = [[:agency, @plans[:agency]], [:enterprise, @plans[:enterprise]]] %>
+  <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+    <% enterprise_plans.each_with_index do |(plan_key, plan), index| %>
+      <% is_current = @current_plan == plan_key %>
+      <% features = plan[:features] %>
+
+      <!-- Card with proper vertical structure -->
+      <article class="relative flex flex-col justify-between bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 min-h-[480px] transition-all duration-200 hover:border-emerald-500 hover:-translate-y-1">
+
+        <!-- Badge (absolutely positioned above card) -->
+        <% if is_current %>
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300 whitespace-nowrap">
+            Current Plan
+          </span>
+        <% end %>
+
+        <!-- Section 1: Header -->
+        <header class="mb-6">
+          <h2 class="text-xl font-semibold text-zinc-200 mb-3"><%= plan[:name] %></h2>
+
+          <!-- Price -->
+          <div class="flex items-baseline gap-1">
+            <span class="text-2xl font-bold text-white leading-none">Contact</span>
+          </div>
+        </header>
+
+        <!-- Section 2: Features (grows to fill space) -->
+        <ul class="flex-1 space-y-3 text-sm text-zinc-300">
+          <% if features[:cashback] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span class="text-emerald-400 font-semibold"><%= features[:cashback] %></span>
+            </li>
+          <% end %>
+
+          <% if features[:ctv_views] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span><strong class="text-white"><%= features[:ctv_views] %></strong> CTV views/month</span>
+            </li>
+          <% end %>
+
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span><strong class="text-white">$15 CPM</strong> Performance Network</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span><strong class="text-white"><%= features[:campaigns_limit] || 'Unlimited' %></strong> active campaigns</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span>30-second video ads</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+            <span><%= features[:support] %> support</span>
+          </li>
+          <% if features[:premium] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span class="text-yellow-400 font-semibold">Premium CTV Network</span>
+            </li>
+          <% end %>
+          <% if features[:unskippable] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span class="text-yellow-400 font-semibold"><%= features[:unskippable] %></span>
+            </li>
+          <% end %>
+          <% if features[:whitelabel] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span>White-label branding</span>
+            </li>
+          <% end %>
+          <% if features[:reseller] %>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5"></span>
+              <span>Reseller program access</span>
+            </li>
+          <% end %>
+        </ul>
+
+        <!-- Section 3: Button (pinned to bottom) -->
+        <div class="mt-6">
+          <a href="https://cal.com/adnexus"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="block w-full rounded-xl border border-emerald-500/40 bg-transparent px-4 py-2.5 text-center text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 hover:brightness-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 transition-all">
+            Book a Call
+          </a>
+        </div>
+      </article>
+    <% end %>
   </div>
 
-</div>
+  <!-- Subscription Details (with proper top margin) -->
+  <div class="mt-12 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+    <h3 class="mb-4 text-base font-semibold flex items-center gap-2 text-zinc-200">
+      <i class="fa-solid fa-circle-info text-emerald-500"></i>
+      Subscription Details
+    </h3>
+    <ul class="grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
+      <li class="flex items-center gap-2">
+        <i class="fa-solid fa-check text-emerald-500 text-xs"></i>
+        Pay as you go — no long-term contracts
+      </li>
+      <li class="flex items-center gap-2">
+        <i class="fa-solid fa-check text-emerald-500 text-xs"></i>
+        Cancel anytime — no commitments
+      </li>
+      <li class="flex items-center gap-2">
+        <i class="fa-solid fa-check text-emerald-500 text-xs"></i>
+        Upgrade or downgrade anytime
+      </li>
+      <li class="flex items-center gap-2">
+        <i class="fa-solid fa-lock text-emerald-500 text-xs"></i>
+        Secure payment by Stripe
+      </li>
+      <li class="flex items-center gap-2">
+        <i class="fa-solid fa-calendar text-emerald-500 text-xs"></i>
+        Monthly billing cycle
+      </li>
+      <li class="flex items-center gap-2">
+        <i class="fa-solid fa-shield-halved text-emerald-500 text-xs"></i>
+        Money-back guarantee
+      </li>
+    </ul>
+  </div>
+</section>
 <%end%>

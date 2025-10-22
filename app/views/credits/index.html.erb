@@ -3,89 +3,275 @@
     <ol class="breadcrumb page-breadcrumb">
       <li><i class="fa fa-home"></i><a href="/">Home</a></li>
       <li><i class="fa fa-angle-right"></i></li>
-      <li class="active">Credits</li>
+      <li class="active">Wallet</li>
     </ol>
     <div class="page-header">
-      <div class="page-title">Advertising Credits</div>
+      <div class="page-title">Wallet</div>
     </div>
-  </div>
-  <div class="page-actions">
-    <%= link_to 'Add Credits', new_credit_path, class: "btn btn-primary" %>
   </div>
 <%end%>
 
 <% content_for :main_body do %>
-<div class="container mt-5">
-  <div class="row">
-    <!-- Credits Balance Card -->
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header bg-success text-white">
-          <h5 class="mb-0"><i class="fa fa-dollar"></i> Current Balance</h5>
+<div class="mx-auto max-w-6xl px-4 py-8">
+  <!-- Success Toast (shown after redirect) -->
+  <% if params[:success] %>
+    <div id="success-toast" class="mb-6 rounded-xl border border-green-500/30 bg-green-500/10 p-4 flex items-center gap-3">
+      <i class="fa-solid fa-check-circle text-green-400 text-xl"></i>
+      <div>
+        <p class="text-green-300 font-semibold">Payment successful!</p>
+        <p class="text-green-200 text-sm">Your $<%= params[:amount] %> in credits will be added shortly.</p>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Top Row: Balance and Add Credits -->
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Current Balance -->
+    <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 hover:border-zinc-700 hover:shadow-xl transition-all duration-200 flex flex-col">
+      <div class="flex items-start justify-between mb-6">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-zinc-400 mb-2">Current Balance</p>
+          <h3 class="text-4xl font-bold text-green-400 font-mono tabular-nums">$<%= '%.2f' % @balance %></h3>
+          <p class="text-xs text-zinc-500 mt-1">Available Credits</p>
         </div>
-        <div class="card-body text-center">
-          <h1 class="display-4">$<%= '%.2f' % @balance %></h1>
-          <p class="text-muted">Available Credits</p>
+        <i class="fa-solid fa-wallet text-green-500/30 text-3xl"></i>
+      </div>
 
-          <%= link_to 'Add Credits', new_credit_path, class: 'btn btn-primary btn-block mt-3' %>
+      <!-- Divider -->
+      <div class="border-t border-zinc-800 my-4"></div>
 
-          <div class="alert alert-info mt-3" style="font-size: 0.9em;">
-            <strong>Minimum Requirements:</strong><br>
-            Deposit: $<%= '%.2f' % @min_deposit %><br>
-            Daily Budget: $<%= '%.2f' % User::MIN_DAILY_BUDGET %>
+      <!-- Info Sections -->
+      <div class="space-y-4 mt-auto">
+        <!-- Requirements -->
+        <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
+          <div class="flex items-start gap-2">
+            <i class="fa-solid fa-info-circle text-blue-400 text-sm mt-0.5"></i>
+            <div class="text-sm text-zinc-300">
+              <p class="font-medium mb-2">Minimums</p>
+              <p class="text-zinc-400">Deposit: <span class="text-white font-mono">$<%= '%.2f' % @min_deposit %></span></p>
+              <p class="text-zinc-400">Daily Budget: <span class="text-white font-mono">$<%= '%.2f' % User::MIN_DAILY_BUDGET %></span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stripe Badge -->
+        <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
+          <div class="flex items-start gap-2">
+            <i class="fa-solid fa-lock text-green-400 text-sm mt-0.5"></i>
+            <div class="text-sm">
+              <p class="text-zinc-300">Secure payment by</p>
+              <a href="https://stripe.com" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300 font-medium inline-flex items-center gap-1 mt-1">
+                Stripe
+                <i class="fa-solid fa-external-link text-xs"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Transaction History -->
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0"><i class="fa fa-list"></i> Transaction History</h5>
-        </div>
-        <div class="card-body">
-          <% if @transactions.any? %>
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th class="text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @transactions.each do |tx| %>
-                    <tr>
-                      <td><%= tx.created_at.strftime('%b %d, %Y %I:%M %p') %></td>
-                      <td>
-                        <span class="badge <%= tx.credit? ? 'badge-success' : 'badge-danger' %>">
-                          <%= tx.transaction_type.titleize %>
-                        </span>
-                      </td>
-                      <td><%= tx.description %></td>
-                      <td class="text-right <%= tx.credit? ? 'text-success' : 'text-danger' %>">
-                        <%= tx.signed_amount %>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
+    <!-- Add Credits Form -->
+    <div class="md:col-span-1 lg:col-span-2 bg-zinc-900/60 border border-zinc-800 rounded-2xl overflow-hidden">
+      <!-- Card Header -->
+      <div class="px-6 py-4 border-b border-zinc-800">
+        <h2 class="text-xl font-semibold text-zinc-200">Add Credits</h2>
+        <p class="text-sm text-zinc-400 mt-1">Add funds to your account (1 USD = 1 credit)</p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="p-6">
+        <%= form_with url: credits_path, method: :post, id: 'credits-form', class: 'space-y-5' do |f| %>
+          <!-- Amount Input -->
+          <div>
+            <label for="amount" class="block text-sm font-medium text-zinc-300 mb-1.5">
+              Amount (USD)
+            </label>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-lg">$</span>
+              <%= text_field_tag :amount, '',
+                  id: 'amount',
+                  class: 'w-full pl-10 pr-4 py-3 bg-zinc-950 border border-zinc-700 rounded-lg text-white text-lg focus:outline-none focus:ring-2 focus:ring-white/70 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed',
+                  placeholder: '0.00',
+                  data: { min: @min_deposit },
+                  autocomplete: 'off' %>
             </div>
-          <% else %>
-            <p class="text-center text-muted">No transactions yet. Add credits to get started!</p>
-          <% end %>
-        </div>
+            <p id="amount-error" class="text-red-400 text-sm mt-1.5 hidden">
+              <i class="fa-solid fa-exclamation-circle"></i> Minimum deposit is $<%= '%.2f' % @min_deposit %>
+            </p>
+          </div>
+
+          <!-- Quick Amounts -->
+          <div>
+            <label class="block text-sm font-medium text-zinc-400 mb-2">Quick Amounts (click to add)</label>
+            <div class="flex flex-wrap gap-2" id="quick-amounts">
+              <% [25, 50, 100, 250, 500, 1000, 5000].each do |amt| %>
+                <button
+                  type="button"
+                  data-amount="<%= amt %>"
+                  class="quick-amount-chip px-4 py-2 rounded-full border border-zinc-700 text-sm font-medium text-zinc-300 hover:bg-white/10 hover:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-white/70 transition-all duration-150 active:scale-95">
+                  $<%= amt >= 1000 ? "#{amt / 1000}K" : amt %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button
+              type="submit"
+              id="submit-btn"
+              disabled
+              class="flex-1 sm:flex-none px-6 py-3 bg-white text-black rounded-xl font-semibold hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+              <i class="fa-solid fa-credit-card mr-2"></i>
+              <span id="submit-text">Purchase Credits</span>
+            </button>
+            <%= link_to root_path, class: 'flex-1 sm:flex-none px-6 py-3 text-center border border-zinc-700 text-zinc-300 rounded-xl font-medium hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-white/70 transition-all' do %>
+              Add later
+            <% end %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
 
-  <div class="row mt-3">
-    <div class="col-md-12 text-center">
-      <%= link_to 'Back to Dashboard', root_path, class: 'btn btn-secondary' %>
+  <!-- Transaction History - Full Width -->
+  <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl overflow-hidden">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
+      <h3 class="text-lg font-semibold text-zinc-200">Transaction History</h3>
+      <i class="fa-solid fa-clock-rotate-left text-zinc-600"></i>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6">
+      <% if @transactions.any? %>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-zinc-800">
+                <th class="text-left text-xs font-medium text-zinc-500 pb-3 pr-4">Date</th>
+                <th class="text-left text-xs font-medium text-zinc-500 pb-3 pr-4">Type</th>
+                <th class="text-left text-xs font-medium text-zinc-500 pb-3 pr-4">Description</th>
+                <th class="text-right text-xs font-medium text-zinc-500 pb-3">Amount</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800/50">
+              <% @transactions.each do |tx| %>
+                <tr class="hover:bg-zinc-800/30 transition-colors">
+                  <td class="py-3 pr-4 text-sm text-zinc-400"><%= tx.created_at.strftime('%b %d, %Y') %></td>
+                  <td class="py-3 pr-4">
+                    <span class="px-2 py-1 text-xs font-medium rounded-full <%= tx.credit? ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300' %>">
+                      <%= tx.transaction_type.titleize %>
+                    </span>
+                  </td>
+                  <td class="py-3 pr-4 text-sm text-zinc-300"><%= tx.description %></td>
+                  <td class="py-3 text-right text-sm font-mono font-semibold <%= tx.credit? ? 'text-green-400' : 'text-red-400' %>">
+                    <%= tx.signed_amount %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="text-center py-12">
+          <div class="text-6xl mb-4">💳</div>
+          <p class="text-zinc-400 mb-2">No transactions yet</p>
+          <p class="text-sm text-zinc-500">Purchases and ad spend will appear here</p>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
+
+<script>
+(function() {
+  const amountInput = document.getElementById('amount');
+  const submitBtn = document.getElementById('submit-btn');
+  const submitText = document.getElementById('submit-text');
+  const amountError = document.getElementById('amount-error');
+  const quickAmountChips = document.querySelectorAll('.quick-amount-chip');
+  const form = document.getElementById('credits-form');
+  const minDeposit = parseFloat(amountInput.dataset.min);
+
+  // Format currency
+  function formatCurrency(value) {
+    const num = parseFloat(value);
+    return isNaN(num) ? '' : num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // Validate amount
+  function validateAmount() {
+    const value = parseFloat(amountInput.value) || 0;
+    const isValid = value >= minDeposit;
+
+    submitBtn.disabled = !isValid;
+
+    if (amountInput.value && !isValid) {
+      amountError.classList.remove('hidden');
+    } else {
+      amountError.classList.add('hidden');
+    }
+
+    return isValid;
+  }
+
+  // Handle input
+  amountInput.addEventListener('input', function(e) {
+    // Remove non-numeric characters except decimal
+    let value = e.target.value.replace(/[^0-9.]/g, '');
+
+    // Ensure only one decimal point
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    e.target.value = value;
+    validateAmount();
+  });
+
+  // Handle quick amount chips (additive)
+  quickAmountChips.forEach(chip => {
+    chip.addEventListener('click', function() {
+      const amount = parseFloat(this.dataset.amount);
+      const currentValue = parseFloat(amountInput.value) || 0;
+
+      // Add to current value
+      const newValue = currentValue + amount;
+      amountInput.value = newValue;
+      validateAmount();
+
+      // Animate click feedback
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 100);
+    });
+  });
+
+  // Handle form submission
+  form.addEventListener('submit', function(e) {
+    if (!validateAmount()) {
+      e.preventDefault();
+      return;
+    }
+
+    // Show loading state
+    submitBtn.disabled = true;
+    submitText.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Redirecting to Stripe...';
+  });
+
+  // Auto-hide success toast
+  const toast = document.getElementById('success-toast');
+  if (toast) {
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-20px)';
+      toast.style.transition = 'all 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 5000);
+  }
+})();
+</script>
 <%end%>
