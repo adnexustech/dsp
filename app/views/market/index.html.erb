@@ -59,7 +59,7 @@
         <!-- Stats -->
         <div class="mt-6 pt-6 border-t border-zinc-800">
           <div class="text-sm text-zinc-400 mb-2">Providers Found</div>
-          <div class="text-2xl font-bold"><%= @providers.total_count %></div>
+          <div class="text-2xl font-bold"><%= @providers.count %></div>
         </div>
 
         <!-- Become a Provider CTA -->
@@ -162,13 +162,6 @@
           <% end %>
         </div>
 
-        <!-- Pagination -->
-        <% if @providers.total_pages > 1 %>
-          <div class="mt-8 flex justify-center">
-            <%= paginate @providers, theme: 'twitter-bootstrap-4', outer_window: 1, inner_window: 2 %>
-          </div>
-        <% end %>
-
       <% else %>
         <!-- Empty State -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-12 text-center">
@@ -217,50 +210,6 @@
 </script>
 
 <style>
-  /* Kaminari Pagination Styling */
-  .pagination {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .pagination .page-item {
-    list-style: none;
-  }
-  
-  .pagination .page-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0.5rem 1rem;
-    background: #18181b;
-    border: 1px solid #27272a;
-    color: #a1a1aa;
-    border-radius: 0.5rem;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  
-  .pagination .page-link:hover {
-    background: #27272a;
-    border-color: #3b82f6;
-    color: #ffffff;
-  }
-  
-  .pagination .page-item.active .page-link {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: #ffffff;
-  }
-  
-  .pagination .page-item.disabled .page-link {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
   /* Line clamp utility */
   .line-clamp-2 {
     display: -webkit-box;

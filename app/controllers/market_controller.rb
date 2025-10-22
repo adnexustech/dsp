@@ -10,7 +10,7 @@ class MarketController < ApplicationController
       @providers = @providers.where("service_categories LIKE ?", "%#{@category}%")
     end
 
-    @providers = @providers.order(created_at: :desc).page(params[:page]).per(12)
+    @providers = @providers.order(created_at: :desc).limit(50)
 
     @categories = [
       'Campaign Management',
