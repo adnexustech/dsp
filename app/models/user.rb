@@ -215,7 +215,8 @@ class User < ApplicationRecord
   def create_personal_organization
     org = Organization.create!(
       name: "#{name || email}'s Organization",
-      owner: self
+      owner: self,
+      credits_balance: 0.0
     )
     update(current_organization: org)
   end

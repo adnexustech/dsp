@@ -1,12 +1,20 @@
 FactoryBot.define do
   factory :organization do
-    name { "MyString" }
-    slug { "MyString" }
-    stripe_customer_id { "MyString" }
-    stripe_subscription_id { "MyString" }
-    subscription_plan { "MyString" }
-    subscription_status { "MyString" }
-    credits_balance { "9.99" }
-    owner_id { 1 }
+    sequence(:name) { |n| "Organization #{n}" }
+    sequence(:slug) { |n| "org-#{n}" }
+    stripe_customer_id { nil }
+    stripe_subscription_id { nil }
+    subscription_plan { 'free' }
+    subscription_status { 'active' }
+    credits_balance { 0.0 }
+
+    # Association - use trait or explicitly set in tests
+    transient do
+      owner { nil }
+    end
+
+    after(:build) do |organization, evaluator|
+      organization.owner_id = evaluator.owner&.id if evaluator.owner
+    end
   end
 end
