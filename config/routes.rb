@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Health check for K8s probes
+  get "/up", to: proc { [200, {}, ["OK"]] }
+
   resources :banners
   resources :campaigns
   resources :banner_videos
