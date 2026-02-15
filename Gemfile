@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '>= 3.3.0'
+ruby '>= 3.4.0'
 
 # Rails 8.0
 gem 'rails', '~> 8.0.0'
@@ -21,7 +21,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'stripe', '~> 12.0'
 
 # Modern View Components
-gem 'phlex-rails', '~> 2.0.0'
+gem 'phlex-rails', '~> 2.0'
 
 # Bootstrap Forms (temporary - migrate to Phlex)
 gem 'bootstrap_form', '~> 5.0'

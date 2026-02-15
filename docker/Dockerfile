@@ -2,7 +2,7 @@
 # Rails 8 Production Dockerfile
 
 # Use Ruby 3.3
-FROM ruby:3.3.0-slim AS base
+FROM ruby:3.4.2-slim AS base
 
 # Rails app lives here
 WORKDIR /rails
