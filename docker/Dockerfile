@@ -42,8 +42,11 @@ RUN bundle install && \
 # Copy application code
 COPY . .
 
-# Precompile assets
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
+# Ensure builds directory exists for tailwindcss output
+RUN mkdir -p app/assets/builds
+
+# Build Tailwind CSS and precompile assets
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails tailwindcss:build assets:precompile
 
 # Final stage: minimal runtime image
 FROM base
