@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
-  create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "active_storage_blobs", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -33,21 +33,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "attachments", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "attachments", force: :cascade do |t|
     t.string "filename"
     t.string "content_type"
-    t.binary "data", size: :long
+    t.binary "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "banner_videos", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "banner_videos", force: :cascade do |t|
     t.integer "campaign_id"
     t.datetime "interval_start"
     t.datetime "interval_end"
@@ -59,7 +59,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.integer "vast_video_linerarity"
     t.integer "vast_video_duration"
     t.text "vast_video_type"
-    t.text "vast_video_outgoing_file", size: :medium
+    t.text "vast_video_outgoing_file"
     t.integer "bids"
     t.integer "clicks"
     t.integer "pixels"
@@ -84,14 +84,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.string "width_height_list"
   end
 
-  create_table "banner_videos_rtb_standards", id: false, charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "banner_videos_rtb_standards", id: false, force: :cascade do |t|
     t.integer "banner_video_id"
     t.integer "rtb_standard_id"
     t.index ["banner_video_id"], name: "index_banner_videos_rtb_standards_on_banner_video_id"
     t.index ["rtb_standard_id"], name: "index_banner_videos_rtb_standards_on_rtb_standard_id"
   end
 
-  create_table "banners", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "banners", force: :cascade do |t|
     t.integer "campaign_id"
     t.datetime "interval_start", null: false
     t.datetime "interval_end"
@@ -102,7 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.decimal "total_cost", precision: 15, scale: 6
     t.string "contenttype", limit: 1024
     t.string "iurl", limit: 1024
-    t.text "htmltemplate", size: :medium
+    t.text "htmltemplate"
     t.integer "bids"
     t.integer "clicks"
     t.integer "pixels"
@@ -124,14 +124,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.string "width_height_list"
   end
 
-  create_table "banners_rtb_standards", id: false, charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "banners_rtb_standards", id: false, force: :cascade do |t|
     t.integer "banner_id"
     t.integer "rtb_standard_id"
     t.index ["banner_id"], name: "index_banners_rtb_standards_on_banner_id"
     t.index ["rtb_standard_id"], name: "index_banners_rtb_standards_on_rtb_standard_id"
   end
 
-  create_table "campaigns", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "campaigns", force: :cascade do |t|
     t.datetime "activate_time"
     t.datetime "expire_time"
     t.decimal "cost", precision: 15, scale: 6
@@ -159,28 +159,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.integer "target_id"
   end
 
-  create_table "campaigns_rtb_standards", id: false, charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "campaigns_rtb_standards", id: false, force: :cascade do |t|
     t.integer "campaign_id"
     t.integer "rtb_standard_id"
     t.index ["campaign_id"], name: "index_campaigns_rtb_standards_on_campaign_id"
     t.index ["rtb_standard_id"], name: "index_campaigns_rtb_standards_on_rtb_standard_id"
   end
 
-  create_table "categories", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "categories", force: :cascade do |t|
     t.string "name", limit: 1024
     t.string "description", limit: 2048
     t.datetime "updated_at"
     t.datetime "created_at"
   end
 
-  create_table "categories_documents", id: false, charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "categories_documents", id: false, force: :cascade do |t|
     t.integer "document_id"
     t.integer "category_id"
     t.index ["category_id"], name: "index_categories_documents_on_category_id"
     t.index ["document_id"], name: "index_categories_documents_on_document_id"
   end
 
-  create_table "countries", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "countries", force: :cascade do |t|
     t.string "sort_order"
     t.string "common_name"
     t.string "formal_name"
@@ -197,7 +197,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.string "itu_t_telephone_code"
   end
 
-  create_table "credit_transactions", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "credit_transactions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.string "transaction_type", null: false
@@ -209,7 +209,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.index ["user_id"], name: "index_credit_transactions_on_user_id"
   end
 
-  create_table "documents", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "documents", force: :cascade do |t|
     t.string "name", limit: 1024
     t.string "description", limit: 2048
     t.string "doctype", limit: 1024
@@ -218,7 +218,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.datetime "created_at"
   end
 
-  create_table "exchange_attributes", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "exchange_attributes", force: :cascade do |t|
     t.integer "banner_id"
     t.integer "banner_video_id"
     t.string "name"
@@ -230,7 +230,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.index ["banner_video_id"], name: "index_exchange_attributes_on_banner_video_id"
   end
 
-  create_table "exchange_rtbspecs", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "exchange_rtbspecs", force: :cascade do |t|
     t.string "rtbspecification", limit: 1024
     t.string "operand_type", limit: 1024
     t.string "operand_ordinal", limit: 1024
@@ -238,7 +238,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.datetime "deleted_at"
   end
 
-  create_table "exchange_smarty_ads_rtbspecs", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "exchange_smarty_ads_rtbspecs", force: :cascade do |t|
     t.string "rtbspecification", limit: 1024
     t.string "operand_type", limit: 1024
     t.string "operand_ordinal", limit: 1024
@@ -246,7 +246,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.datetime "deleted_at"
   end
 
-  create_table "iab_categories", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "iab_categories", force: :cascade do |t|
     t.text "group"
     t.text "name"
     t.text "iab_id"
@@ -255,7 +255,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "lists", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "lists", force: :cascade do |t|
     t.string "name", limit: 1024
     t.string "description", limit: 4096
     t.string "list_type", limit: 1024
@@ -268,7 +268,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "organization_members", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "organization_members", force: :cascade do |t|
     t.bigint "organization_id", null: false
     t.bigint "user_id", null: false
     t.string "role"
@@ -278,7 +278,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.index ["user_id"], name: "index_organization_members_on_user_id"
   end
 
-  create_table "organizations", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "organizations", force: :cascade do |t|
     t.string "name"
     t.string "slug"
     t.string "stripe_customer_id"
@@ -294,7 +294,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.index ["owner_id"], name: "index_organizations_on_owner_id"
   end
 
-  create_table "report_commands", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "report_commands", force: :cascade do |t|
     t.string "name", limit: 1024
     t.string "type", limit: 1024
     t.integer "campaign_id"
@@ -306,7 +306,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.integer "banner_video_id"
   end
 
-  create_table "rtb_standards", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "rtb_standards", force: :cascade do |t|
     t.string "rtbspecification", limit: 1024
     t.string "operator", limit: 1024
     t.string "operand", limit: 1024
@@ -320,7 +320,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.integer "operand_list_id"
   end
 
-  create_table "stats_rtb", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "stats_rtb", force: :cascade do |t|
     t.integer "campaign_id"
     t.datetime "stats_date"
     t.integer "bids"
@@ -331,14 +331,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.decimal "bid_price", precision: 15, scale: 6
   end
 
-  create_table "targets", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "targets", force: :cascade do |t|
     t.datetime "activate_time"
     t.datetime "expire_time"
-    t.text "list_of_domains", size: :medium
+    t.text "list_of_domains"
     t.string "domain_targetting", limit: 50
-    t.float "geo_latitude", limit: 53
-    t.float "geo_longitude", limit: 53
-    t.float "geo_range", limit: 53
+    t.float "geo_latitude"
+    t.float "geo_longitude"
+    t.float "geo_range"
     t.text "country"
     t.text "geo_region"
     t.text "carrier"
@@ -354,7 +354,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_205525) do
     t.integer "domains_list_id"
   end
 
-  create_table "users", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "password_digest"
