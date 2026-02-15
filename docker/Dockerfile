@@ -55,7 +55,7 @@ COPY --from=build /rails /rails
 # Create rails user and set ownership
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    mkdir -p db log storage tmp && \
+    mkdir -p db log storage tmp/pids tmp/cache tmp/sockets && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
