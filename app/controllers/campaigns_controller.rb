@@ -136,9 +136,10 @@ class CampaignsController < ApplicationController
       end
 
       ["exchanges","regions"].each do |attr|
-        str = params[attr]
+        # Check both top-level params and campaign params
+        str = params[attr] || params[:campaign][attr]
         str = str.join(",") if str.kind_of?(Array)
-        params[:campaign][attr] = str.to_s
+        params[:campaign][attr] = str.to_s if str.present?
       end
       params.require(:campaign).permit(:name, :id, :activate_time, :expire_time, 
         :budget_limit_daily, :budget_limit_hourly, :total_budget, :ad_domain, :status, :shard, :forensiq, :deleted_at,

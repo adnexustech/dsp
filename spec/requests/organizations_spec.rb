@@ -1,45 +1,50 @@
 require 'rails_helper'
 
 RSpec.describe "Organizations", type: :request do
-  describe "GET /show" do
+  before { setup_authentication }
+
+  describe "GET /organization" do
     it "returns http success" do
-      get "/organizations/show"
+      get organization_path
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET /update" do
+  describe "PATCH /organization" do
     it "returns http success" do
-      get "/organizations/update"
+      patch organization_path, params: { organization: { name: "Updated Org" } }
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  describe "POST /organizations/:id/switch" do
+    it "returns http success" do
+      org = create(:organization, owner: @test_user)
+      post switch_organization_path(org)
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  describe "GET /organization/members" do
+    it "returns http success" do
+      get members_organization_path
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET /switch" do
+  describe "POST /organization/add_member" do
     it "returns http success" do
-      get "/organizations/switch"
-      expect(response).to have_http_status(:success)
+      member = create(:user)
+      post add_member_organization_path, params: { user_id: member.id }
+      expect(response).to have_http_status(:redirect)
     end
   end
 
-  describe "GET /members" do
+  describe "DELETE /organization/remove_member" do
     it "returns http success" do
-      get "/organizations/members"
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe "GET /add_member" do
-    it "returns http success" do
-      get "/organizations/add_member"
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe "GET /remove_member" do
-    it "returns http success" do
-      get "/organizations/remove_member"
-      expect(response).to have_http_status(:success)
+      member = create(:user)
+      delete remove_member_organization_path, params: { user_id: member.id }
+      expect(response).to have_http_status(:redirect)
     end
   end
 

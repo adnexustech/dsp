@@ -6,7 +6,7 @@ ruby '>= 3.3.0'
 gem 'rails', '~> 8.0.0'
 
 # Database
-gem 'mysql2', '~> 0.5'
+gem 'pg', '~> 1.5'
 
 # Modern Asset Pipeline
 gem 'propshaft'  # Rails 8 asset pipeline
@@ -40,8 +40,7 @@ gem 'redis', '~> 5.0'
 gem 'aws-sdk-s3', '~> 1.0'  # Use specific S3 gem instead of full aws-sdk
 gem 's3_direct_upload'
 
-# Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', require: false
+# bootsnap removed - native extensions fail in cross-platform Docker builds
 
 # CSV library (removed from Ruby 3.4 stdlib)
 gem 'csv'

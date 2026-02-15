@@ -1,6 +1,6 @@
 default: &default
-  adapter: mysql2
-  encoding: utf8mb3
+  adapter: postgresql
+  encoding: unicode
   pool: 10
   database: <%= ENV['DB_NAME'] %>
   port: <%= ENV['DB_PORT'] %>
@@ -11,11 +11,10 @@ default: &default
 development:
   <<: *default
   database: <%= ENV['DB_NAME'] || 'adnexus_dev' %>
-  port: <%= ENV['DB_PORT'] || 3306 %>
+  port: <%= ENV['DB_PORT'] || 5432 %>
   host: <%= ENV['DB_HOST'] || 'localhost' %>
-  # MariaDB homebrew installation doesn't require auth
-  username: <%= ENV['DB_USERNAME'] || '' %>
-  password: <%= ENV['DB_PASSWORD'] || '' %>
+  username: <%= ENV['DB_USERNAME'] || 'adnexus' %>
+  password: <%= ENV['DB_PASSWORD'] || 'adnexus' %>
 
 test:
   <<: *default
@@ -23,4 +22,4 @@ test:
 
 production:
   <<: *default
-  reconnect: true
+  url: <%= ENV['DATABASE_URL'] %>

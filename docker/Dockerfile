@@ -11,15 +11,16 @@ WORKDIR /rails
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development:test"
+    BUNDLE_WITHOUT="development:test" \
+    BUNDLE_FORCE_RUBY_PLATFORM="1"
 
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       curl \
       libvips \
-      libmariadb-dev \
-      default-mysql-client \
+      libpq-dev \
+      postgresql-client \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Build stage: install gems and precompile assets
@@ -34,16 +35,12 @@ RUN apt-get update -qq && \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock* ./
 RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 # Copy application code
 COPY . .
-
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompile assets
 RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile

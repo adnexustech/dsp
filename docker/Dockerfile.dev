@@ -10,8 +10,8 @@ RUN apt-get update -qq && \
       curl \
       git \
       libvips \
-      libmariadb-dev \
-      default-mysql-client \
+      libpq-dev \
+      postgresql-client \
       nodejs \
       vim \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives

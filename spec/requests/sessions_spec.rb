@@ -22,9 +22,9 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
-  describe "DELETE /logout" do
+  describe "GET /logout" do
     it "logs out the user" do
-      delete logout_path
+      get logout_path
       expect(response).to redirect_to(login_path)
     end
   end

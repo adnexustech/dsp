@@ -41,7 +41,7 @@
           value="<%= @banner.interval_start&.strftime('%m-%d-%Y %H%M') %>"
           class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 datepicker" />
         <span class="text-zinc-400">to</span>
-        <input type="text" name="interval_end"
+        <input type="text" name="interval_end" id="interval_end"
           value="<%= @banner.interval_end&.strftime('%m-%d-%Y %H%M') %>"
           class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 datepicker" />
       </div>
@@ -126,7 +126,7 @@
     <!-- Submit Buttons -->
     <div class="flex justify-end gap-3 pt-6 border-t border-zinc-800">
       <%= link_to "Cancel", banners_path, class: "px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors" %>
-      <%= f.submit "Update Banner", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer" %>
+      <%= f.submit @banner.new_record? ? "Create Banner" : "Update Banner", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer" %>
     </div>
   <% end %>
 </div>

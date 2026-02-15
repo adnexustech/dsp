@@ -1,11 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "Campaigns", type: :request do
-  # Stub authorization
   before do
-    allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
+    setup_authentication
     allow(Bidder).to receive(:ping).and_return(true)
     allow(Bidder).to receive(:updateAll).and_return(true)
+    allow(Bidder).to receive(:updateCampaign).and_return(true)
+    allow_any_instance_of(Campaign).to receive(:update_bidder).and_return(true)
+    allow_any_instance_of(Campaign).to receive(:remove_bidder).and_return(true)
   end
 
   let(:target) { create(:target) }
@@ -91,7 +93,16 @@ RSpec.describe "Campaigns", type: :request do
 
   describe "PATCH /campaigns/:id" do
     let(:campaign) { create(:campaign) }
-    let(:new_attributes) { { name: "Updated Campaign" } }
+    let(:new_attributes) do
+      {
+        name: "Updated Campaign",
+        activate_time: campaign.activate_time,
+        expire_time: campaign.expire_time,
+        ad_domain: campaign.ad_domain,
+        regions: campaign.regions,
+        total_budget: campaign.total_budget
+      }
+    end
 
     context "with valid parameters" do
       it "updates the requested campaign" do

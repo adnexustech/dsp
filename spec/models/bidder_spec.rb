@@ -28,6 +28,16 @@ RSpec.describe Bidder, type: :model do
             )
           )
           .to_return(status: 200, body: "OK")
+
+        stub_request(:post, "http://bidder2.example.com:8888/api")
+          .with(
+            body: hash_including(
+              "type" => "Ping#",
+              "username" => "test_user",
+              "password" => "test_password"
+            )
+          )
+          .to_return(status: 200, body: "OK")
       end
 
       it "returns 'ok'" do
@@ -36,9 +46,11 @@ RSpec.describe Bidder, type: :model do
 
       it "makes HTTP POST request to all crosstalk hosts" do
         Bidder.ping
-        
+
         expect(WebMock).to have_requested(:post, "http://bidder1.example.com:8888/api")
-          .once
+          .at_least_once
+        expect(WebMock).to have_requested(:post, "http://bidder2.example.com:8888/api")
+          .at_least_once
       end
     end
 

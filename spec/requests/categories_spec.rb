@@ -1,9 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Categories", type: :request do
-  before do
-    allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
-  end
+  before { setup_authentication }
 
   describe "GET /categories" do
     it "returns success" do

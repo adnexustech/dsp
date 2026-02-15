@@ -7,10 +7,7 @@ RSpec.describe "Referrals", type: :request do
 
   describe "GET /referrals" do
     context "when user is authenticated" do
-      before do
-        # Simulate logged-in user session
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-      end
+      before { setup_authentication }
 
       it "returns http success" do
         get referrals_path
@@ -58,9 +55,7 @@ RSpec.describe "Referrals", type: :request do
 
   describe "authorization behavior" do
     context "with authenticated user via stub" do
-      before do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-      end
+      before { setup_authentication }
 
       it "allows access to authenticated user" do
         get referrals_path

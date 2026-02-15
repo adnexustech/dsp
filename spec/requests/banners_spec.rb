@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Banners", type: :request do
   before do
-    allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
-    allow(Bidder).to receive(:ping).and_return(true)
+    setup_authentication
   end
 
   let(:campaign) { create(:campaign) }
@@ -22,7 +21,7 @@ RSpec.describe "Banners", type: :request do
     }
   end
 
-  let(:invalid_attributes) { { name: nil } }
+  let(:invalid_attributes) { { name: nil, contenttype: nil, bid_ecpm: nil } }
 
   describe "GET /banners" do
     it "returns success" do

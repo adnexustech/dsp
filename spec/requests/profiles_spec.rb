@@ -30,9 +30,7 @@ RSpec.describe "Profiles", type: :request do
     end
 
     context "when user is logged in" do
-      before do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-      end
+      before { setup_authentication }
 
       it "allows access to show action" do
         get profile_path
@@ -52,9 +50,7 @@ RSpec.describe "Profiles", type: :request do
   end
 
   describe "GET #show" do
-    before do
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-    end
+    before { setup_authentication }
 
     it "returns http success" do
       get profile_path
@@ -106,9 +102,7 @@ RSpec.describe "Profiles", type: :request do
   end
 
   describe "GET #edit" do
-    before do
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-    end
+    before { setup_authentication }
 
     it "returns http success" do
       get edit_profile_path
@@ -122,9 +116,7 @@ RSpec.describe "Profiles", type: :request do
   end
 
   describe "PATCH #update" do
-    before do
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-    end
+    before { setup_authentication }
 
     context "with valid parameters" do
       let(:valid_params) do

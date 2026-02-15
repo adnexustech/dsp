@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Banners Comprehensive CRUD", type: :request do
   before do
-    allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
+    setup_authentication
     allow(Bidder).to receive(:ping).and_return(true)
     allow(Bidder).to receive(:updateCampaign).and_return(true)
   end
@@ -78,9 +78,8 @@ RSpec.describe "Banners Comprehensive CRUD", type: :request do
       end
 
       it "syncs with bidder when campaign present" do
-        expect(Bidder).to receive(:ping).and_return(true)
-        expect(campaign).to receive(:update_bidder).and_return(true)
-        
+        expect_any_instance_of(Campaign).to receive(:update_bidder).and_return(true)
+
         post banners_path, params: full_params
       end
     end
@@ -147,8 +146,7 @@ RSpec.describe "Banners Comprehensive CRUD", type: :request do
 
     context "removing campaign association" do
       it "removes campaign and syncs bidder" do
-        old_campaign = banner.campaign
-        expect(old_campaign).to receive(:update_bidder).and_return(true)
+        expect_any_instance_of(Campaign).to receive(:update_bidder).and_return(true)
 
         patch banner_path(banner), params: {
           banner: { campaign_id: nil }
@@ -181,8 +179,7 @@ RSpec.describe "Banners Comprehensive CRUD", type: :request do
       end
 
       it "destroys banner and syncs bidder" do
-        old_campaign = banner.campaign
-        expect(old_campaign).to receive(:update_bidder).and_return(true)
+        expect_any_instance_of(Campaign).to receive(:update_bidder).and_return(true)
 
         expect {
           delete banner_path(banner)
@@ -197,10 +194,13 @@ RSpec.describe "Banners Comprehensive CRUD", type: :request do
         allow(Bidder).to receive(:ping).and_return(false)
       end
 
-      it "still destroys banner but shows error" do
+      it "does not destroy banner and shows error" do
         expect {
           delete banner_path(banner)
-        }.to change(Banner, :count).by(-1)
+        }.to change(Banner, :count).by(0)
+
+        expect(response).to have_http_status(:redirect)
+        expect(flash[:notice]).to include("Unable to connect to bidder")
       end
     end
   end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "BannerVideos", type: :request do
   before do
-    allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
+    setup_authentication
     allow(Bidder).to receive(:ping).and_return(true)
   end
 

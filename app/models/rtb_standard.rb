@@ -1,6 +1,6 @@
 class RtbStandard < ApplicationRecord
 
-    belongs_to :campaign
+    belongs_to :campaign, optional: true
     has_many :banners
     has_many :banner_videos
     has_and_belongs_to_many :campaigns

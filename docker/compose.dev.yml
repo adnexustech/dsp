@@ -1,25 +1,20 @@
 # Docker Compose for Local Development
-# Usage: docker compose -f docker/compose.yml up
-
-version: '3.9'
+# Usage: docker compose -f docker/compose.dev.yml up
 
 services:
-  # MySQL Database
+  # PostgreSQL Database
   db:
-    image: mysql:8.0
-    platform: linux/amd64  # For Apple Silicon compatibility
+    image: postgres:16-alpine
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      MYSQL_ROOT_PASSWORD: adnexus
-      MYSQL_DATABASE: adnexus_dev
-      MYSQL_USER: adnexus
-      MYSQL_PASSWORD: adnexus
+      POSTGRES_USER: adnexus
+      POSTGRES_PASSWORD: adnexus
+      POSTGRES_DB: adnexus_dev
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-padnexus"]
+      test: ["CMD-SHELL", "pg_isready -U adnexus -d adnexus_dev"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -62,7 +57,7 @@ services:
   web:
     build:
       context: ..
-      dockerfile: Dockerfile.dev
+      dockerfile: docker/Dockerfile.dev
     volumes:
       - ..:/rails
       - bundle_cache:/usr/local/bundle
@@ -72,13 +67,13 @@ services:
     environment:
       # Database
       DB_HOST: db
-      DB_PORT: 3306
+      DB_PORT: 5432
       DB_USERNAME: adnexus
       DB_PASSWORD: adnexus
       DB_NAME: adnexus_dev
 
       # Redis
-      REDIS_URL: redis://redis:6379/0  # Internal Docker network uses 6379
+      REDIS_URL: redis://redis:6379/0
 
       # Rails
       RAILS_ENV: development
@@ -125,7 +120,7 @@ services:
       "
 
 volumes:
-  mysql_data:
+  postgres_data:
     driver: local
   es_data:
     driver: local

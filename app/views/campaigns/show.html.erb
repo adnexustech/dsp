@@ -34,7 +34,7 @@
                                 <div><strong>Name:</strong> <%= @campaign.name %></div>
                                 <div><strong>Status:</strong> <span class="<%= @campaign.status == 'runnable' ? 'text-green-500' : 'text-red-500' %>"><%= @campaign.status&.upcase %></span></div>
                                 <div><strong>Active Time:</strong> <%= @campaign.activate_time&.strftime('%m/%d/%Y %H:%M') %> to <%= @campaign.expire_time&.strftime('%m/%d/%Y %H:%M') %></div>
-                                <div><strong>Domain:</strong> <%= @campaign.domain %></div>
+                                <div><strong>Domain:</strong> <%= @campaign.ad_domain %></div>
                                 <div><strong>Hourly Budget:</strong> $<%= '%.2f' % @campaign.budget_limit_hourly if @campaign.budget_limit_hourly %></div>
                                 <div><strong>Daily Budget:</strong> $<%= '%.2f' % @campaign.budget_limit_daily if @campaign.budget_limit_daily %></div>
                                 <div><strong>Total Budget:</strong> $<%= '%.2f' % @campaign.total_budget if @campaign.total_budget %></div>
@@ -43,7 +43,36 @@
                             <%= link_to 'Edit', edit_campaign_path(@campaign) , class:"btn btn-default btn-sm" %> |
                             <%= link_to 'Campaigns', campaigns_path , class:"btn btn-default btn-sm"%>
                         </div>
-                    </div>                            
+                    </div>
+
+                    <% if @campaign.banners.any? %>
+                    <div class="panel panel-grey mt-4">
+                        <div class="panel-heading">
+                            Associated Banners
+                        </div>
+                        <div class="panel-body pan">
+                            <div class="p-6">
+                              <div class="space-y-2">
+                                <% @campaign.banners.each do |banner| %>
+                                  <div class="flex justify-between items-center py-2 border-b border-zinc-200">
+                                    <div>
+                                      <strong><%= banner.name %></strong>
+                                      <span class="text-sm text-zinc-600 ml-2">
+                                        (<%= banner.contenttype %>, $<%= '%.2f' % banner.bid_ecpm if banner.bid_ecpm %>)
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <%= link_to 'View', banner_path(banner), class: "btn btn-xs btn-info" %>
+                                      <%= link_to 'Edit', edit_banner_path(banner), class: "btn btn-xs btn-default" %>
+                                    </div>
+                                  </div>
+                                <% end %>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% end %>
+
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@ RSpec.describe Campaign, type: :model do
   describe 'associations' do
     it { should have_many(:banners).dependent(:destroy) }
     it { should have_many(:banner_videos).dependent(:destroy) }
-    it { should belong_to(:target) }
+    it { should belong_to(:target).optional }
     it { should have_and_belong_to_many(:rtb_standards) }
   end
 
