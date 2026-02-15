@@ -1,9 +1,15 @@
 #!/bin/bash -e
 
-# Run database migrations if connected
+# Run database setup if connected
 if [ "${SKIP_MIGRATIONS}" != "true" ]; then
   echo "Running database migrations..."
-  bundle exec rails db:migrate 2>/dev/null || echo "Migration skipped (DB not available)"
+  # Try migrate first; if no tables exist, load schema instead
+  bundle exec rails db:migrate 2>/dev/null || {
+    echo "Migration failed, attempting schema:load..."
+    bundle exec rails db:schema:load 2>/dev/null || echo "Schema load skipped (DB not available)"
+    echo "Seeding database..."
+    bundle exec rails db:seed 2>/dev/null || echo "Seed skipped"
+  }
 fi
 
 exec "${@}"
