@@ -21,7 +21,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'stripe', '~> 12.0'
 
 # Modern View Components
-gem 'phlex-rails', '~> 2.0'
+gem 'phlex-rails', '~> 2.2.0'
 
 # Bootstrap Forms (temporary - migrate to Phlex)
 gem 'bootstrap_form', '~> 5.0'
