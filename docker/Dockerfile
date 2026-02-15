@@ -32,6 +32,7 @@ RUN apt-get update -qq && \
       build-essential \
       git \
       pkg-config \
+      libyaml-dev \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
