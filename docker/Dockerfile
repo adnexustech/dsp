@@ -55,10 +55,11 @@ COPY --from=build /rails /rails
 # Create rails user and set ownership
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    mkdir -p db log storage tmp && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
-# Entrypoint prepares database
+# Entrypoint runs migrations
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Expose port 3000
